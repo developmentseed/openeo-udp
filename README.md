@@ -39,7 +39,7 @@ notebooks/
 
 ## Notebook Structure
 
-Each conversion notebook follows a consistent structure to ensure clarity and reproducibility. Using the NDCI cyanobacteria detection example, a typical notebook contains:
+Each conversion notebook follows a consistent structure to ensure clarity and reproducibility. Using the [NDCI cyanobacteria detection example](notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb) as a reference, a typical notebook contains:
 
 ### Introduction and Context
 
@@ -106,10 +106,10 @@ The requirements file includes the openEO Python client library, visualization t
 
 ### Running a Notebook
 
-Start Jupyter and open any notebook:
+Start Jupyter and open any notebook. For example, the [NDCI cyanobacteria notebook](notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb):
 
 ```bash
-jupyter notebook notebooks/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb
+jupyter notebook notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb
 ```
 
 Execute the cells sequentially to see the conversion process, validate results, and export the UDP definition. Most notebooks are designed to run completely from top to bottom without modification, though you may want to adjust spatial extents or temporal ranges to explore different areas.
@@ -135,6 +135,8 @@ The converted algorithms can be consumed through web map tile services (XYZ endp
 We welcome contributions from the community! Whether you are converting additional evalscripts, improving existing conversions, or fixing bugs, your help makes this resource more valuable for everyone.
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute to this project, including the conversion process, coding standards, testing requirements, and pull request procedures.
+
+The [NDCI cyanobacteria notebook](notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb) serves as a comprehensive reference implementation demonstrating best practices for conversion, documentation, and validation.
 
 ## Original Evalscripts
 
