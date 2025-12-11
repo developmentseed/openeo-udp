@@ -99,6 +99,14 @@ Clone the repository and install the required dependencies:
 ```bash
 git clone https://github.com/developmentseed/openeo-udp.git
 cd openeo-udp
+
+# Create a virtual environment
+python -m venv .venv
+
+# Activate the virtual environment
+source .venv/bin/activate
+
+# Install requirements
 pip install -r requirements.txt
 ```
 
