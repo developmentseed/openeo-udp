@@ -117,6 +117,7 @@ This project uses [uv](https://docs.astral.sh/uv/) for fast and reliable depende
    ```
 
 3. **Install as Jupyter kernel** (recommended for running notebooks):
+
    ```bash
    # Install the environment as a Jupyter kernel
    uv run python -m ipykernel install --user --name openeo-udp --display-name "openEO UDP"
