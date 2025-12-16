@@ -2,4 +2,4 @@ openeo
 matplotlib
 pillow
 numpy
-
+python-dotenv
