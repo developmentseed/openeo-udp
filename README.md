@@ -97,19 +97,21 @@ To run these notebooks, you need:
 This project uses [uv](https://docs.astral.sh/uv/) for fast and reliable dependency management.
 
 1. **Install uv** if you haven't already:
+
    ```bash
    # On macOS and Linux
    curl -LsSf https://astral.sh/uv/install.sh | sh
-   
+
    # On Windows
    powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
    ```
 
 2. **Clone the repository and set up the environment**:
+
    ```bash
    git clone https://github.com/developmentseed/openeo-udp.git
    cd openeo-udp
-   
+
    # Create virtual environment and install all dependencies
    uv sync
    ```
