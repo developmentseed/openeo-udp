@@ -88,39 +88,62 @@ Each notebook concludes with proper attribution to the original evalscript autho
 To run these notebooks, you need:
 
 - Python 3.11 or later
-- Jupyter Notebook or JupyterLab
+- [uv](https://docs.astral.sh/uv/) for fast and reliable dependency management
 - Access to an openEO backend (we recommend https://openeo.ds.io/ for testing)
 - Basic understanding of remote sensing concepts and Python programming
 
-### Installation
+### Environment Setup
 
-Clone the repository and install the required dependencies:
+This project uses [uv](https://docs.astral.sh/uv/) for fast and reliable dependency management.
 
-```bash
-git clone https://github.com/developmentseed/openeo-udp.git
-cd openeo-udp
+1. **Install uv** if you haven't already:
 
-# Create a virtual environment
-python -m venv .venv
+   ```bash
+   # On macOS and Linux
+   curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Activate the virtual environment
-source .venv/bin/activate
+   # On Windows
+   powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
 
-# Install requirements
-pip install -r requirements.txt
-```
+2. **Clone the repository and set up the environment**:
 
-The requirements file includes the openEO Python client library, visualization tools like matplotlib and Pillow, and any specialized processing libraries needed for specific algorithms.
+   ```bash
+   git clone https://github.com/developmentseed/openeo-udp.git
+   cd openeo-udp
+
+   # Create virtual environment and install all dependencies
+   uv sync
+   ```
+
+3. **Install as Jupyter kernel** (recommended for running notebooks):
+
+   ```bash
+   # Install the environment as a Jupyter kernel
+   uv run python -m ipykernel install --user --name openeo-udp --display-name "openEO UDP"
+   ```
+
+The environment includes the openEO Python client library, visualization tools like matplotlib and Pillow, Jupyter, and all other dependencies needed to run the notebooks.
 
 ### Running a Notebook
 
 Start Jupyter and open any notebook. For example, the [NDCI cyanobacteria notebook](notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb):
 
 ```bash
-jupyter notebook notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb
+# Start Jupyter using uv
+uv run jupyter lab
+
+# Or start Jupyter Notebook
+uv run jupyter notebook
 ```
 
-Execute the cells sequentially to see the conversion process, validate results, and export the UDP definition. Most notebooks are designed to run completely from top to bottom without modification, though you may want to adjust spatial extents or temporal ranges to explore different areas.
+When creating or opening a notebook:
+
+1. Make sure the "openEO UDP" kernel is selected (if you installed it as a kernel)
+2. Open the [NDCI cyanobacteria notebook](notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb)
+3. Execute the cells sequentially to see the conversion process, validate results, and export the UDP definition
+
+Most notebooks are designed to run completely from top to bottom without modification, though you may want to adjust spatial extents or temporal ranges to explore different areas.
 
 ## Using the Exported UDPs
 

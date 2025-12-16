@@ -2,6 +2,95 @@
 
 Thank you for your interest in contributing to the Sentinel Hub evalscript to openEO conversion project! This guide will help you understand our conversion process and standards so your contributions can be integrated smoothly.
 
+## Getting Started
+
+### Development Environment Setup
+
+Before you begin converting evalscripts, set up your development environment properly:
+
+#### Prerequisites
+
+- Python 3.11 or later
+- [uv](https://docs.astral.sh/uv/) for dependency management
+- Git for version control
+- Access to an openEO backend for testing
+
+#### Environment Setup
+
+1. **Install uv** if you haven't already:
+   ```bash
+   # On macOS and Linux
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   
+   # On Windows
+   powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+
+2. **Fork and clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/openeo-udp.git
+   cd openeo-udp
+   ```
+
+3. **Set up the development environment**:
+   ```bash
+   # Create virtual environment and install all dependencies
+   uv sync
+   
+   # Install development dependencies (for linting, testing)
+   uv sync --group dev
+   
+   # Install as Jupyter kernel for notebook development
+   uv run python -m ipykernel install --user --name openeo-udp-dev --display-name "openEO UDP (Dev)"
+   ```
+
+#### Jupyter Kernel Management
+
+After installation, you should have the "openEO UDP (Dev)" kernel available in Jupyter. When creating or opening notebooks:
+
+- Ensure you select the correct kernel
+- Verify the kernel has access to all required packages
+- Test the openEO connection in the first cell
+
+### Working with the Development Environment
+
+- **Starting Jupyter**: Use `uv run jupyter lab` or `uv run jupyter notebook`
+- **Running tests**: Use `uv run pytest` 
+- **Code formatting**: Use `uv run black .` 
+- **Linting**: Use `uv run ruff check .`
+- **Installing new packages**: Use `uv add package-name`
+- **Running any Python script**: Use `uv run python script.py`
+
+#### Verifying Your Environment
+
+Before starting development, verify your environment is set up correctly:
+
+1. **Test Python and package availability**:
+   ```bash
+   uv run python -c "
+import openeo
+import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
+print('All packages imported successfully!')
+"
+   ```
+
+2. **Test openEO connection** (optional, requires backend access):
+   ```bash
+   uv run python -c "
+import openeo
+connection = openeo.connect('https://openeo.ds.io/')
+print('OpenEO connection successful!')
+"
+   ```
+
+3. **Check Jupyter kernel**:
+   - Launch Jupyter: `uv run jupyter lab`
+   - Create a new notebook
+   - Ensure "openEO UDP (Dev)" kernel is available and selected
+   - Run the import test from step 1
+
 ## Understanding the Conversion Process
 
 Converting a Sentinel Hub evalscript to an openEO User-Defined Process involves more than simple translation. You need to understand both what the algorithm does scientifically and how to express that logic using openEO's process graph structure.
