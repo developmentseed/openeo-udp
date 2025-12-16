@@ -16,55 +16,124 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
 
-# Virtual environments
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
 .venv/
+openeo-env/
+myproject-env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
 .env
+.venv
+env/
 venv/
 ENV/
-env/
+env.bak/
+venv.bak/
 
-# uv
-.uv/
+# Spyder project settings
+.spyderproject
+.spyproject
 
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb_checkpoints
+# Rope project settings
+.ropeproject
 
-# IDE
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# IDE - VSCode
 .vscode/
+*.code-workspace
+
+# IDE - PyCharm
 .idea/
-*.swp
-*.swo
-*~
+*.iml
+*.iws
+*.ipr
 
-# OS
+# IDE - Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# OS - macOS
 .DS_Store
-.DS_Store?
+.AppleDouble
+.LSOverride
 ._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
+
+# OS - Windows
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
+# OS - Linux
+*~
+.directory
+.Trash-*
 
-# Documentation
-site/
+# Project specific - output files
+*.png
+*.tiff
+*.tif
+*.jpg
+*.jpeg
+*.nc
+!**/docs/**/*.png
+!**/docs/**/*.jpg
 
 # Temporary files
 *.tmp
 *.temp
 *.log
+*.swp
+*.swo
+*~
 
 # OpenEO specific
-.openeo/
-auth_*.json
+*.json.bak
+*.zarr
+
