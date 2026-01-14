@@ -53,6 +53,8 @@ This section provides the mathematical foundation and methodology behind the alg
 
 The notebook then establishes the technical environment by importing necessary libraries, connecting to the openEO backend, and configuring any required parameters. This includes libraries for data processing (openEO), visualization (matplotlib), and any specialized processing functions.
 
+Alternatively, the environment can be configured using a `.env` file with default parameters from `.env.example`, as demonstrated in the [BAIS2 burned area example](notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/bais2_burned_area.ipynb). This approach provides flexibility to switch between backend providers when running openEO processes.
+
 ### Data Loading and Exploration
 
 This section demonstrates how to load the initial dataset, define the spatial extent, select appropriate bands, and perform initial exploration of the data. The NDCI example shows how to extract multiple Sentinel-2 bands needed for both the main index and supporting calculations.
@@ -124,6 +126,27 @@ This project uses [uv](https://docs.astral.sh/uv/) for fast and reliable depende
    ```
 
 The environment includes the openEO Python client library, visualization tools like matplotlib and Pillow, Jupyter, and all other dependencies needed to run the notebooks.
+
+### Configure `.env` variables (Optional)
+
+To customize spatial or temporal coverage and backend provider selection, configure parameters using an `.env` file:
+
+1. **Copy the example file** to the folder where your notebooks reside:
+   ```bash
+   cd notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/
+   cp .env.example .env
+   ```
+
+2. **Edit the `.env` file** with your preferred values:
+   - Spatial extent (bounding box coordinates)
+   - Temporal coverage (date ranges)
+   - Backend provider (currently supports two openEO backends)
+   - Sentinel-2 collection ID as specified by your selected backend
+   - Bands to load
+
+3. **Run your notebooks**: The `.env` parameters will be automatically loaded when you execute any notebook in that directory.
+
+**Note**: Place the `.env` file in the same directory as your notebooks. The configuration will apply to all notebooks in that folder.
 
 ### Running a Notebook
 
