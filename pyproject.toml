@@ -4,16 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openeo-udp"
+version = "0.1.0"
 description = "openEO User-Defined Processes converted from Sentinel Hub evalscripts"
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
 authors = [
-    {name = "Development Seed", email = "info@developmentseed.org"},
+    {name = "Emmanuel Mathot", email = "emmanuel@developmentseed.org"},
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
@@ -31,7 +31,7 @@ dependencies = [
     "requests>=2.28.0",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
@@ -51,11 +51,12 @@ Documentation = "https://github.com/developmentseed/openeo-udp"
 Repository = "https://github.com/developmentseed/openeo-udp"
 "Bug Tracker" = "https://github.com/developmentseed/openeo-udp/issues"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.setuptools]
+packages = []
+include-package-data = true
 
-[tool.setuptools.package-dir]
-"" = "src"
+[tool.setuptools.package-data]
+"*" = ["notebooks/**/*.ipynb"]
 
 [tool.black]
 line-length = 88
