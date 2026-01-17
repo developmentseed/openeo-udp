@@ -316,6 +316,55 @@ class TestParameterValidation:
                 assert hasattr(param_set[key], "default")
 
 
+class TestParameterMapping:
+    """Test cases for endpoint parameter mapping."""
+    
+    def test_copernicus_explorer_mapping(self, temp_params_file):
+        """Test parameter mapping for EOPF Explorer endpoint."""
+        param_manager = ParameterManager(temp_params_file)
+        param_manager.use_parameter_set('venice_lagoon')
+        raw_params = param_manager.get_parameter_set()
+        
+        # Apply EOPF Explorer mapping
+        mapped_params = param_manager.apply_endpoint_mapping(raw_params, 'copernicus_explorer')
+        
+        # Check collection mapping
+        assert mapped_params['collection'].default == 'sentinel-2-l2a'
+        
+        # Check band mapping (should have reflectance prefix)
+        expected_bands = ['reflectance|B02', 'reflectance|B03', 'reflectance|B04', 
+                         'reflectance|B05', 'reflectance|B08', 'reflectance|B8A', 'reflectance|B11']
+        assert mapped_params['bands'].default == expected_bands
+    
+    def test_copernicus_dataspace_mapping(self, temp_params_file):
+        """Test parameter mapping for Copernicus Data Space endpoint."""
+        param_manager = ParameterManager(temp_params_file)
+        param_manager.use_parameter_set('venice_lagoon')
+        raw_params = param_manager.get_parameter_set()
+        
+        # Apply CDSE mapping
+        mapped_params = param_manager.apply_endpoint_mapping(raw_params, 'copernicus_dataspace')
+        
+        # Check collection mapping (should keep SENTINEL2_L2A)
+        assert mapped_params['collection'].default == 'SENTINEL2_L2A'
+        
+        # Check band mapping (should keep original bands)
+        expected_bands = ['B02', 'B03', 'B04', 'B05', 'B08', 'B8A', 'B11']
+        assert mapped_params['bands'].default == expected_bands
+    
+    def test_unknown_endpoint_mapping(self, temp_params_file):
+        """Test parameter mapping for unknown endpoint uses default mapper."""
+        param_manager = ParameterManager(temp_params_file)
+        param_manager.use_parameter_set('venice_lagoon')
+        raw_params = param_manager.get_parameter_set()
+        
+        # Apply mapping for unknown endpoint
+        mapped_params = param_manager.apply_endpoint_mapping(raw_params, 'unknown_endpoint')
+        
+        # Should return original parameters unchanged
+        assert mapped_params == raw_params
+
+
 class TestIntegration:
     """Integration tests for the complete workflow."""
 

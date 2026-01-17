@@ -216,6 +216,54 @@ class ParameterManager:
         )
         print("To change selections, use the interactive widgets in the next cell.")
 
+    def _load_mapper(self, endpoint_name: str):
+        """Load parameter mapper for specific endpoint.
+        
+        Args:
+            endpoint_name: Name of the endpoint
+            
+        Returns:
+            Mapper function or None if not found
+        """
+        try:
+            # Try to load endpoint-specific mapper
+            mapper_module_name = f"openeo_udp.mappers.{endpoint_name}"
+            mapper_module = importlib.import_module(mapper_module_name)
+            return getattr(mapper_module, 'map_parameters', None)
+        except ImportError:
+            try:
+                # Fall back to default mapper
+                from .mappers.default import map_parameters
+                return map_parameters
+            except ImportError:
+                return None
+
+    def apply_endpoint_mapping(self, params: Dict[str, Any], endpoint_name: str) -> Dict[str, Any]:
+        """Apply endpoint-specific parameter mapping.
+        
+        Args:
+            params: Parameter dictionary to map
+            endpoint_name: Name of the target endpoint
+            
+        Returns:
+            Mapped parameter dictionary
+        """
+        from .config import load_endpoint_config
+        
+        # Load endpoint configuration
+        endpoint_config = load_endpoint_config()
+        if endpoint_name not in endpoint_config.get('endpoints', {}):
+            return params
+            
+        endpoint_info = endpoint_config['endpoints'][endpoint_name]
+        
+        # Load and apply mapper
+        mapper_fn = self._load_mapper(endpoint_name)
+        if mapper_fn:
+            return mapper_fn(params, endpoint_info)
+        else:
+            return params
+
     def __str__(self) -> str:
         """String representation."""
         sets = list(self._parameter_sets.keys())

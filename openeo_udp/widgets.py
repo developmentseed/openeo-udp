@@ -115,9 +115,10 @@ def interactive_parameter_selection(param_manager, default_param_set=None, defau
                 param_manager.use_parameter_set(selected_param_set)
                 print(f"✓ Parameter set applied: {selected_location_name}")
                 
-                # Get parameter set
-                state['current_params'] = param_manager.get_parameter_set()
-                print(f"✓ Parameters loaded for: {state['current_params'].get('location_name', 'Unknown')}")
+                # Get parameter set and apply endpoint mapping
+                raw_params = param_manager.get_parameter_set()
+                state['current_params'] = param_manager.apply_endpoint_mapping(raw_params, selected_endpoint)
+                print(f"✓ Parameters loaded and mapped for endpoint: {selected_endpoint}")
                 
                 # Connect to endpoint
                 print(f"🔗 Connecting to {selected_endpoint}...")
@@ -209,14 +210,26 @@ def quick_connect(param_manager, param_set=None, endpoint=None, silent=False):
     try:
         # Apply parameter set
         param_manager.use_parameter_set(selected_param_set)
-        current_params = param_manager.get_parameter_set()
+        raw_params = param_manager.get_parameter_set()
+        
+        # Apply endpoint mapping
+        current_params = param_manager.apply_endpoint_mapping(raw_params, selected_endpoint)
         
         # Connect to endpoint
         connection = get_connection(selected_endpoint)
         
         if not silent:
             print(f"✅ Successfully connected to {selected_endpoint}")
-            print(f"✅ Parameters loaded for: {current_params.get('location_name', 'Unknown')}")
+            print(f"✅ Parameters loaded and mapped for: {current_params.get('location_name', 'Unknown')}")
+            
+            # Show mapping details if parameters were transformed
+            if current_params != raw_params:
+                print(f"🔄 Parameters mapped for endpoint {selected_endpoint}:")
+                for param_name, param_value in current_params.items():
+                    if param_name != 'location_name' and hasattr(param_value, 'default'):
+                        raw_value = raw_params.get(param_name)
+                        if raw_value and hasattr(raw_value, 'default') and raw_value.default != param_value.default:
+                            print(f"  {param_name}: {raw_value.default} -> {param_value.default}")
             
         return connection, current_params
         
