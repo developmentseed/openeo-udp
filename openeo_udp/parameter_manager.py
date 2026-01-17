@@ -46,7 +46,8 @@ class ParameterManager:
 
             # Get parameter sets from get_parameters function
             if hasattr(params_module, "get_parameters"):
-                return params_module.get_parameters()
+                parameter_sets = params_module.get_parameters()
+                return self._ensure_parameter_descriptions(parameter_sets)
             else:
                 raise ValueError(
                     f"{self.param_file} does not have a get_parameters() function"
@@ -54,6 +55,40 @@ class ParameterManager:
 
         except Exception as e:
             raise RuntimeError(f"Error loading parameter file {self.param_file}: {e}")
+
+    def _ensure_parameter_descriptions(self, parameter_sets: Dict[str, Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+        """Ensure all Parameter objects have descriptions, using name as fallback.
+        
+        Args:
+            parameter_sets: Dictionary of parameter sets
+            
+        Returns:
+            Dictionary of parameter sets with description fallbacks applied
+        """
+        processed_sets = {}
+        
+        for set_name, param_set in parameter_sets.items():
+            processed_set = {}
+            
+            for key, value in param_set.items():
+                if isinstance(value, Parameter):
+                    # Check if Parameter has a description
+                    if not hasattr(value, 'description') or not value.description:
+                        # Create a new Parameter with description fallback
+                        processed_set[key] = Parameter(
+                            value.name,
+                            description=f"{value.name.replace('_', ' ').title()}",
+                            default=value.default if hasattr(value, 'default') else None,
+                            schema=value.schema if hasattr(value, 'schema') else None
+                        )
+                    else:
+                        processed_set[key] = value
+                else:
+                    processed_set[key] = value
+                    
+            processed_sets[set_name] = processed_set
+            
+        return processed_sets
 
     def list_parameter_sets(self) -> List[str]:
         """Get list of available parameter set names.
@@ -143,6 +178,43 @@ class ParameterManager:
                 parameters[param_name] = param_value
 
         return parameters
+
+    def print_options(self, algorithm_name: str = "algorithm") -> None:
+        """Print available parameter sets and endpoint options.
+
+        Args:
+            algorithm_name: Name of the algorithm for display purposes
+        """
+        from .config import load_endpoint_config
+
+        # Show available parameter sets
+        available_sets = self.list_parameter_sets()
+        print(f"Available parameter sets for {algorithm_name}:")
+        for i, set_name in enumerate(available_sets, 1):
+            params = self.get_parameter_set(set_name)
+            location_name = params.get("location_name", set_name)
+            print(f"  {i}. {set_name}: {location_name}")
+
+        # Load and show endpoint configuration
+        endpoint_config = load_endpoint_config()
+        available_endpoints = [
+            name
+            for name, config in endpoint_config["endpoints"].items()
+            if config.get("enabled", True)
+        ]
+        print(f"\nAvailable OpenEO endpoints:")
+        for i, endpoint in enumerate(available_endpoints, 1):
+            endpoint_info = endpoint_config["endpoints"][endpoint]
+            print(f"  {i}. {endpoint}: {endpoint_info.get('url', 'URL not specified')}")
+
+        # Show defaults
+        default_endpoint = (
+            available_endpoints[0] if available_endpoints else "eopf_explorer"
+        )
+        print(
+            f"\nDefaults: Parameter set '{available_sets[0]}' and endpoint '{default_endpoint}'"
+        )
+        print("To change selections, use the interactive widgets in the next cell.")
 
     def __str__(self) -> str:
         """String representation."""

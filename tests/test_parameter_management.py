@@ -30,19 +30,19 @@ def get_parameters():
     return {
         'venice_lagoon': {
             'location_name': 'Venice Lagoon',
-            'bounding_box': Parameter('bounding_box', default={'west': 12.0, 'south': 45.3, 'east': 12.6, 'north': 45.6}),
-            'time': Parameter('time', default=['2023-06-01', '2023-06-30']),
-            'bands': Parameter('bands', default=['B02', 'B03', 'B04', 'B05', 'B08', 'B8A', 'B11']),
-            'collection': Parameter('collection', default='SENTINEL2_L2A'),
-            'cloud_cover': Parameter('cloud_cover', default=30),
+            'bounding_box': Parameter('bounding_box', description='Spatial extent for Venice Lagoon', default={'west': 12.0, 'south': 45.3, 'east': 12.6, 'north': 45.6}),
+            'time': Parameter('time', description='Temporal range for data acquisition', default=['2023-06-01', '2023-06-30']),
+            'bands': Parameter('bands', description='Sentinel-2 bands for analysis', default=['B02', 'B03', 'B04', 'B05', 'B08', 'B8A', 'B11']),
+            'collection': Parameter('collection', description='Data collection identifier', default='SENTINEL2_L2A'),
+            'cloud_cover': Parameter('cloud_cover', description='Maximum cloud cover percentage', default=30),
         },
         'lake_victoria': {
             'location_name': 'Lake Victoria',
-            'bounding_box': Parameter('bounding_box', default={'west': 31.5, 'south': -3.0, 'east': 34.5, 'north': 0.5}),
-            'time': Parameter('time', default=['2023-07-01', '2023-07-31']),
-            'bands': Parameter('bands', default=['B02', 'B03', 'B04', 'B05', 'B08', 'B8A', 'B11']),
-            'collection': Parameter('collection', default='SENTINEL2_L2A'),
-            'cloud_cover': Parameter('cloud_cover', default=20),
+            'bounding_box': Parameter('bounding_box', description='Spatial extent for Lake Victoria', default={'west': 31.5, 'south': -3.0, 'east': 34.5, 'north': 0.5}),
+            'time': Parameter('time', description='Temporal range for data acquisition', default=['2023-07-01', '2023-07-31']),
+            'bands': Parameter('bands', description='Sentinel-2 bands for analysis', default=['B02', 'B03', 'B04', 'B05', 'B08', 'B8A', 'B11']),
+            'collection': Parameter('collection', description='Data collection identifier', default='SENTINEL2_L2A'),
+            'cloud_cover': Parameter('cloud_cover', description='Maximum cloud cover percentage', default=20),
         }
     }
 """
@@ -283,6 +283,7 @@ class TestParameterValidation:
         """Test that Parameter objects are created correctly."""
         bbox_param = Parameter(
             "bounding_box",
+            description="Test bounding box parameter",
             default={"west": 12.0, "south": 45.3, "east": 12.6, "north": 45.6},
         )
 
