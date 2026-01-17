@@ -1,0 +1,73 @@
+# OpenEO Backend Endpoint Configuration
+# This file defines available OpenEO backends with their connection parameters
+
+endpoints:
+  copernicus_explorer:
+    name: "EOPF Explorer API"
+    url: "https://api.explorer.eopf.copernicus.eu/openeo"
+    auth_method: "oidc_authorization_code"
+    collection_id: "sentinel-2-l2a"
+    band_format: "reflectance|{band}"
+    description: "Primary endpoint for interactive development and exploration"
+    capabilities:
+      - "load_collection"
+      - "apply_dimension"
+      - "save_result"
+      - "create_service"
+    cloud_cover_filter: true
+    max_area_km2: 10000
+    
+  copernicus_dataspace:
+    name: "Copernicus Data Space - Production API"
+    url: "https://openeo.dataspace.copernicus.eu/"
+    auth_method: "oidc"
+    collection_id: "SENTINEL2_L2A"
+    band_format: "{band}"
+    description: "Production endpoint for larger scale processing"
+    capabilities:
+      - "load_collection"
+      - "apply_dimension"
+      - "save_result"
+      - "batch_processing"
+    cloud_cover_filter: true
+    max_area_km2: 50000
+    
+  ds_development:
+    name: "Development Seed OpenEO Backend"
+    url: "https://openeo.ds.io/"
+    auth_method: "oidc"
+    collection_id: "sentinel-2-l2a"
+    band_format: "{band}"
+    description: "Development and testing endpoint"
+    capabilities:
+      - "load_collection"
+      - "apply_dimension"
+      - "save_result"
+    cloud_cover_filter: true
+    max_area_km2: 5000
+    
+  local_development:
+    name: "Local Development Backend"
+    url: "http://127.0.0.1:8081/"
+    auth_method: "basic"
+    collection_id: "sentinel-2-l2a"
+    band_format: "{band}"
+    description: "Local development instance"
+    capabilities:
+      - "load_collection"
+      - "apply_dimension"
+    cloud_cover_filter: false
+    max_area_km2: 1000
+    enabled: false
+
+# Default endpoint selection priority
+default_priority:
+  - "eopf_explorer"
+  - "copernicus_dataspace" 
+  - "ds_development"
+  - "local_development"
+
+# Band mappings for different collection formats
+band_mappings:
+  sentinel2_standard: ["B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08", "B8A", "B09", "B10", "B11", "B12"]
+  sentinel2_reflectance: ["reflectance|b01", "reflectance|b02", "reflectance|b03", "reflectance|b04", "reflectance|b05", "reflectance|b06", "reflectance|b07", "reflectance|b08", "reflectance|b8a", "reflectance|b09", "reflectance|b10", "reflectance|b11", "reflectance|b12"]
