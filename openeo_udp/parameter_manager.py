@@ -221,3 +221,27 @@ class ParameterManager:
         sets = list(self._parameter_sets.keys())
         current = self._current_set or "None"
         return f"ParameterManager({len(sets)} sets: {sets}, current: {current})"
+
+    def interactive_parameter_selection(self):
+        """Create interactive parameter selection widgets.
+        
+        Returns:
+            Callable function that returns (connection, current_params) tuple
+        """
+        # Import here to avoid circular imports and heavy widget dependencies
+        from .widgets import interactive_parameter_selection
+        return interactive_parameter_selection(self)
+    
+    def quick_connect(self, parameter_set: str = None, endpoint: str = None):
+        """Quick programmatic connection without UI widgets.
+        
+        Args:
+            parameter_set: Name of parameter set to use (uses first available if None)
+            endpoint: Name of endpoint to connect to (uses first available if None)
+            
+        Returns:
+            Tuple of (connection, current_params) where current_params is a dict of Parameter objects
+        """
+        # Import here to avoid circular imports
+        from .widgets import quick_connect
+        return quick_connect(self, parameter_set, endpoint)
