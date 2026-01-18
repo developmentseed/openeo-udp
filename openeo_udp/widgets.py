@@ -12,14 +12,12 @@ from .endpoints import get_all_endpoints
 
 def get_connection(endpoint_url, auth_method="oidc"):
     """Get an OpenEO connection to the specified backend."""
-    if auth_method == "oidc":
-        connection = openeo.connect(endpoint_url)
+    connection = openeo.connect(endpoint_url)
+    
+    if auth_method in ["oidc", "oidc_authorization_code"]:
         connection.authenticate_oidc_authorization_code()
-    elif auth_method == "oidc_authorization_code":  
-        connection = openeo.connect(endpoint_url)
-        connection.authenticate_oidc_authorization_code()
-    else:
-        connection = openeo.connect(endpoint_url)
+    # For other auth methods, connection is returned without authentication
+    
     return connection
 
 

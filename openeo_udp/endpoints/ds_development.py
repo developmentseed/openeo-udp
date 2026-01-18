@@ -44,7 +44,7 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
     for param_name, param_value in params.items():
         if isinstance(param_value, Parameter):
             # Map collection parameter to DS format
-            if param_name == 'collection':
+            if param_name == "collection":
                 mapped_params[param_name] = Parameter(
                     param_value.name,
                     description=param_value.description if hasattr(param_value, 'description') else param_value.name,

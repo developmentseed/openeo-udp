@@ -164,25 +164,6 @@ class ParameterManager:
 
         return param_set[name]
 
-    def get_all_parameters(self, set_name: str = None) -> Dict[str, Parameter]:
-        """Get all parameters as openEO Parameter objects.
-
-        Args:
-            set_name: Parameter set to use
-
-        Returns:
-            Dictionary mapping parameter names to Parameter objects
-        """
-        param_set = self.get_parameter_set(set_name)
-
-        # Filter out non-Parameter objects (like location_name)
-        parameters = {}
-        for param_name, param_value in param_set.items():
-            if isinstance(param_value, Parameter):
-                parameters[param_name] = param_value
-
-        return parameters
-
     def print_options(self, algorithm_name: str = "algorithm") -> None:
         """Print available parameter sets and endpoint options.
 
