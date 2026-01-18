@@ -11,17 +11,6 @@ from IPython.display import clear_output, display
 from .endpoints import get_all_endpoints
 
 
-def get_connection(endpoint_url, auth_method="oidc"):
-    """Get an OpenEO connection to the specified backend."""
-    connection = openeo.connect(endpoint_url)
-
-    if auth_method in ["oidc", "oidc_authorization_code"]:
-        connection.authenticate_oidc_authorization_code()
-    # For other auth methods, connection is returned without authentication
-
-    return connection
-
-
 def interactive_parameter_selection(
     param_manager, default_param_set=None, default_endpoint=None
 ):
@@ -157,7 +146,13 @@ def interactive_parameter_selection(
                 auth_method = endpoint_cfg.get("auth_method", "oidc")
 
                 # Connect using the actual URL
-                state["connection"] = get_connection(endpoint_url, auth_method)
+                connection = openeo.connect(endpoint_url)
+
+                if auth_method in ["oidc", "oidc_authorization_code"]:
+                    connection.authenticate_oidc_authorization_code()
+                # For other auth methods, connection is returned without authentication
+
+                state["connection"] = connection
                 state["selected_endpoint"] = selected_endpoint
                 print("✅ Connected successfully!")
 
@@ -201,97 +196,3 @@ def interactive_parameter_selection(
         return state["connection"], state["current_params"]
 
     return get_results
-
-
-def quick_connect(param_manager, param_set=None, endpoint=None, silent=False):
-    """
-    Quickly connect to an OpenEO backend with specified parameters (non-interactive).
-
-    This function provides a programmatic way to connect without UI widgets,
-    useful for automated workflows or when the desired parameters are known.
-
-    Parameters
-    ----------
-    param_manager : ParameterManager
-        An initialized ParameterManager instance
-    param_set : str, optional
-        Parameter set to use. If None, uses the first available set.
-    endpoint : str, optional
-        Endpoint to connect to. If None, uses the first available endpoint.
-    silent : bool, optional
-        If True, suppress output messages. Default is False.
-
-    Returns
-    -------
-    tuple
-        (connection, current_params)
-
-    Examples
-    --------
-    >>> param_manager = ParameterManager('algorithm.params.py')
-    >>> connection, params = quick_connect(param_manager, 'venice_lagoon', 'copernicus_explorer')
-    """
-
-    available_sets = param_manager.list_parameter_sets()
-    endpoint_config = get_all_endpoints()
-    available_endpoints = [
-        name for name, config in endpoint_config.items() if config.get("enabled", True)
-    ]
-
-    # Set defaults
-    selected_param_set = param_set or available_sets[0] if available_sets else None
-    selected_endpoint = endpoint or (
-        available_endpoints[0] if available_endpoints else "copernicus_explorer"
-    )
-
-    if not silent:
-        print(f"🔄 Connecting to {selected_endpoint}...")
-        print(f"📍 Using parameter set: {selected_param_set}")
-
-    try:
-        # Apply parameter set
-        param_manager.use_parameter_set(selected_param_set)
-        raw_params = param_manager.get_parameter_set()
-
-        # Apply endpoint mapping
-        current_params = param_manager.apply_endpoint_mapping(
-            raw_params, selected_endpoint
-        )
-
-        # Get endpoint configuration and connect
-        endpoint_cfg = endpoint_config.get(selected_endpoint, {})
-        endpoint_url = endpoint_cfg.get("url", selected_endpoint)
-        auth_method = endpoint_cfg.get("auth_method", "oidc")
-
-        # Connect to endpoint using the actual URL
-        connection = get_connection(endpoint_url, auth_method)
-
-        if not silent:
-            print(f"✅ Successfully connected to {selected_endpoint}")
-            print(
-                f"✅ Parameters loaded and mapped for: {current_params.get('location_name', 'Unknown')}"
-            )
-
-            # Show mapping details if parameters were transformed
-            if current_params != raw_params:
-                print(f"🔄 Parameters mapped for endpoint {selected_endpoint}:")
-                for param_name, param_value in current_params.items():
-                    if param_name != "location_name" and hasattr(
-                        param_value, "default"
-                    ):
-                        raw_value = raw_params.get(param_name)
-                        if (
-                            raw_value
-                            and hasattr(raw_value, "default")
-                            and raw_value.default != param_value.default
-                        ):
-                            print(
-                                f"  {param_name}: {raw_value.default} -> {param_value.default}"
-                            )
-
-        return connection, current_params
-
-    except Exception as e:
-        if not silent:
-            print(f"❌ Error: {str(e)}")
-        raise

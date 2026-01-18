@@ -195,12 +195,11 @@ class ParameterManager:
             endpoint_info = all_endpoints[endpoint]
             print(f"  {i}. {endpoint}: {endpoint_info.get('url', 'URL not specified')}")
 
-        # Show defaults
-        default_endpoint = (
-            available_endpoints[0] if available_endpoints else "copernicus_explorer"
+        print(
+            "\n💡 Tip: Use param_manager.interactive_parameter_selection() for interactive selection,"
         )
         print(
-            f"\nDefaults: Parameter set '{available_sets[0]}' and endpoint '{default_endpoint}'"
+            "or param_manager.quick_connect('set_name', 'endpoint') for direct connection."
         )
         print("To change selections, use the interactive widgets in the next cell.")
 
@@ -253,17 +252,100 @@ class ParameterManager:
 
         return interactive_parameter_selection(self)
 
-    def quick_connect(self, parameter_set: str = None, endpoint: str = None):
-        """Quick programmatic connection without UI widgets.
-
-        Args:
-            parameter_set: Name of parameter set to use (uses first available if None)
-            endpoint: Name of endpoint to connect to (uses first available if None)
-
-        Returns:
-            Tuple of (connection, current_params) where current_params is a dict of Parameter objects
+    def quick_connect(self, param_set=None, endpoint=None, silent=False):
         """
-        # Import here to avoid circular imports
-        from .widgets import quick_connect
+        Quickly connect to an OpenEO backend with specified parameters (non-interactive).
 
-        return quick_connect(self, parameter_set, endpoint)
+        This method provides a programmatic way to connect without UI widgets,
+        useful for automated workflows or when the desired parameters are known.
+
+        Parameters
+        ----------
+        param_set : str, optional
+            Parameter set to use. If None, uses the first available set.
+        endpoint : str, optional
+            Endpoint to connect to. If None, uses the first available endpoint.
+        silent : bool, optional
+            If True, suppress output messages. Default is False.
+
+        Returns
+        -------
+        tuple
+            (connection, current_params)
+
+        Examples
+        --------
+        >>> param_manager = ParameterManager('algorithm.params.py')
+        >>> connection, params = param_manager.quick_connect('venice_lagoon', 'copernicus_explorer')
+        """
+        import openeo
+
+        from .endpoints import get_all_endpoints
+
+        available_sets = self.list_parameter_sets()
+        endpoint_config = get_all_endpoints()
+        available_endpoints = [
+            name
+            for name, config in endpoint_config.items()
+            if config.get("enabled", True)
+        ]
+
+        # Set defaults
+        selected_param_set = param_set or available_sets[0] if available_sets else None
+        selected_endpoint = endpoint or (
+            available_endpoints[0] if available_endpoints else "copernicus_explorer"
+        )
+
+        if not silent:
+            print(f"🔄 Connecting to {selected_endpoint}...")
+            print(f"📍 Using parameter set: {selected_param_set}")
+
+        try:
+            # Apply parameter set
+            self.use_parameter_set(selected_param_set)
+            raw_params = self.get_parameter_set()
+
+            # Apply endpoint mapping
+            current_params = self.apply_endpoint_mapping(raw_params, selected_endpoint)
+
+            # Get endpoint configuration and connect
+            endpoint_cfg = endpoint_config.get(selected_endpoint, {})
+            endpoint_url = endpoint_cfg.get("url", selected_endpoint)
+            auth_method = endpoint_cfg.get("auth_method", "oidc")
+
+            # Connect to endpoint using the actual URL
+            connection = openeo.connect(endpoint_url)
+
+            if auth_method in ["oidc", "oidc_authorization_code"]:
+                connection.authenticate_oidc_authorization_code()
+            # For other auth methods, connection is returned without authentication
+
+            if not silent:
+                print(f"✅ Successfully connected to {selected_endpoint}")
+                print(
+                    f"✅ Parameters loaded and mapped for: {current_params.get('location_name', 'Unknown')}"
+                )
+
+                # Show mapping details if parameters were transformed
+                if current_params != raw_params:
+                    print(f"🔄 Parameters mapped for endpoint {selected_endpoint}:")
+                    for param_name, param_value in current_params.items():
+                        if param_name != "location_name" and hasattr(
+                            param_value, "default"
+                        ):
+                            raw_value = raw_params.get(param_name)
+                            if (
+                                raw_value
+                                and hasattr(raw_value, "default")
+                                and raw_value.default != param_value.default
+                            ):
+                                print(
+                                    f"  {param_name}: {raw_value.default} -> {param_value.default}"
+                                )
+
+            return connection, current_params
+
+        except Exception as e:
+            if not silent:
+                print(f"❌ Error: {str(e)}")
+            raise

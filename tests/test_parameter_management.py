@@ -208,42 +208,43 @@ class TestParameterManagerMethods:
         # Should return a callable function
         assert callable(result)
 
-    @patch("openeo_udp.widgets.get_connection")
-    def test_quick_connect_success(self, mock_get_connection, mock_param_manager):
+    @patch("openeo.connect")
+    def test_quick_connect_success(self, mock_connect, mock_param_manager):
         """Test successful quick connection."""
         # Mock successful connection
         mock_connection = Mock()
-        mock_get_connection.return_value = mock_connection
+        mock_connect.return_value = mock_connection
+        mock_connection.authenticate_oidc_authorization_code = Mock()
 
         connection, params = mock_param_manager.quick_connect(
-            parameter_set="venice_lagoon",
-            endpoint="copernicus_explorer",
+            param_set="venice_lagoon", endpoint="copernicus_explorer", silent=True
         )
 
         assert connection == mock_connection
         assert "location_name" in params
         assert params["location_name"] == "Venice Lagoon"
 
-    @patch("openeo_udp.widgets.get_connection")
-    def test_quick_connect_with_defaults(self, mock_get_connection, mock_param_manager):
+    @patch("openeo.connect")
+    def test_quick_connect_with_defaults(self, mock_connect, mock_param_manager):
         """Test quick connection with default parameters."""
         mock_connection = Mock()
-        mock_get_connection.return_value = mock_connection
+        mock_connect.return_value = mock_connection
+        mock_connection.authenticate_oidc_authorization_code = Mock()
 
-        connection, params = mock_param_manager.quick_connect()
+        connection, params = mock_param_manager.quick_connect(silent=True)
 
         assert connection == mock_connection
         # Should use first available parameter set
         assert params["location_name"] in ["Venice Lagoon", "Lake Victoria"]
 
-    @patch("openeo_udp.widgets.get_connection")
-    def test_quick_connect_failure(self, mock_get_connection, mock_param_manager):
+    @patch("openeo.connect")
+    def test_quick_connect_failure(self, mock_connect, mock_param_manager):
         """Test quick connection failure handling."""
         # Mock connection failure
-        mock_get_connection.side_effect = Exception("Connection failed")
+        mock_connect.side_effect = Exception("Connection failed")
 
         with pytest.raises(Exception, match="Connection failed"):
-            mock_param_manager.quick_connect()
+            mock_param_manager.quick_connect(silent=True)
 
 
 class TestParameterValidation:
