@@ -16,7 +16,7 @@ from pathlib import Path
 
 # Import the modules to test
 from openeo_udp import ParameterManager
-from openeo_udp.config import load_endpoint_config
+from openeo_udp.endpoints import get_all_endpoints
 from openeo.api.process import Parameter
 
 
@@ -141,139 +141,113 @@ class TestParameterManager:
 
 
 class TestEndpointConfiguration:
-    """Test cases for endpoint configuration loading."""
+    """Test cases for Python-based endpoint configuration loading."""
 
-    @patch("pathlib.Path.exists")
-    @patch("builtins.open")
-    @patch("yaml.safe_load")
-    def test_load_endpoint_config(self, mock_yaml_load, mock_open, mock_exists):
-        """Test loading endpoint configuration from YAML file."""
-        mock_exists.return_value = True
-        mock_yaml_load.return_value = {
-            "endpoints": {
-                "test_endpoint": {
-                    "url": "https://test.example.com",
-                    "enabled": True,
-                    "auth": {"type": "basic"},
-                }
-            }
-        }
-
-        config = load_endpoint_config()
-        assert "endpoints" in config
-        assert "test_endpoint" in config["endpoints"]
-        assert config["endpoints"]["test_endpoint"]["url"] == "https://test.example.com"
-
-    @patch("pathlib.Path.exists")
-    def test_load_endpoint_config_missing_file(self, mock_exists):
-        """Test handling of missing endpoint config file."""
-        # Since the actual implementation raises FileNotFoundError when file doesn't exist,
-        # let's test that behavior instead
-        mock_exists.return_value = False
+    def test_get_all_endpoints(self):
+        """Test loading endpoint configuration from Python modules."""
+        all_endpoints = get_all_endpoints()
         
-        with pytest.raises(FileNotFoundError):
-            load_endpoint_config()
+        # Should have at least our three configured endpoints
+        assert 'copernicus_explorer' in all_endpoints
+        assert 'copernicus_dataspace' in all_endpoints
+        assert 'ds_development' in all_endpoints
+        
+        # Check structure of endpoint config
+        for endpoint_name, config in all_endpoints.items():
+            assert 'url' in config
+            assert 'collection_id' in config
+            assert 'band_format' in config
+    
+    def test_endpoint_config_structure(self):
+        """Test that endpoint configurations have the expected structure."""
+        all_endpoints = get_all_endpoints()
+        
+        # Test EOPF Explorer endpoint specifically
+        explorer_config = all_endpoints.get('copernicus_explorer')
+        assert explorer_config is not None
+        assert explorer_config['url'] == 'https://api.explorer.eopf.copernicus.eu/openeo'
+        assert explorer_config['collection_id'] == 'sentinel-2-l2a'
+        assert explorer_config['band_format'] == 'reflectance|{band}'
+        
+        # Test Copernicus Data Space endpoint
+        cdse_config = all_endpoints.get('copernicus_dataspace')
+        assert cdse_config is not None
+        assert 'dataspace.copernicus.eu' in cdse_config['url']
+        assert cdse_config['collection_id'] == 'SENTINEL2_L2A'
+        assert cdse_config['band_format'] == '{band}'
 
 
-class TestWidgets:
-    """Test cases for widget functionality."""
+class TestParameterManagerMethods:
+    """Test cases for ParameterManager widget and helper methods."""
 
     @pytest.fixture
     def mock_param_manager(self, temp_params_file):
         """Create a real ParameterManager for testing."""
         return ParameterManager(temp_params_file)
 
-    @patch("openeo_udp.widgets.load_endpoint_config")
-    @patch("openeo_udp.widgets.display")
-    @patch("openeo_udp.widgets.clear_output")
-    def test_interactive_parameter_selection_creation(
-        self, mock_clear_output, mock_display, mock_load_config, mock_param_manager
-    ):
+    def test_print_options(self, mock_param_manager, capsys):
+        """Test print_options helper method."""
+        mock_param_manager.print_options("Test Algorithm")
+        
+        # Capture printed output
+        captured = capsys.readouterr()
+        output = captured.out
+        
+        # Should contain algorithm name and parameter sets
+        assert "Test Algorithm" in output
+        assert "venice_lagoon" in output
+        assert "lake_victoria" in output
+        assert "Available parameter sets" in output
+
+    def test_interactive_parameter_selection_creation(self, mock_param_manager):
         """Test that interactive parameter selection creates widgets properly."""
-        from openeo_udp.widgets import interactive_parameter_selection
-
-        # Mock endpoint config
-        mock_load_config.return_value = {
-            "endpoints": {"test_endpoint": {"url": "https://test.com", "enabled": True}}
-        }
-
-        result = interactive_parameter_selection(mock_param_manager)
+        result = mock_param_manager.interactive_parameter_selection()
 
         # Should return a callable function
         assert callable(result)
 
-        # Should have called clear_output and display
-        mock_clear_output.assert_called_once_with(wait=True)
-        assert mock_display.call_count >= 1  # Should display widgets
-
-    @patch("openeo_udp.widgets.load_endpoint_config")
     @patch("openeo_udp.widgets.get_connection")
     def test_quick_connect_success(
-        self, mock_get_connection, mock_load_config, mock_param_manager
+        self, mock_get_connection, mock_param_manager
     ):
         """Test successful quick connection."""
-        from openeo_udp.widgets import quick_connect
-
         # Mock successful connection
         mock_connection = Mock()
         mock_get_connection.return_value = mock_connection
 
-        # Mock endpoint config
-        mock_load_config.return_value = {
-            "endpoints": {"test_endpoint": {"url": "https://test.com", "enabled": True}}
-        }
-
-        connection, params = quick_connect(
-            mock_param_manager,
-            param_set="venice_lagoon",
-            endpoint="test_endpoint",
-            silent=True,
+        connection, params = mock_param_manager.quick_connect(
+            parameter_set="venice_lagoon",
+            endpoint="copernicus_explorer",
         )
 
         assert connection == mock_connection
         assert "location_name" in params
         assert params["location_name"] == "Venice Lagoon"
 
-    @patch("openeo_udp.widgets.load_endpoint_config")
     @patch("openeo_udp.widgets.get_connection")
     def test_quick_connect_with_defaults(
-        self, mock_get_connection, mock_load_config, mock_param_manager
+        self, mock_get_connection, mock_param_manager
     ):
         """Test quick connection with default parameters."""
-        from openeo_udp.widgets import quick_connect
-
         mock_connection = Mock()
         mock_get_connection.return_value = mock_connection
 
-        mock_load_config.return_value = {
-            "endpoints": {
-                "default_endpoint": {"url": "https://default.com", "enabled": True}
-            }
-        }
-
-        connection, params = quick_connect(mock_param_manager, silent=True)
+        connection, params = mock_param_manager.quick_connect()
 
         assert connection == mock_connection
         # Should use first available parameter set
         assert params["location_name"] in ["Venice Lagoon", "Lake Victoria"]
 
-    @patch("openeo_udp.widgets.load_endpoint_config")
     @patch("openeo_udp.widgets.get_connection")
     def test_quick_connect_failure(
-        self, mock_get_connection, mock_load_config, mock_param_manager
+        self, mock_get_connection, mock_param_manager
     ):
         """Test quick connection failure handling."""
-        from openeo_udp.widgets import quick_connect
-
         # Mock connection failure
         mock_get_connection.side_effect = Exception("Connection failed")
 
-        mock_load_config.return_value = {
-            "endpoints": {"test_endpoint": {"url": "https://test.com", "enabled": True}}
-        }
-
         with pytest.raises(Exception, match="Connection failed"):
-            quick_connect(mock_param_manager, silent=True)
+            mock_param_manager.quick_connect()
 
 
 class TestParameterValidation:
@@ -331,9 +305,9 @@ class TestParameterMapping:
         # Check collection mapping
         assert mapped_params['collection'].default == 'sentinel-2-l2a'
         
-        # Check band mapping (should have reflectance prefix)
-        expected_bands = ['reflectance|B02', 'reflectance|B03', 'reflectance|B04', 
-                         'reflectance|B05', 'reflectance|B08', 'reflectance|B8A', 'reflectance|B11']
+        # Check band mapping (should have reflectance prefix and lowercase)
+        expected_bands = ['reflectance|b02', 'reflectance|b03', 'reflectance|b04', 
+                         'reflectance|b05', 'reflectance|b08', 'reflectance|b8a', 'reflectance|b11']
         assert mapped_params['bands'].default == expected_bands
     
     def test_copernicus_dataspace_mapping(self, temp_params_file):
@@ -347,6 +321,18 @@ class TestParameterMapping:
         
         # Check collection mapping (should keep SENTINEL2_L2A)
         assert mapped_params['collection'].default == 'SENTINEL2_L2A'
+        
+    def test_ds_development_mapping(self, temp_params_file):
+        """Test parameter mapping for Development Seed endpoint."""
+        param_manager = ParameterManager(temp_params_file)
+        param_manager.use_parameter_set('venice_lagoon')
+        raw_params = param_manager.get_parameter_set()
+        
+        # Apply DS development mapping
+        mapped_params = param_manager.apply_endpoint_mapping(raw_params, 'ds_development')
+        
+        # Check collection mapping
+        assert mapped_params['collection'].default == 'sentinel-2-l2a'
         
         # Check band mapping (should keep original bands)
         expected_bands = ['B02', 'B03', 'B04', 'B05', 'B08', 'B8A', 'B11']
@@ -369,19 +355,13 @@ class TestIntegration:
     """Integration tests for the complete workflow."""
 
     @patch("openeo_udp.widgets.get_connection")
-    @patch("openeo_udp.widgets.load_endpoint_config")
     def test_complete_workflow_simulation(
-        self, mock_load_config, mock_get_connection, temp_params_file
+        self, mock_get_connection, temp_params_file
     ):
         """Test a complete workflow from parameter loading to connection."""
-        from openeo_udp.widgets import quick_connect
-
         # Mock external dependencies
         mock_connection = Mock()
         mock_get_connection.return_value = mock_connection
-        mock_load_config.return_value = {
-            "endpoints": {"test_endpoint": {"url": "https://test.com", "enabled": True}}
-        }
 
         # Test complete workflow
         param_manager = ParameterManager(temp_params_file)
@@ -400,11 +380,9 @@ class TestIntegration:
         assert bbox.default["west"] == 12.0
 
         # Test quick connect
-        connection, current_params = quick_connect(
-            param_manager,
-            param_set="venice_lagoon",
-            endpoint="test_endpoint",
-            silent=True,
+        connection, current_params = param_manager.quick_connect(
+            parameter_set="venice_lagoon",
+            endpoint="copernicus_explorer",
         )
 
         assert connection == mock_connection

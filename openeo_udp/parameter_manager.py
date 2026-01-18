@@ -56,38 +56,42 @@ class ParameterManager:
         except Exception as e:
             raise RuntimeError(f"Error loading parameter file {self.param_file}: {e}")
 
-    def _ensure_parameter_descriptions(self, parameter_sets: Dict[str, Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    def _ensure_parameter_descriptions(
+        self, parameter_sets: Dict[str, Dict[str, Any]]
+    ) -> Dict[str, Dict[str, Any]]:
         """Ensure all Parameter objects have descriptions, using name as fallback.
-        
+
         Args:
             parameter_sets: Dictionary of parameter sets
-            
+
         Returns:
             Dictionary of parameter sets with description fallbacks applied
         """
         processed_sets = {}
-        
+
         for set_name, param_set in parameter_sets.items():
             processed_set = {}
-            
+
             for key, value in param_set.items():
                 if isinstance(value, Parameter):
                     # Check if Parameter has a description
-                    if not hasattr(value, 'description') or not value.description:
+                    if not hasattr(value, "description") or not value.description:
                         # Create a new Parameter with description fallback
                         processed_set[key] = Parameter(
                             value.name,
                             description=f"{value.name.replace('_', ' ').title()}",
-                            default=value.default if hasattr(value, 'default') else None,
-                            schema=value.schema if hasattr(value, 'schema') else None
+                            default=value.default
+                            if hasattr(value, "default")
+                            else None,
+                            schema=value.schema if hasattr(value, "schema") else None,
                         )
                     else:
                         processed_set[key] = value
                 else:
                     processed_set[key] = value
-                    
+
             processed_sets[set_name] = processed_set
-            
+
         return processed_sets
 
     def list_parameter_sets(self) -> List[str]:
@@ -185,7 +189,7 @@ class ParameterManager:
         Args:
             algorithm_name: Name of the algorithm for display purposes
         """
-        from .config import load_endpoint_config
+        from .endpoints import get_all_endpoints
 
         # Show available parameter sets
         available_sets = self.list_parameter_sets()
@@ -196,20 +200,20 @@ class ParameterManager:
             print(f"  {i}. {set_name}: {location_name}")
 
         # Load and show endpoint configuration
-        endpoint_config = load_endpoint_config()
+        all_endpoints = get_all_endpoints()
         available_endpoints = [
             name
-            for name, config in endpoint_config["endpoints"].items()
+            for name, config in all_endpoints.items()
             if config.get("enabled", True)
         ]
         print(f"\nAvailable OpenEO endpoints:")
         for i, endpoint in enumerate(available_endpoints, 1):
-            endpoint_info = endpoint_config["endpoints"][endpoint]
+            endpoint_info = all_endpoints[endpoint]
             print(f"  {i}. {endpoint}: {endpoint_info.get('url', 'URL not specified')}")
 
         # Show defaults
         default_endpoint = (
-            available_endpoints[0] if available_endpoints else "eopf_explorer"
+            available_endpoints[0] if available_endpoints else "copernicus_explorer"
         )
         print(
             f"\nDefaults: Parameter set '{available_sets[0]}' and endpoint '{default_endpoint}'"
@@ -218,49 +222,33 @@ class ParameterManager:
 
     def _load_mapper(self, endpoint_name: str):
         """Load parameter mapper for specific endpoint.
-        
+
         Args:
             endpoint_name: Name of the endpoint
-            
+
         Returns:
             Mapper function or None if not found
         """
-        try:
-            # Try to load endpoint-specific mapper
-            mapper_module_name = f"openeo_udp.mappers.{endpoint_name}"
-            mapper_module = importlib.import_module(mapper_module_name)
-            return getattr(mapper_module, 'map_parameters', None)
-        except ImportError:
-            try:
-                # Fall back to default mapper
-                from .mappers.default import map_parameters
-                return map_parameters
-            except ImportError:
-                return None
+        from .endpoints import get_endpoint_mapper
 
-    def apply_endpoint_mapping(self, params: Dict[str, Any], endpoint_name: str) -> Dict[str, Any]:
+        return get_endpoint_mapper(endpoint_name)
+
+    def apply_endpoint_mapping(
+        self, params: Dict[str, Any], endpoint_name: str
+    ) -> Dict[str, Any]:
         """Apply endpoint-specific parameter mapping.
-        
+
         Args:
             params: Parameter dictionary to map
             endpoint_name: Name of the target endpoint
-            
+
         Returns:
             Mapped parameter dictionary
         """
-        from .config import load_endpoint_config
-        
-        # Load endpoint configuration
-        endpoint_config = load_endpoint_config()
-        if endpoint_name not in endpoint_config.get('endpoints', {}):
-            return params
-            
-        endpoint_info = endpoint_config['endpoints'][endpoint_name]
-        
         # Load and apply mapper
         mapper_fn = self._load_mapper(endpoint_name)
         if mapper_fn:
-            return mapper_fn(params, endpoint_info)
+            return mapper_fn(params)
         else:
             return params
 
@@ -272,24 +260,26 @@ class ParameterManager:
 
     def interactive_parameter_selection(self):
         """Create interactive parameter selection widgets.
-        
+
         Returns:
             Callable function that returns (connection, current_params) tuple
         """
         # Import here to avoid circular imports and heavy widget dependencies
         from .widgets import interactive_parameter_selection
+
         return interactive_parameter_selection(self)
-    
+
     def quick_connect(self, parameter_set: str = None, endpoint: str = None):
         """Quick programmatic connection without UI widgets.
-        
+
         Args:
             parameter_set: Name of parameter set to use (uses first available if None)
             endpoint: Name of endpoint to connect to (uses first available if None)
-            
+
         Returns:
             Tuple of (connection, current_params) where current_params is a dict of Parameter objects
         """
         # Import here to avoid circular imports
         from .widgets import quick_connect
+
         return quick_connect(self, parameter_set, endpoint)
