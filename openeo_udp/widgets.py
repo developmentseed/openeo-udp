@@ -151,7 +151,14 @@ def interactive_parameter_selection(
 
                 # Connect to endpoint
                 print(f"🔗 Connecting to {selected_endpoint}...")
-                state["connection"] = get_connection(selected_endpoint)
+                
+                # Get endpoint configuration
+                endpoint_cfg = endpoint_config.get(selected_endpoint, {})
+                endpoint_url = endpoint_cfg.get("url", selected_endpoint) 
+                auth_method = endpoint_cfg.get("auth_method", "oidc")
+                
+                # Connect using the actual URL
+                state["connection"] = get_connection(endpoint_url, auth_method)
                 state["selected_endpoint"] = selected_endpoint
                 print(f"✅ Connected successfully!")
 
@@ -252,8 +259,13 @@ def quick_connect(param_manager, param_set=None, endpoint=None, silent=False):
             raw_params, selected_endpoint
         )
 
-        # Connect to endpoint
-        connection = get_connection(selected_endpoint)
+        # Get endpoint configuration and connect
+        endpoint_cfg = endpoint_config.get(selected_endpoint, {})
+        endpoint_url = endpoint_cfg.get("url", selected_endpoint)
+        auth_method = endpoint_cfg.get("auth_method", "oidc")
+        
+        # Connect to endpoint using the actual URL
+        connection = get_connection(endpoint_url, auth_method)
 
         if not silent:
             print(f"✅ Successfully connected to {selected_endpoint}")
