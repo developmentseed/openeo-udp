@@ -278,7 +278,6 @@ class ParameterManager:
         >>> param_manager = ParameterManager('algorithm.params.py')
         >>> connection, params = param_manager.quick_connect('venice_lagoon', 'copernicus_explorer')
         """
-        import openeo
 
         from .endpoints import get_all_endpoints
 
@@ -308,17 +307,10 @@ class ParameterManager:
             # Apply endpoint mapping
             current_params = self.apply_endpoint_mapping(raw_params, selected_endpoint)
 
-            # Get endpoint configuration and connect
-            endpoint_cfg = endpoint_config.get(selected_endpoint, {})
-            endpoint_url = endpoint_cfg.get("url", selected_endpoint)
-            auth_method = endpoint_cfg.get("auth_method", "oidc")
+            # Use endpoint-specific connection function
+            from .endpoints import get_endpoint_connection
 
-            # Connect to endpoint using the actual URL
-            connection = openeo.connect(endpoint_url)
-
-            if auth_method in ["oidc", "oidc_authorization_code"]:
-                connection.authenticate_oidc_authorization_code()
-            # For other auth methods, connection is returned without authentication
+            connection = get_endpoint_connection(selected_endpoint)
 
             if not silent:
                 print(f"✅ Successfully connected to {selected_endpoint}")

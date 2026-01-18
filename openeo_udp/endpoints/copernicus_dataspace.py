@@ -6,6 +6,7 @@ for the Copernicus Data Space OpenEO backend.
 
 from typing import Any, Dict
 
+import openeo
 from openeo.api.process import Parameter
 
 # Endpoint configuration
@@ -70,3 +71,17 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
                 )
 
     return mapped_params
+
+
+def get_connection():
+    """Create connection to Copernicus Data Space endpoint.
+
+    Returns:
+        Authenticated OpenEO connection
+    """
+    connection = openeo.connect(ENDPOINT_CONFIG["url"])
+
+    # Copernicus Data Space uses OIDC authentication
+    connection.authenticate_oidc_authorization_code()
+
+    return connection

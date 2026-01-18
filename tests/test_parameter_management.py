@@ -224,24 +224,24 @@ class TestParameterManagerMethods:
         assert "location_name" in params
         assert params["location_name"] == "Venice Lagoon"
 
-    @patch("openeo.connect")
-    def test_quick_connect_with_defaults(self, mock_connect, mock_param_manager):
+    @patch("openeo_udp.endpoints.get_endpoint_connection")
+    def test_quick_connect_with_defaults(self, mock_get_connection, mock_param_manager):
         """Test quick connection with default parameters."""
         mock_connection = Mock()
-        mock_connect.return_value = mock_connection
-        mock_connection.authenticate_oidc_authorization_code = Mock()
+        mock_get_connection.return_value = mock_connection
 
         connection, params = mock_param_manager.quick_connect(silent=True)
 
         assert connection == mock_connection
         # Should use first available parameter set
         assert params["location_name"] in ["Venice Lagoon", "Lake Victoria"]
+        mock_get_connection.assert_called_once()
 
-    @patch("openeo.connect")
-    def test_quick_connect_failure(self, mock_connect, mock_param_manager):
+    @patch("openeo_udp.endpoints.get_endpoint_connection")
+    def test_quick_connect_failure(self, mock_get_connection, mock_param_manager):
         """Test quick connection failure handling."""
         # Mock connection failure
-        mock_connect.side_effect = Exception("Connection failed")
+        mock_get_connection.side_effect = Exception("Connection failed")
 
         with pytest.raises(Exception, match="Connection failed"):
             mock_param_manager.quick_connect(silent=True)
@@ -366,7 +366,7 @@ class TestParameterMapping:
 class TestIntegration:
     """Integration tests for the complete workflow."""
 
-    @patch("openeo_udp.widgets.get_connection")
+    @patch("openeo_udp.endpoints.get_endpoint_connection")
     def test_complete_workflow_simulation(self, mock_get_connection, temp_params_file):
         """Test a complete workflow from parameter loading to connection."""
         # Mock external dependencies
@@ -391,8 +391,9 @@ class TestIntegration:
 
         # Test quick connect
         connection, current_params = param_manager.quick_connect(
-            parameter_set="venice_lagoon",
+            param_set="venice_lagoon",
             endpoint="copernicus_explorer",
+            silent=True
         )
 
         assert connection == mock_connection

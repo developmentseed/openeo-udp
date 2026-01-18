@@ -5,7 +5,6 @@ This module provides reusable UI components for parameter selection and backend 
 """
 
 import ipywidgets as widgets
-import openeo
 from IPython.display import clear_output, display
 
 from .endpoints import get_all_endpoints
@@ -140,17 +139,10 @@ def interactive_parameter_selection(
                 # Connect to endpoint
                 print(f"🔗 Connecting to {selected_endpoint}...")
 
-                # Get endpoint configuration
-                endpoint_cfg = endpoint_config.get(selected_endpoint, {})
-                endpoint_url = endpoint_cfg.get("url", selected_endpoint)
-                auth_method = endpoint_cfg.get("auth_method", "oidc")
+                # Use endpoint-specific connection function
+                from .endpoints import get_endpoint_connection
 
-                # Connect using the actual URL
-                connection = openeo.connect(endpoint_url)
-
-                if auth_method in ["oidc", "oidc_authorization_code"]:
-                    connection.authenticate_oidc_authorization_code()
-                # For other auth methods, connection is returned without authentication
+                connection = get_endpoint_connection(selected_endpoint)
 
                 state["connection"] = connection
                 state["selected_endpoint"] = selected_endpoint

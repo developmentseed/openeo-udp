@@ -6,6 +6,7 @@ for the Development Seed OpenEO backend.
 
 from typing import Any, Dict
 
+import openeo
 from openeo.api.process import Parameter
 
 # Endpoint configuration
@@ -65,3 +66,17 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
                 )
 
     return mapped_params
+
+
+def get_connection():
+    """Create connection to Development Seed OpenEO Backend.
+
+    Returns:
+        Authenticated OpenEO connection
+    """
+    connection = openeo.connect(ENDPOINT_CONFIG["url"])
+
+    # Development Seed backend uses OIDC authentication
+    connection.authenticate_oidc_authorization_code()
+
+    return connection

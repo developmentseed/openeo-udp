@@ -6,6 +6,7 @@ for the EOPF Explorer OpenEO backend.
 
 from typing import Any, Dict
 
+import openeo
 from openeo.api.process import Parameter
 
 # Endpoint configuration
@@ -73,3 +74,17 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
                 )
 
     return mapped_params
+
+
+def get_connection():
+    """Create connection to EOPF Explorer endpoint.
+
+    Returns:
+        Authenticated OpenEO connection
+    """
+    connection = openeo.connect(ENDPOINT_CONFIG["url"])
+
+    # EOPF Explorer uses OIDC authorization code authentication
+    connection.authenticate_oidc_authorization_code()
+
+    return connection

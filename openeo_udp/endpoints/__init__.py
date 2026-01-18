@@ -59,6 +59,31 @@ def get_endpoint_mapper(endpoint_name: str):
         return None
 
 
+def get_endpoint_connection(endpoint_name: str):
+    """Get connection function for specific endpoint.
+
+    Args:
+        endpoint_name: Name of the endpoint
+
+    Returns:
+        Connection object from endpoint-specific get_connection function
+
+    Raises:
+        ImportError: If endpoint module or get_connection function not found
+    """
+    try:
+        module = importlib.import_module(f"openeo_udp.endpoints.{endpoint_name}")
+        if not hasattr(module, "get_connection"):
+            raise ImportError(
+                f"Endpoint '{endpoint_name}' does not have a get_connection function"
+            )
+        return module.get_connection()
+    except ImportError as e:
+        raise ImportError(
+            f"Failed to get connection for endpoint '{endpoint_name}': {e}"
+        ) from e
+
+
 def get_all_endpoints() -> Dict[str, Dict[str, Any]]:
     """Get all endpoint configurations.
 
