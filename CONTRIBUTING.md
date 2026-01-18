@@ -21,7 +21,7 @@ Before you begin converting evalscripts, set up your development environment pro
    ```bash
    # On macOS and Linux
    curl -LsSf https://astral.sh/uv/install.sh | sh
-   
+
    # On Windows
    powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
    ```
@@ -36,10 +36,14 @@ Before you begin converting evalscripts, set up your development environment pro
    ```bash
    # Create virtual environment and install all dependencies
    uv sync
-   
+
    # Install development dependencies (for linting, testing)
    uv sync --group dev
-   
+
+   # Install pre-commit hooks for code quality
+   pip install -r requirements-dev.txt
+   pre-commit install
+
    # Install as Jupyter kernel for notebook development
    uv run python -m ipykernel install --user --name openeo-udp-dev --display-name "openEO UDP (Dev)"
    ```
@@ -55,8 +59,8 @@ After installation, you should have the "openEO UDP (Dev)" kernel available in J
 ### Working with the Development Environment
 
 - **Starting Jupyter**: Use `uv run jupyter lab` or `uv run jupyter notebook`
-- **Running tests**: Use `uv run pytest` 
-- **Code formatting**: Use `uv run black .` 
+- **Running tests**: Use `uv run pytest`
+- **Code formatting**: Use `uv run black .`
 - **Linting**: Use `uv run ruff check .`
 - **Installing new packages**: Use `uv add package-name`
 - **Running any Python script**: Use `uv run python script.py`
@@ -90,6 +94,36 @@ print('OpenEO connection successful!')
    - Create a new notebook
    - Ensure "openEO UDP (Dev)" kernel is available and selected
    - Run the import test from step 1
+
+### Code Quality and Pre-commit Hooks
+
+This project uses pre-commit hooks to maintain consistent code quality:
+
+#### What's Included
+- **Black**: Python code formatting
+- **isort**: Import sorting and organization
+- **flake8**: Python linting and style checks
+- **mypy**: Static type checking
+- **bandit**: Security vulnerability scanning
+- **nbstripout**: Notebook output cleaning
+- **General checks**: trailing whitespace, end-of-file fixers, etc.
+
+#### Running Quality Checks
+
+```bash
+# Run all pre-commit hooks on all files
+pre-commit run --all-files
+
+# Run specific hooks
+pre-commit run black
+pre-commit run flake8
+
+# Auto-format Python files
+black .
+isort .
+```
+
+The hooks will automatically run when you commit changes. If any hook fails, the commit is blocked until you fix the issues.
 
 ## Understanding the Conversion Process
 
