@@ -5,8 +5,8 @@ and other common parameter types used in OpenEO processing workflows.
 """
 
 import re
-from datetime import datetime, date
-from typing import Dict, List, Any, Union, Optional
+from datetime import date, datetime
+from typing import Any, Dict, List, Optional
 
 
 class ValidationError(Exception):
@@ -139,7 +139,7 @@ class TemporalValidator:
             datetime.fromisoformat(date_str)
             return True
         except ValueError as e:
-            raise ValidationError(f"Invalid date value: {date_str} - {e}")
+            raise ValidationError(f"Invalid date value: {date_str} - {e}") from e
 
     @staticmethod
     def validate_temporal_range(
@@ -368,6 +368,6 @@ def validate_parameter_value(
     else:
         # Generic validation - just check the value is not None
         if value is None:
-            raise ValidationError(f"Parameter value cannot be None")
+            raise ValidationError("Parameter value cannot be None")
 
     return True

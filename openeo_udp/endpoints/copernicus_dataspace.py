@@ -4,8 +4,9 @@ This module contains both connection configuration and parameter mapping logic
 for the Copernicus Data Space OpenEO backend.
 """
 
-from openeo.api.process import Parameter
 from typing import Any, Dict
+
+from openeo.api.process import Parameter
 
 # Endpoint configuration
 ENDPOINT_CONFIG = {
@@ -48,9 +49,11 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
             if param_name == "collection":
                 mapped_params[param_name] = Parameter(
                     param_value.name,
-                    description=param_value.description
-                    if hasattr(param_value, "description")
-                    else param_value.name,
+                    description=(
+                        param_value.description
+                        if hasattr(param_value, "description")
+                        else param_value.name
+                    ),
                     default=ENDPOINT_CONFIG["collection_id"],
                 )
 
@@ -58,9 +61,11 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
             elif param_name == "bands" and isinstance(param_value.default, list):
                 mapped_params[param_name] = Parameter(
                     param_value.name,
-                    description=param_value.description
-                    if hasattr(param_value, "description")
-                    else param_value.name,
+                    description=(
+                        param_value.description
+                        if hasattr(param_value, "description")
+                        else param_value.name
+                    ),
                     default=param_value.default,  # No transformation needed
                 )
 

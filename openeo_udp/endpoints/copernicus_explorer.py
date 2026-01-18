@@ -4,8 +4,9 @@ This module contains both connection configuration and parameter mapping logic
 for the EOPF Explorer OpenEO backend.
 """
 
-from openeo.api.process import Parameter
 from typing import Any, Dict
+
+from openeo.api.process import Parameter
 
 # Endpoint configuration
 ENDPOINT_CONFIG = {
@@ -48,20 +49,26 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
             if param_name == "collection":
                 mapped_params[param_name] = Parameter(
                     param_value.name,
-                    description=param_value.description
-                    if hasattr(param_value, "description")
-                    else param_value.name,
+                    description=(
+                        param_value.description
+                        if hasattr(param_value, "description")
+                        else param_value.name
+                    ),
                     default=ENDPOINT_CONFIG["collection_id"],
                 )
 
             # Map bands parameter with reflectance prefix
             elif param_name == "bands" and isinstance(param_value.default, list):
-                mapped_bands = [f"reflectance|{band.lower()}" for band in param_value.default]
+                mapped_bands = [
+                    f"reflectance|{band.lower()}" for band in param_value.default
+                ]
                 mapped_params[param_name] = Parameter(
                     param_value.name,
-                    description=param_value.description
-                    if hasattr(param_value, "description")
-                    else param_value.name,
+                    description=(
+                        param_value.description
+                        if hasattr(param_value, "description")
+                        else param_value.name
+                    ),
                     default=mapped_bands,
                 )
 

@@ -5,19 +5,20 @@ This module provides reusable UI components for parameter selection and backend 
 """
 
 import ipywidgets as widgets
-from IPython.display import display, clear_output
 import openeo
+from IPython.display import clear_output, display
+
 from .endpoints import get_all_endpoints
 
 
 def get_connection(endpoint_url, auth_method="oidc"):
     """Get an OpenEO connection to the specified backend."""
     connection = openeo.connect(endpoint_url)
-    
+
     if auth_method in ["oidc", "oidc_authorization_code"]:
         connection.authenticate_oidc_authorization_code()
     # For other auth methods, connection is returned without authentication
-    
+
     return connection
 
 
@@ -149,19 +150,19 @@ def interactive_parameter_selection(
 
                 # Connect to endpoint
                 print(f"🔗 Connecting to {selected_endpoint}...")
-                
+
                 # Get endpoint configuration
                 endpoint_cfg = endpoint_config.get(selected_endpoint, {})
-                endpoint_url = endpoint_cfg.get("url", selected_endpoint) 
+                endpoint_url = endpoint_cfg.get("url", selected_endpoint)
                 auth_method = endpoint_cfg.get("auth_method", "oidc")
-                
+
                 # Connect using the actual URL
                 state["connection"] = get_connection(endpoint_url, auth_method)
                 state["selected_endpoint"] = selected_endpoint
-                print(f"✅ Connected successfully!")
+                print("✅ Connected successfully!")
 
                 # Display parameter details
-                print(f"\n📊 Parameter Details:")
+                print("\n📊 Parameter Details:")
                 for key, value in state["current_params"].items():
                     if key != "location_name":
                         if hasattr(value, "default"):
@@ -169,7 +170,7 @@ def interactive_parameter_selection(
                         else:
                             print(f"  {key}: {value}")
 
-                print(f"\n✨ Ready to proceed!")
+                print("\n✨ Ready to proceed!")
 
             except Exception as e:
                 print(f"❌ Error: {str(e)}")
@@ -261,7 +262,7 @@ def quick_connect(param_manager, param_set=None, endpoint=None, silent=False):
         endpoint_cfg = endpoint_config.get(selected_endpoint, {})
         endpoint_url = endpoint_cfg.get("url", selected_endpoint)
         auth_method = endpoint_cfg.get("auth_method", "oidc")
-        
+
         # Connect to endpoint using the actual URL
         connection = get_connection(endpoint_url, auth_method)
 

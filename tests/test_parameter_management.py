@@ -8,16 +8,16 @@ This test suite covers:
 - Parameter validation
 """
 
-import pytest
-import tempfile
 import os
-from unittest.mock import Mock, patch, MagicMock
-from pathlib import Path
+import tempfile
+from unittest.mock import Mock, patch
+
+import pytest
+from openeo.api.process import Parameter
 
 # Import the modules to test
 from openeo_udp import ParameterManager
 from openeo_udp.endpoints import get_all_endpoints
-from openeo.api.process import Parameter
 
 
 @pytest.fixture
@@ -146,35 +146,37 @@ class TestEndpointConfiguration:
     def test_get_all_endpoints(self):
         """Test loading endpoint configuration from Python modules."""
         all_endpoints = get_all_endpoints()
-        
+
         # Should have at least our three configured endpoints
-        assert 'copernicus_explorer' in all_endpoints
-        assert 'copernicus_dataspace' in all_endpoints
-        assert 'ds_development' in all_endpoints
-        
+        assert "copernicus_explorer" in all_endpoints
+        assert "copernicus_dataspace" in all_endpoints
+        assert "ds_development" in all_endpoints
+
         # Check structure of endpoint config
-        for endpoint_name, config in all_endpoints.items():
-            assert 'url' in config
-            assert 'collection_id' in config
-            assert 'band_format' in config
-    
+        for config in all_endpoints.values():
+            assert "url" in config
+            assert "collection_id" in config
+            assert "band_format" in config
+
     def test_endpoint_config_structure(self):
         """Test that endpoint configurations have the expected structure."""
         all_endpoints = get_all_endpoints()
-        
+
         # Test EOPF Explorer endpoint specifically
-        explorer_config = all_endpoints.get('copernicus_explorer')
+        explorer_config = all_endpoints.get("copernicus_explorer")
         assert explorer_config is not None
-        assert explorer_config['url'] == 'https://api.explorer.eopf.copernicus.eu/openeo'
-        assert explorer_config['collection_id'] == 'sentinel-2-l2a'
-        assert explorer_config['band_format'] == 'reflectance|{band}'
-        
+        assert (
+            explorer_config["url"] == "https://api.explorer.eopf.copernicus.eu/openeo"
+        )
+        assert explorer_config["collection_id"] == "sentinel-2-l2a"
+        assert explorer_config["band_format"] == "reflectance|{band}"
+
         # Test Copernicus Data Space endpoint
-        cdse_config = all_endpoints.get('copernicus_dataspace')
+        cdse_config = all_endpoints.get("copernicus_dataspace")
         assert cdse_config is not None
-        assert 'dataspace.copernicus.eu' in cdse_config['url']
-        assert cdse_config['collection_id'] == 'SENTINEL2_L2A'
-        assert cdse_config['band_format'] == '{band}'
+        assert "dataspace.copernicus.eu" in cdse_config["url"]
+        assert cdse_config["collection_id"] == "SENTINEL2_L2A"
+        assert cdse_config["band_format"] == "{band}"
 
 
 class TestParameterManagerMethods:
@@ -188,11 +190,11 @@ class TestParameterManagerMethods:
     def test_print_options(self, mock_param_manager, capsys):
         """Test print_options helper method."""
         mock_param_manager.print_options("Test Algorithm")
-        
+
         # Capture printed output
         captured = capsys.readouterr()
         output = captured.out
-        
+
         # Should contain algorithm name and parameter sets
         assert "Test Algorithm" in output
         assert "venice_lagoon" in output
@@ -207,9 +209,7 @@ class TestParameterManagerMethods:
         assert callable(result)
 
     @patch("openeo_udp.widgets.get_connection")
-    def test_quick_connect_success(
-        self, mock_get_connection, mock_param_manager
-    ):
+    def test_quick_connect_success(self, mock_get_connection, mock_param_manager):
         """Test successful quick connection."""
         # Mock successful connection
         mock_connection = Mock()
@@ -225,9 +225,7 @@ class TestParameterManagerMethods:
         assert params["location_name"] == "Venice Lagoon"
 
     @patch("openeo_udp.widgets.get_connection")
-    def test_quick_connect_with_defaults(
-        self, mock_get_connection, mock_param_manager
-    ):
+    def test_quick_connect_with_defaults(self, mock_get_connection, mock_param_manager):
         """Test quick connection with default parameters."""
         mock_connection = Mock()
         mock_get_connection.return_value = mock_connection
@@ -239,9 +237,7 @@ class TestParameterManagerMethods:
         assert params["location_name"] in ["Venice Lagoon", "Lake Victoria"]
 
     @patch("openeo_udp.widgets.get_connection")
-    def test_quick_connect_failure(
-        self, mock_get_connection, mock_param_manager
-    ):
+    def test_quick_connect_failure(self, mock_get_connection, mock_param_manager):
         """Test quick connection failure handling."""
         # Mock connection failure
         mock_get_connection.side_effect = Exception("Connection failed")
@@ -292,61 +288,76 @@ class TestParameterValidation:
 
 class TestParameterMapping:
     """Test cases for endpoint parameter mapping."""
-    
+
     def test_copernicus_explorer_mapping(self, temp_params_file):
         """Test parameter mapping for EOPF Explorer endpoint."""
         param_manager = ParameterManager(temp_params_file)
-        param_manager.use_parameter_set('venice_lagoon')
+        param_manager.use_parameter_set("venice_lagoon")
         raw_params = param_manager.get_parameter_set()
-        
+
         # Apply EOPF Explorer mapping
-        mapped_params = param_manager.apply_endpoint_mapping(raw_params, 'copernicus_explorer')
-        
+        mapped_params = param_manager.apply_endpoint_mapping(
+            raw_params, "copernicus_explorer"
+        )
+
         # Check collection mapping
-        assert mapped_params['collection'].default == 'sentinel-2-l2a'
-        
+        assert mapped_params["collection"].default == "sentinel-2-l2a"
+
         # Check band mapping (should have reflectance prefix and lowercase)
-        expected_bands = ['reflectance|b02', 'reflectance|b03', 'reflectance|b04', 
-                         'reflectance|b05', 'reflectance|b08', 'reflectance|b8a', 'reflectance|b11']
-        assert mapped_params['bands'].default == expected_bands
-    
+        expected_bands = [
+            "reflectance|b02",
+            "reflectance|b03",
+            "reflectance|b04",
+            "reflectance|b05",
+            "reflectance|b08",
+            "reflectance|b8a",
+            "reflectance|b11",
+        ]
+        assert mapped_params["bands"].default == expected_bands
+
     def test_copernicus_dataspace_mapping(self, temp_params_file):
         """Test parameter mapping for Copernicus Data Space endpoint."""
         param_manager = ParameterManager(temp_params_file)
-        param_manager.use_parameter_set('venice_lagoon')
+        param_manager.use_parameter_set("venice_lagoon")
         raw_params = param_manager.get_parameter_set()
-        
+
         # Apply CDSE mapping
-        mapped_params = param_manager.apply_endpoint_mapping(raw_params, 'copernicus_dataspace')
-        
+        mapped_params = param_manager.apply_endpoint_mapping(
+            raw_params, "copernicus_dataspace"
+        )
+
         # Check collection mapping (should keep SENTINEL2_L2A)
-        assert mapped_params['collection'].default == 'SENTINEL2_L2A'
-        
+        assert mapped_params["collection"].default == "SENTINEL2_L2A"
+
     def test_ds_development_mapping(self, temp_params_file):
         """Test parameter mapping for Development Seed endpoint."""
         param_manager = ParameterManager(temp_params_file)
-        param_manager.use_parameter_set('venice_lagoon')
+        param_manager.use_parameter_set("venice_lagoon")
         raw_params = param_manager.get_parameter_set()
-        
+
         # Apply DS development mapping
-        mapped_params = param_manager.apply_endpoint_mapping(raw_params, 'ds_development')
-        
+        mapped_params = param_manager.apply_endpoint_mapping(
+            raw_params, "ds_development"
+        )
+
         # Check collection mapping
-        assert mapped_params['collection'].default == 'sentinel-2-l2a'
-        
+        assert mapped_params["collection"].default == "sentinel-2-l2a"
+
         # Check band mapping (should keep original bands)
-        expected_bands = ['B02', 'B03', 'B04', 'B05', 'B08', 'B8A', 'B11']
-        assert mapped_params['bands'].default == expected_bands
-    
+        expected_bands = ["B02", "B03", "B04", "B05", "B08", "B8A", "B11"]
+        assert mapped_params["bands"].default == expected_bands
+
     def test_unknown_endpoint_mapping(self, temp_params_file):
         """Test parameter mapping for unknown endpoint uses default mapper."""
         param_manager = ParameterManager(temp_params_file)
-        param_manager.use_parameter_set('venice_lagoon')
+        param_manager.use_parameter_set("venice_lagoon")
         raw_params = param_manager.get_parameter_set()
-        
+
         # Apply mapping for unknown endpoint
-        mapped_params = param_manager.apply_endpoint_mapping(raw_params, 'unknown_endpoint')
-        
+        mapped_params = param_manager.apply_endpoint_mapping(
+            raw_params, "unknown_endpoint"
+        )
+
         # Should return original parameters unchanged
         assert mapped_params == raw_params
 
@@ -355,9 +366,7 @@ class TestIntegration:
     """Integration tests for the complete workflow."""
 
     @patch("openeo_udp.widgets.get_connection")
-    def test_complete_workflow_simulation(
-        self, mock_get_connection, temp_params_file
-    ):
+    def test_complete_workflow_simulation(self, mock_get_connection, temp_params_file):
         """Test a complete workflow from parameter loading to connection."""
         # Mock external dependencies
         mock_connection = Mock()

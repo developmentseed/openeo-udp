@@ -7,7 +7,7 @@ The OpenEO UDP Parameter Management System provides a unified interface for mana
 The parameter management system consists of three main components:
 
 1. **Parameter Manager**: Core functionality for loading and managing parameter sets
-2. **Endpoint Configuration**: Python-based configurations for different OpenEO backends  
+2. **Endpoint Configuration**: Python-based configurations for different OpenEO backends
 3. **Interactive Widgets**: User-friendly interface for parameter selection and connection
 
 ## Quick Start
@@ -213,7 +213,7 @@ ENDPOINT_CONFIG = {
 def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
     """Map parameters for this endpoint."""
     mapped_params = params.copy()
-    
+
     for param_name, param_value in params.items():
         if isinstance(param_value, Parameter):
             if param_name == "collection":
@@ -225,7 +225,7 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
             elif param_name == "bands" and isinstance(param_value.default, list):
                 # Apply custom band mapping logic here
                 pass
-    
+
     return mapped_params
 ```
 
@@ -342,7 +342,7 @@ See the following notebooks for complete examples:
 When adding new algorithms or improving existing ones:
 
 1. **Follow parameter file conventions**
-2. **Test with multiple endpoints** 
+2. **Test with multiple endpoints**
 3. **Include diverse parameter sets** (different locations, time periods)
 4. **Document any special requirements**
 

@@ -6,7 +6,8 @@ from co-located .py files containing a get_parameters() function.
 
 import importlib.util
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
 from openeo.api.process import Parameter
 
 
@@ -54,7 +55,9 @@ class ParameterManager:
                 )
 
         except Exception as e:
-            raise RuntimeError(f"Error loading parameter file {self.param_file}: {e}")
+            raise RuntimeError(
+                f"Error loading parameter file {self.param_file}: {e}"
+            ) from e
 
     def _ensure_parameter_descriptions(
         self, parameter_sets: Dict[str, Dict[str, Any]]
@@ -80,9 +83,9 @@ class ParameterManager:
                         processed_set[key] = Parameter(
                             value.name,
                             description=f"{value.name.replace('_', ' ').title()}",
-                            default=value.default
-                            if hasattr(value, "default")
-                            else None,
+                            default=(
+                                value.default if hasattr(value, "default") else None
+                            ),
                             schema=value.schema if hasattr(value, "schema") else None,
                         )
                     else:
@@ -187,7 +190,7 @@ class ParameterManager:
             for name, config in all_endpoints.items()
             if config.get("enabled", True)
         ]
-        print(f"\nAvailable OpenEO endpoints:")
+        print("\nAvailable OpenEO endpoints:")
         for i, endpoint in enumerate(available_endpoints, 1):
             endpoint_info = all_endpoints[endpoint]
             print(f"  {i}. {endpoint}: {endpoint_info.get('url', 'URL not specified')}")
