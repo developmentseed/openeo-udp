@@ -394,6 +394,16 @@ Evalscripts that work with time series or temporal composites require different 
 
 Converting evalscripts to openEO UDPs makes valuable algorithms accessible across the entire openEO ecosystem while maintaining their utility for real-time exploration and analysis. Your contributions help build a library of interoperable Earth observation processes that benefit researchers, operational users, and educators worldwide.
 
+## Licensing
+
+This repository uses a mixed-licensing approach:
+
+- **Default license**: MIT (see `LICENSE`).
+- **Converted Sentinel Hub evalscripts**: must remain **CC-BY-SA-4.0**.
+
+If you convert a Sentinel Hub evalscript, add a clear file header that states the
+origin and license. See `LICENSING.md` for the required template and examples.
+
 Thank you for contributing to this important work. Your efforts make Earth observation more open, accessible, and interoperable for everyone.
 
 ---
