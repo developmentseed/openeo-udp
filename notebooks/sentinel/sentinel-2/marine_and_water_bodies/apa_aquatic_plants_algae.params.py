@@ -22,7 +22,7 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Venice Lagoon area",
-                default={"west": 12.0, "south": 45.25, "east": 12.6, "north": 45.6},
+                default={"west": 12.15, "south": 45.3, "east": 12.5, "north": 45.55},
             ),
             "time": Parameter(
                 "time",
@@ -50,12 +50,12 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Lake Victoria area",
-                default={"west": 31.5, "south": -3.0, "east": 35.0, "north": 0.5},
+                default={"west": 33.52, "south": -0.64, "east": 34.9, "north": 0.15},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
-                default=["2023-06-01", "2023-08-31"],
+                default=["2019-10-03", "2019-10-06"],
             ),
             "bands": Parameter(
                 "bands",

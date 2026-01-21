@@ -148,7 +148,7 @@ class TestEndpointConfiguration:
         all_endpoints = get_all_endpoints()
 
         # Should have at least our three configured endpoints
-        assert "copernicus_explorer" in all_endpoints
+        assert "eopf_explorer" in all_endpoints
         assert "copernicus_dataspace" in all_endpoints
         assert "ds_development" in all_endpoints
 
@@ -163,7 +163,7 @@ class TestEndpointConfiguration:
         all_endpoints = get_all_endpoints()
 
         # Test EOPF Explorer endpoint specifically
-        explorer_config = all_endpoints.get("copernicus_explorer")
+        explorer_config = all_endpoints.get("eopf_explorer")
         assert explorer_config is not None
         assert (
             explorer_config["url"] == "https://api.explorer.eopf.copernicus.eu/openeo"
@@ -217,7 +217,7 @@ class TestParameterManagerMethods:
         mock_connection.authenticate_oidc_authorization_code = Mock()
 
         connection, params = mock_param_manager.quick_connect(
-            param_set="venice_lagoon", endpoint="copernicus_explorer", silent=True
+            param_set="venice_lagoon", endpoint="eopf_explorer", silent=True
         )
 
         assert connection == mock_connection
@@ -290,7 +290,7 @@ class TestParameterValidation:
 class TestParameterMapping:
     """Test cases for endpoint parameter mapping."""
 
-    def test_copernicus_explorer_mapping(self, temp_params_file):
+    def test_eopf_explorer_mapping(self, temp_params_file):
         """Test parameter mapping for EOPF Explorer endpoint."""
         param_manager = ParameterManager(temp_params_file)
         param_manager.use_parameter_set("venice_lagoon")
@@ -298,7 +298,7 @@ class TestParameterMapping:
 
         # Apply EOPF Explorer mapping
         mapped_params = param_manager.apply_endpoint_mapping(
-            raw_params, "copernicus_explorer"
+            raw_params, "eopf_explorer"
         )
 
         # Check collection mapping
@@ -392,7 +392,7 @@ class TestIntegration:
         # Test quick connect
         connection, current_params = param_manager.quick_connect(
             param_set="venice_lagoon",
-            endpoint="copernicus_explorer",
+            endpoint="eopf_explorer",
             silent=True
         )
 

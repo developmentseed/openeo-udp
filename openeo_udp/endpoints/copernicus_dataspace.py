@@ -82,6 +82,6 @@ def get_connection():
     connection = openeo.connect(ENDPOINT_CONFIG["url"])
 
     # Copernicus Data Space uses OIDC authentication
-    connection.authenticate_oidc_authorization_code()
+    connection.authenticate_oidc()
 
     return connection

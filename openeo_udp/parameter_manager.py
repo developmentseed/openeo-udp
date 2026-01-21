@@ -276,7 +276,7 @@ class ParameterManager:
         Examples
         --------
         >>> param_manager = ParameterManager('algorithm.params.py')
-        >>> connection, params = param_manager.quick_connect('venice_lagoon', 'copernicus_explorer')
+        >>> connection, params = param_manager.quick_connect('venice_lagoon', 'eopf_explorer')
         """
 
         from .endpoints import get_all_endpoints
@@ -292,7 +292,7 @@ class ParameterManager:
         # Set defaults
         selected_param_set = param_set or available_sets[0] if available_sets else None
         selected_endpoint = endpoint or (
-            available_endpoints[0] if available_endpoints else "copernicus_explorer"
+            available_endpoints[0] if available_endpoints else "eopf_explorer"
         )
 
         if not silent:

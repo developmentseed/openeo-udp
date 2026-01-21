@@ -66,7 +66,7 @@ connection, current_params = selection_widget()
 # Programmatic approach - direct connection
 connection, current_params = param_manager.quick_connect(
     parameter_set='venice_lagoon',
-    endpoint='copernicus_explorer'
+    endpoint='eopf_explorer'
 )
 ```
 
@@ -133,7 +133,7 @@ param_manager = ParameterManager('algorithm.params.py')
 # Quick connection to any endpoint with any parameter set
 connection, params = param_manager.quick_connect(
     parameter_set='venice_lagoon',
-    endpoint='copernicus_explorer'
+    endpoint='eopf_explorer'
 )
 
 # Or use interactive widgets in Jupyter notebooks

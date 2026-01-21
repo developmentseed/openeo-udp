@@ -5,7 +5,7 @@ This directory contains endpoint configurations using pure Python modules for ma
 ## Structure
 
 Each endpoint is configured in a separate Python file:
-- `copernicus_explorer.py` - EOPF Explorer API configuration
+- `eopf_explorer.py` - EOPF Explorer API configuration
 - `copernicus_dataspace.py` - Copernicus Data Space configuration
 - `ds_development.py` - Development Seed OpenEO Backend configuration
 

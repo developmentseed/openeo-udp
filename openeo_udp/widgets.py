@@ -5,6 +5,7 @@ This module provides reusable UI components for parameter selection and backend 
 """
 
 import ipywidgets as widgets
+import openeo
 from IPython.display import clear_output, display
 
 from .endpoints import get_all_endpoints
@@ -56,7 +57,7 @@ def interactive_parameter_selection(
     # Set defaults
     default_param = default_param_set or available_sets[0] if available_sets else None
     default_ep = default_endpoint or (
-        available_endpoints[0] if available_endpoints else "copernicus_explorer"
+        available_endpoints[0] if available_endpoints else "eopf_explorer"
     )
 
     # Create dropdown options
@@ -178,7 +179,7 @@ def interactive_parameter_selection(
     display(output)
 
     # Return a simple function that gets the connection and parameters as a tuple
-    def get_results():
+    def get_results() -> tuple[openeo.Connection, dict]:
         """Get the connection and parameters as a tuple."""
         if state["connection"] is None:
             print(

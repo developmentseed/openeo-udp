@@ -21,7 +21,7 @@ param_manager = ParameterManager('algorithm_name.params.py')
 # Quick programmatic connection
 connection, params = param_manager.quick_connect(
     parameter_set='venice_lagoon',
-    endpoint='copernicus_explorer'
+    endpoint='eopf_explorer'
 )
 
 # Or use interactive widgets in Jupyter
@@ -90,7 +90,7 @@ The system supports multiple OpenEO backends with automatic parameter mapping to
 
 | Endpoint | Description | Collection ID | Band Format |
 |----------|-------------|---------------|-------------|
-| **copernicus_explorer** | EOPF Explorer API | `sentinel-2-l2a` | `reflectance\|{band}` |
+| **eopf_explorer** | EOPF Explorer API | `sentinel-2-l2a` | `reflectance\|{band}` |
 | **copernicus_dataspace** | Copernicus Data Space | `SENTINEL2_L2A` | `{band}` |
 | **ds_development** | Development Seed | `sentinel-2-l2a` | `{band}` |
 
@@ -143,7 +143,7 @@ bbox = param_manager.get_parameter('bounding_box')
 # Quick programmatic connection
 connection, params = param_manager.quick_connect(
     parameter_set='venice_lagoon',  # Optional, uses first if None
-    endpoint='copernicus_explorer'  # Optional, uses first if None
+    endpoint='eopf_explorer'  # Optional, uses first if None
 )
 
 # Interactive widget creation
@@ -158,7 +158,7 @@ widget = param_manager.interactive_parameter_selection()
 param_manager.print_options("My Algorithm")
 
 # Apply endpoint mapping manually
-mapped_params = param_manager.apply_endpoint_mapping(params, 'copernicus_explorer')
+mapped_params = param_manager.apply_endpoint_mapping(params, 'eopf_explorer')
 ```
 
 ## Interactive Widgets
@@ -325,7 +325,7 @@ connection = openeo.connect('https://openeo.example.com')
 ```python
 # Using parameter manager
 param_manager = ParameterManager('algorithm.params.py')
-connection, params = param_manager.quick_connect('venice_lagoon', 'copernicus_explorer')
+connection, params = param_manager.quick_connect('venice_lagoon', 'eopf_explorer')
 bbox = params['bounding_box'].default
 time_range = params['time'].default
 ```
