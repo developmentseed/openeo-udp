@@ -169,6 +169,10 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to 
 
 The [NDCI cyanobacteria notebook](notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb) serves as a comprehensive reference implementation demonstrating best practices for conversion, documentation, and validation.
 
+## Publication Documentation
+
+Guidance for preparing and publishing UDP documentation is available in [docs/publication.md](docs/publication.md).
+
 ## Original Evalscripts
 
 All algorithms in this repository are converted from Sentinel Hub's community-contributed evalscripts. The original scripts can be found at:
