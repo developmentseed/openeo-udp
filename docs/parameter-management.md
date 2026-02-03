@@ -2,6 +2,8 @@
 
 The OpenEO UDP Parameter Management System provides a unified interface for managing algorithm parameters and backend connections across different OpenEO endpoints. This system eliminates the need for manual parameter editing when switching between locations, time periods, or OpenEO backends.
 
+> 💡 **Reference Implementation**: The [APA (Aquatic Plants and Algae) notebook](../notebooks/sentinel/sentinel-2/marine_and_water_bodies/apa_aquatic_plants_algae.ipynb) provides a complete working example of this parameter management system.
+
 ## Overview
 
 The parameter management system consists of three main components:
@@ -9,6 +11,88 @@ The parameter management system consists of three main components:
 1. **Parameter Manager**: Core functionality for loading and managing parameter sets
 2. **Endpoint Configuration**: Python-based configurations for different OpenEO backends
 3. **Interactive Widgets**: User-friendly interface for parameter selection and connection
+
+## Usage Patterns
+
+The parameter management system supports two main usage patterns:
+
+### 1. Interactive Widgets (Recommended for Notebooks)
+
+Best for Jupyter notebooks where users want to select parameters interactively:
+
+```python
+# Create interactive widgets
+selection_widget = param_manager.interactive_parameter_selection()
+# User selects options via dropdown menus
+connection, current_params = selection_widget()
+```
+
+**Benefits:**
+- User-friendly interface with dropdown menus
+- No need to remember parameter set names or endpoint IDs
+- Handles authentication flows properly within widgets
+- Perfect for exploratory analysis
+
+### 2. Programmatic Approach (Ideal for Scripts)
+
+Best for automation, scripts, or when you know exactly which parameters to use:
+
+```python
+# Direct connection with known parameters
+connection, current_params = param_manager.quick_connect(
+    parameter_set='venice_lagoon',
+    endpoint='eopf_explorer'
+)
+```
+
+**Benefits:**
+- No user interaction required
+- Perfect for automated workflows
+- Reproducible parameter selection
+- Ideal for batch processing
+
+### When to Use Each Approach
+
+**Use Interactive Widgets when:**
+- Working in Jupyter notebooks
+- Exploring different parameter combinations
+- Creating tutorials or demos
+- Users are not familiar with available parameter sets
+- You want a user-friendly interface
+
+**Use Programmatic Approach when:**
+- Running automated scripts
+- Processing multiple locations in batch
+- Working in production environments
+- You know the exact parameters needed
+- Building APIs or services
+
+## Interactive Workflow Example
+
+```python
+# Step 1: Initialize parameter manager with algorithm-specific parameter file
+param_manager = ParameterManager('apa_aquatic_plants_algae.params.py')
+
+# Step 2: Display available options to user
+param_manager.print_options("APA algorithm")
+# This shows all parameter sets and available endpoints without triggering authentication
+
+# Step 3: Create interactive widgets for user selection
+selection_widget = param_manager.interactive_parameter_selection()
+# This creates dropdown menus for endpoint and parameter set selection
+
+# Step 4: Get connection and parameters after user interaction
+connection, current_params = selection_widget()
+# After user clicks "Connect & Load Parameters", this returns the connection and parameters
+
+# Step 5: Use parameters in your OpenEO workflow
+s2cube = connection.load_collection(
+    current_params["collection"].default,
+    temporal_extent=current_params["time"].default,
+    spatial_extent=current_params["bounding_box"].default,
+    bands=current_params["bands"].default
+)
+```
 
 ## Quick Start
 
@@ -18,15 +102,26 @@ from openeo_udp import ParameterManager
 # Initialize with your parameter file
 param_manager = ParameterManager('algorithm_name.params.py')
 
-# Quick programmatic connection
-connection, params = param_manager.quick_connect(
+# Display available options
+param_manager.print_options("Algorithm name")
+
+# Option 1: Interactive approach (recommended for Jupyter notebooks)
+selection_widget = param_manager.interactive_parameter_selection()
+connection, current_params = selection_widget()  # After UI interaction
+
+# Option 2: Programmatic approach (useful for scripts and automation)
+connection, current_params = param_manager.quick_connect(
     parameter_set='venice_lagoon',
     endpoint='eopf_explorer'
 )
 
-# Or use interactive widgets in Jupyter
-selection_widget = param_manager.interactive_parameter_selection()
-connection, params = selection_widget()  # After UI interaction
+# Use parameters in your OpenEO workflow
+s2cube = connection.load_collection(
+    current_params["collection"].default,
+    temporal_extent=current_params["time"].default,
+    spatial_extent=current_params["bounding_box"].default,
+    bands=current_params["bands"].default
+)
 ```
 
 ## Parameter Files

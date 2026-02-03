@@ -59,14 +59,25 @@ The notebook then establishes the technical environment by importing necessary l
 # Initialize parameter manager with algorithm-specific parameters
 param_manager = ParameterManager('algorithm_name.params.py')
 
+# Display available options
+param_manager.print_options("Algorithm name")
+
 # Interactive approach - user selects via dropdowns
 selection_widget = param_manager.interactive_parameter_selection()
 connection, current_params = selection_widget()
 
-# Programmatic approach - direct connection
+# Alternative: Programmatic approach - direct connection
 connection, current_params = param_manager.quick_connect(
     parameter_set='venice_lagoon',
     endpoint='eopf_explorer'
+)
+
+# Use parameters in your analysis
+s2cube = connection.load_collection(
+    current_params["collection"].default,
+    temporal_extent=current_params["time"].default,
+    spatial_extent=current_params["bounding_box"].default,
+    bands=current_params["bands"].default
 )
 ```
 
@@ -127,17 +138,21 @@ This repository includes a comprehensive parameter management system that simpli
 ```python
 from openeo_udp import ParameterManager
 
-# Initialize parameter manager
+# Initialize parameter manager with algorithm parameters
 param_manager = ParameterManager('algorithm.params.py')
 
-# Quick connection to any endpoint with any parameter set
-connection, params = param_manager.quick_connect(
+# Show available parameter sets and endpoints
+param_manager.print_options("Algorithm name")
+
+# Option 1: Interactive widgets (recommended for notebooks)
+selection_widget = param_manager.interactive_parameter_selection()
+connection, current_params = selection_widget()
+
+# Option 2: Programmatic connection (useful for scripts)
+connection, current_params = param_manager.quick_connect(
     parameter_set='venice_lagoon',
     endpoint='eopf_explorer'
 )
-
-# Or use interactive widgets in Jupyter notebooks
-selection_widget = param_manager.interactive_parameter_selection()
 ```
 
 📚 **[Complete Parameter Management Documentation](docs/parameter-management.md)**

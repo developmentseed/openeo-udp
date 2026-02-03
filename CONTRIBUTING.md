@@ -174,7 +174,28 @@ Before writing any code, thoroughly analyze the original evalscript:
   - The openEO Python client
   - Visualization tools
   - Any specialized processing libraries
-  - Establish a connection to the openEO backend, handling authentication appropriately
+  - **The openEO UDP parameter management system** (`from openeo_udp import ParameterManager`)
+
+- **Set up parameter management** to support multiple locations and backends:
+  - Create a `.params.py` file alongside your notebook with parameter sets for different locations
+  - Use the parameter manager for flexible backend connections and parameter handling
+  - Choose the appropriate approach:
+    - **Interactive widgets** for user-friendly parameter selection in notebooks
+    - **Programmatic approach** for scripts and automated workflows
+
+  ```python
+  # Initialize parameter manager
+  param_manager = ParameterManager('your_algorithm.params.py')
+  
+  # Option 1: Interactive approach (recommended for notebooks)
+  selection_widget = param_manager.interactive_parameter_selection()
+  connection, current_params = selection_widget()
+  
+  # Option 2: Programmatic approach (for scripts)
+  connection, current_params = param_manager.quick_connect(
+      parameter_set='venice_lagoon', endpoint='eopf_explorer'
+  )
+  ```
 
 - **Define your test area** by selecting a spatial extent where the algorithm should produce meaningful results:
   - Water quality algorithms (like NDCI): choose areas with known water bodies
