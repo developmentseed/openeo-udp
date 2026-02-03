@@ -88,7 +88,7 @@ def get_parameters():
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
-                default=["2023-05-01", "2023-07-31"],
+                default=["2023-05-03", "2023-05-31"],
             ),
             "bands": Parameter(
                 "bands",
@@ -103,7 +103,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
-                default=20,
+                default=50,
             ),
         },
         "florida_everglades": {
@@ -116,7 +116,7 @@ def get_parameters():
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
-                default=["2023-06-01", "2023-08-31"],
+                default=["2023-07-04", "2023-08-31"],
             ),
             "bands": Parameter(
                 "bands",
@@ -144,7 +144,7 @@ def get_parameters():
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
-                default=["2023-08-01", "2023-10-31"],
+                default=["2023-08-10", "2023-10-31"],
             ),
             "bands": Parameter(
                 "bands",
