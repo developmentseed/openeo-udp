@@ -138,3 +138,4 @@ $RECYCLE.BIN/
 *.zarr
 
 .coverage
+notebooks/sentinel/sentinel-2/marine_and_water_bodies/apa_lake_victoria_east_africa.tiff.aux.xml
