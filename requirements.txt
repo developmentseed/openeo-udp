@@ -1,5 +1,0 @@
-openeo
-matplotlib
-pillow
-numpy
-

@@ -53,6 +53,36 @@ This section provides the mathematical foundation and methodology behind the alg
 
 The notebook then establishes the technical environment by importing necessary libraries, connecting to the openEO backend, and configuring any required parameters. This includes libraries for data processing (openEO), visualization (matplotlib), and any specialized processing functions.
 
+**Parameter Management System** for flexible backend connections and parameter handling:
+
+```python
+# Initialize parameter manager with algorithm-specific parameters
+param_manager = ParameterManager('algorithm_name.params.py')
+
+# Display available options
+param_manager.print_options("Algorithm name")
+
+# Interactive approach - user selects via dropdowns
+selection_widget = param_manager.interactive_parameter_selection()
+connection, current_params = selection_widget()
+
+# Alternative: Programmatic approach - direct connection
+connection, current_params = param_manager.quick_connect(
+    parameter_set='venice_lagoon',
+    endpoint='eopf_explorer'
+)
+
+# Use parameters in your analysis
+s2cube = connection.load_collection(
+    current_params["collection"].default,
+    temporal_extent=current_params["time"].default,
+    spatial_extent=current_params["bounding_box"].default,
+    bands=current_params["bands"].default
+)
+```
+
+This approach allows notebooks to work seamlessly with different OpenEO backends and parameter sets without code modifications.
+
 ### Data Loading and Exploration
 
 This section demonstrates how to load the initial dataset, define the spatial extent, select appropriate bands, and perform initial exploration of the data. The NDCI example shows how to extract multiple Sentinel-2 bands needed for both the main index and supporting calculations.
@@ -92,6 +122,41 @@ To run these notebooks, you need:
 - Access to an openEO backend (we recommend https://openeo.ds.io/ for testing)
 - Basic understanding of remote sensing concepts and Python programming
 
+### Parameter Management System
+
+This repository includes a comprehensive parameter management system that simplifies working with different locations, time periods, and OpenEO backends. The system eliminates the need for manual parameter editing when switching between scenarios.
+
+**Key Features:**
+
+- **Multiple Parameter Sets**: Predefined configurations for different locations (Venice Lagoon, Lake Victoria, etc.)
+- **Backend Flexibility**: Automatic parameter mapping for different OpenEO endpoints
+- **Interactive Widgets**: User-friendly dropdown menus for parameter selection
+- **Programmatic Access**: Quick connection methods for automated workflows
+
+**Quick Example:**
+
+```python
+from openeo_udp import ParameterManager
+
+# Initialize parameter manager with algorithm parameters
+param_manager = ParameterManager('algorithm.params.py')
+
+# Show available parameter sets and endpoints
+param_manager.print_options("Algorithm name")
+
+# Option 1: Interactive widgets (recommended for notebooks)
+selection_widget = param_manager.interactive_parameter_selection()
+connection, current_params = selection_widget()
+
+# Option 2: Programmatic connection (useful for scripts)
+connection, current_params = param_manager.quick_connect(
+    parameter_set='venice_lagoon',
+    endpoint='eopf_explorer'
+)
+```
+
+📚 **[Complete Parameter Management Documentation](docs/parameter-management.md)**
+
 ### Environment Setup
 
 This project uses [uv](https://docs.astral.sh/uv/) for fast and reliable dependency management.
@@ -127,7 +192,7 @@ The environment includes the openEO Python client library, visualization tools l
 
 ### Running a Notebook
 
-Start Jupyter and open any notebook. For example, the [NDCI cyanobacteria notebook](notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb):
+Start Jupyter and open any notebook. For example, the [APA Aquatic Plants and Algae notebook](notebooks/sentinel/sentinel-2/marine_and_water_bodies/apa_aquatic_plants_algae.ipynb):
 
 ```bash
 # Start Jupyter using uv
@@ -140,8 +205,16 @@ uv run jupyter notebook
 When creating or opening a notebook:
 
 1. Make sure the "openEO UDP" kernel is selected (if you installed it as a kernel)
-2. Open the [NDCI cyanobacteria notebook](notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb)
+2. Open a notebook like [APA Aquatic Plants and Algae](notebooks/sentinel/sentinel-2/marine_and_water_bodies/apa_aquatic_plants_algae.ipynb)
 3. Execute the cells sequentially to see the conversion process, validate results, and export the UDP definition
+
+**Parameter Management Integration:**
+Notebooks include parameter files (`.params.py`) that define multiple locations and configurations. You can:
+
+- Use interactive widgets to select parameters and endpoints via dropdowns
+- Switch between locations (Venice Lagoon, Lake Victoria, etc.) without editing code
+- Connect to different OpenEO backends with automatic parameter mapping
+- Run the same algorithm on different areas by simply changing parameter sets
 
 Most notebooks are designed to run completely from top to bottom without modification, though you may want to adjust spatial extents or temporal ranges to explore different areas.
 
