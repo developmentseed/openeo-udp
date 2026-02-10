@@ -21,7 +21,7 @@ Before you begin converting evalscripts, set up your development environment pro
    ```bash
    # On macOS and Linux
    curl -LsSf https://astral.sh/uv/install.sh | sh
-   
+
    # On Windows
    powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
    ```
@@ -36,10 +36,14 @@ Before you begin converting evalscripts, set up your development environment pro
    ```bash
    # Create virtual environment and install all dependencies
    uv sync
-   
+
    # Install development dependencies (for linting, testing)
    uv sync --group dev
-   
+
+   # Install pre-commit hooks for code quality
+   pip install -r requirements-dev.txt
+   pre-commit install
+
    # Install as Jupyter kernel for notebook development
    uv run python -m ipykernel install --user --name openeo-udp-dev --display-name "openEO UDP (Dev)"
    ```
@@ -55,8 +59,8 @@ After installation, you should have the "openEO UDP (Dev)" kernel available in J
 ### Working with the Development Environment
 
 - **Starting Jupyter**: Use `uv run jupyter lab` or `uv run jupyter notebook`
-- **Running tests**: Use `uv run pytest` 
-- **Code formatting**: Use `uv run black .` 
+- **Running tests**: Use `uv run pytest`
+- **Code formatting**: Use `uv run black .`
 - **Linting**: Use `uv run ruff check .`
 - **Installing new packages**: Use `uv add package-name`
 - **Running any Python script**: Use `uv run python script.py`
@@ -90,6 +94,36 @@ print('OpenEO connection successful!')
    - Create a new notebook
    - Ensure "openEO UDP (Dev)" kernel is available and selected
    - Run the import test from step 1
+
+### Code Quality and Pre-commit Hooks
+
+This project uses pre-commit hooks to maintain consistent code quality:
+
+#### What's Included
+- **Black**: Python code formatting
+- **isort**: Import sorting and organization
+- **flake8**: Python linting and style checks
+- **mypy**: Static type checking
+- **bandit**: Security vulnerability scanning
+- **nbstripout**: Notebook output cleaning
+- **General checks**: trailing whitespace, end-of-file fixers, etc.
+
+#### Running Quality Checks
+
+```bash
+# Run all pre-commit hooks on all files
+pre-commit run --all-files
+
+# Run specific hooks
+pre-commit run black
+pre-commit run flake8
+
+# Auto-format Python files
+black .
+isort .
+```
+
+The hooks will automatically run when you commit changes. If any hook fails, the commit is blocked until you fix the issues.
 
 ## Understanding the Conversion Process
 
@@ -140,7 +174,28 @@ Before writing any code, thoroughly analyze the original evalscript:
   - The openEO Python client
   - Visualization tools
   - Any specialized processing libraries
-  - Establish a connection to the openEO backend, handling authentication appropriately
+  - **The openEO UDP parameter management system** (`from openeo_udp import ParameterManager`)
+
+- **Set up parameter management** to support multiple locations and backends:
+  - Create a `.params.py` file alongside your notebook with parameter sets for different locations
+  - Use the parameter manager for flexible backend connections and parameter handling
+  - Choose the appropriate approach:
+    - **Interactive widgets** for user-friendly parameter selection in notebooks
+    - **Programmatic approach** for scripts and automated workflows
+
+  ```python
+  # Initialize parameter manager
+  param_manager = ParameterManager('your_algorithm.params.py')
+  
+  # Option 1: Interactive approach (recommended for notebooks)
+  selection_widget = param_manager.interactive_parameter_selection()
+  connection, current_params = selection_widget()
+  
+  # Option 2: Programmatic approach (for scripts)
+  connection, current_params = param_manager.quick_connect(
+      parameter_set='venice_lagoon', endpoint='eopf_explorer'
+  )
+  ```
 
 - **Define your test area** by selecting a spatial extent where the algorithm should produce meaningful results:
   - Water quality algorithms (like NDCI): choose areas with known water bodies
@@ -393,6 +448,16 @@ Evalscripts that work with time series or temporal composites require different 
 ## Conclusion
 
 Converting evalscripts to openEO UDPs makes valuable algorithms accessible across the entire openEO ecosystem while maintaining their utility for real-time exploration and analysis. Your contributions help build a library of interoperable Earth observation processes that benefit researchers, operational users, and educators worldwide.
+
+## Licensing
+
+This repository uses a mixed-licensing approach:
+
+- **Default license**: MIT (see `LICENSE`).
+- **Converted Sentinel Hub evalscripts**: must remain **CC-BY-SA-4.0**.
+
+If you convert a Sentinel Hub evalscript, add a clear file header that states the
+origin and license. See `LICENSING.md` for the required template and examples.
 
 Thank you for contributing to this important work. Your efforts make Earth observation more open, accessible, and interoperable for everyone.
 
