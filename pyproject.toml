@@ -55,7 +55,7 @@ Repository = "https://github.com/developmentseed/openeo-udp"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["openeo_udp*"]
+include = ["openeo_udp*", "algorithm_registration*"]
 exclude = ["tests*"]
 
 [tool.setuptools]
