@@ -1,0 +1,67 @@
+name: Register Algorithm to APEx Catalogue
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'algorithm_registration/**'
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout openeo-udp
+      uses: actions/Checkout@v4
+      with:
+        fetch-depth: 2
+    
+    - name: Detect changed algorithm
+      id: detect
+      run: |
+        ALG=$(git diff --name-only HEAD~1 HEAD -- algorithm_registration/ \ 
+          | grep '^algorithm_registration/[^/]*/[^/]' \
+          | awk -F'/' '{print $2}' \
+          | sort -u \
+          | head -1)
+        if [ -z "$ALG" ]; then
+          echo "No algorithm directory changes detected, skipping."
+          exit 1
+        fi
+        echo "alg=$ALG" >> $GITHUB_OUTPUT
+    
+    - name: Clone apex_algorithm repo
+      run: |
+        git clone https://x-access-token:${{ secrets.APEX_PAT }}@github.com/developmentseed/apex_algorithms.git
+      
+    - name: Create branch and copy records
+      run: |
+        cd apex_algorithms
+        git checkout -b alg/${{ steps.detect.outputs.alg }}
+        cp -r ../openeo-udp/algorithm_registration/${{ steps.detect.outputs.alg }} algorithm_catalog/developmentseed
+
+    - name: Set up conda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-activate-base: false
+    
+    - name: Create QA environment
+      run: conda create --name apex_algorithms_qa python pytest -y
+
+    - name: Run QA tests
+      working-directory: apex_algorithms
+      run: |
+        conda run -n apex_algorithms_qa pip install qa/tools
+        conda run -n apex_algorithms_qa pytest qa/unittests/tests/test_records.py
+
+    - name: Push records only on success
+      if: success() # Only runs if all tests succeeded
+      run: |
+        cd apex_algorithms
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add algorithm_catalog/developmentseed/${{ steps.detect.outputs.alg }}
+        git commit -m "Add ${{ steps.detect.outputs.alg }} UDP"
+        git push origin alg/${{ steps.detect.outputs.alg }}
+
