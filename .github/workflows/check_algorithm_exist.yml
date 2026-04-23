@@ -1,0 +1,27 @@
+name: Check Existence of the Algorithm
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+    
+      - name: Check if algorithm exists
+        run: |
+          ALG=$(git diff --name-only origin/main...HEAD -- algorithm_registration/ \
+            | grep '^algorithm_registration/[^/]*/[^/]' \
+            | awk -F'/' '{print $2}' \
+            | sort -u \
+            | head -1)
+          if [ -z "$ALG" ]; then
+            echo "::warning::No algorithm directory changes detected. Did you forget to export OGC metadata and UDP?"
+            exit 1
+          fi
+          echo "Algorithm detected: $ALG"
