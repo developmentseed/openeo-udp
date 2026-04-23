@@ -17,6 +17,8 @@ ENDPOINT_CONFIG = {
     "collection_id": "sentinel-2-l2a",
     "band_format": "reflectance|{band}",
     "reflectance_scale": 1.0,
+    "bands_dimension": "bands",
+    "time_dimension": "time",
     "description": "Primary endpoint for interactive development and exploration",
     "capabilities": [
         "load_collection",
@@ -45,6 +47,8 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
     """
     mapped_params = params.copy()
     mapped_params["reflectance_scale"] = ENDPOINT_CONFIG["reflectance_scale"]
+    mapped_params["bands_dimension"] = ENDPOINT_CONFIG["bands_dimension"]
+    mapped_params["time_dimension"] = ENDPOINT_CONFIG["time_dimension"]
 
     for param_name, param_value in params.items():
         if isinstance(param_value, Parameter):
