@@ -16,6 +16,7 @@ ENDPOINT_CONFIG = {
     "auth_method": "oidc_authorization_code",
     "collection_id": "sentinel-2-l2a",
     "band_format": "reflectance|{band}",
+    "reflectance_scale": 1.0,
     "description": "Primary endpoint for interactive development and exploration",
     "capabilities": [
         "load_collection",
@@ -43,6 +44,7 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
         Mapped parameter dictionary
     """
     mapped_params = params.copy()
+    mapped_params["reflectance_scale"] = ENDPOINT_CONFIG["reflectance_scale"]
 
     for param_name, param_value in params.items():
         if isinstance(param_value, Parameter):

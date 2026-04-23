@@ -16,6 +16,7 @@ ENDPOINT_CONFIG = {
     "auth_method": "oidc",
     "collection_id": "sentinel-2-l2a",
     "band_format": "{band}",
+    "reflectance_scale": 10000.0,
     "description": "Development and testing endpoint",
     "capabilities": ["load_collection", "apply_dimension", "save_result"],
     "cloud_cover_filter": True,
@@ -55,6 +56,7 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
         Mapped parameter dictionary
     """
     mapped_params = params.copy()
+    mapped_params["reflectance_scale"] = ENDPOINT_CONFIG["reflectance_scale"]
 
     # Track the collection to determine if we need to add resolution suffixes
     collection_id = ENDPOINT_CONFIG["collection_id"]
