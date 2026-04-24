@@ -17,6 +17,7 @@ jobs:
       with:
         fetch-depth: 2
     
+    # Detect changes on main between HEAD~1 and HEAD
     - name: Detect changed algorithm
       id: detect
       run: |
@@ -31,29 +32,25 @@ jobs:
         fi
         echo "alg=$ALG" >> $GITHUB_OUTPUT
     
+    # Pipeline below happens in developmentseed/apex_algorithms repo
     - name: Clone apex_algorithm repo
       run: |
-        git clone https://x-access-token:${{ secrets.APEX_PAT }}@github.com/developmentseed/apex_algorithms.git
+        git clone https://github.com/developmentseed/apex_algorithms.git
       
     - name: Create branch and copy records
       run: |
         cd apex_algorithms
         git checkout -b alg/${{ steps.detect.outputs.alg }}
         cp -r ../openeo-udp/algorithm_registration/${{ steps.detect.outputs.alg }} algorithm_catalog/developmentseed
-
-    - name: Set up conda
-      uses: conda-incubator/setup-miniconda@v3
-      with:
-        auto-activate-base: false
     
-    - name: Create QA environment
-      run: conda create --name apex_algorithms_qa python pytest -y
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v4
 
     - name: Run QA tests
       working-directory: apex_algorithms
       run: |
-        conda run -n apex_algorithms_qa pip install qa/tools
-        conda run -n apex_algorithms_qa pytest qa/unittests/tests/test_records.py
+          uv sync --frozen
+          uv run pytest qa/unittests/tests/test_records.py
 
     - name: Push records only on success
       if: success() # Only runs if all tests succeeded
@@ -63,5 +60,6 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add algorithm_catalog/developmentseed/${{ steps.detect.outputs.alg }}
         git commit -m "Add ${{ steps.detect.outputs.alg }} UDP"
-        git push origin alg/${{ steps.detect.outputs.alg }}
+        git remote add target https://x-access-token:${{ secrets.APEX_PAT }}@github.com/developmentseed/apex_algorithms.git
+        git push target alg/${{ steps.detect.outputs.alg }}
 
