@@ -4,17 +4,17 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B02",
-          "B03",
-          "B04",
-          "B05",
-          "B07",
-          "B08",
-          "B8A",
-          "B11",
-          "B12"
+          "reflectance|b02",
+          "reflectance|b03",
+          "reflectance|b04",
+          "reflectance|b05",
+          "reflectance|b07",
+          "reflectance|b08",
+          "reflectance|b8a",
+          "reflectance|b11",
+          "reflectance|b12"
         ],
-        "id": "SENTINEL2_L2A",
+        "id": "sentinel-2-l2a",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
@@ -24,7 +24,9 @@
                   "x": {
                     "from_parameter": "value"
                   },
-                  "y": 20
+                  "y": {
+                    "from_parameter": "cloud_cover"
+                  }
                 },
                 "result": true
               }
@@ -32,15 +34,11 @@
           }
         },
         "spatial_extent": {
-          "west": -9.42,
-          "south": 39.3,
-          "east": -9.32,
-          "north": 39.38
+          "from_parameter": "bounding_box"
         },
-        "temporal_extent": [
-          "2025-12-01",
-          "2026-03-01"
-        ]
+        "temporal_extent": {
+          "from_parameter": "time"
+        }
       }
     },
     "reducedimension1": {
@@ -49,7 +47,7 @@
         "data": {
           "from_node": "loadcollection1"
         },
-        "dimension": "t",
+        "dimension": "time",
         "reducer": {
           "process_graph": {
             "first1": {
@@ -89,7 +87,7 @@
                 "x": {
                   "from_node": "arrayelement1"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "multiply1": {
@@ -116,7 +114,7 @@
                 "x": {
                   "from_node": "arrayelement2"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "multiply2": {
@@ -143,7 +141,7 @@
                 "x": {
                   "from_node": "arrayelement3"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "multiply3": {
@@ -720,7 +718,7 @@
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "subtract1": {
@@ -1077,7 +1075,7 @@
                 "x": {
                   "from_node": "arrayelement5"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "arrayelement6": {
@@ -1095,7 +1093,7 @@
                 "x": {
                   "from_node": "arrayelement6"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "subtract3": {
@@ -1178,7 +1176,7 @@
                 "x": {
                   "from_node": "arrayelement7"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "arrayelement8": {
@@ -1196,7 +1194,7 @@
                 "x": {
                   "from_node": "arrayelement8"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "subtract5": {
@@ -1371,7 +1369,7 @@
                 "x": {
                   "from_node": "arrayelement9"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "multiply47": {
@@ -1806,15 +1804,15 @@
       "description": "Sentinel-2 bands required for NDCI calculation",
       "schema": {},
       "default": [
-        "B02",
-        "B03",
-        "B04",
-        "B05",
-        "B07",
-        "B08",
-        "B8A",
-        "B11",
-        "B12"
+        "reflectance|b02",
+        "reflectance|b03",
+        "reflectance|b04",
+        "reflectance|b05",
+        "reflectance|b07",
+        "reflectance|b08",
+        "reflectance|b8a",
+        "reflectance|b11",
+        "reflectance|b12"
       ],
       "optional": true
     }
