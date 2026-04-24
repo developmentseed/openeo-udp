@@ -1,5 +1,5 @@
 {
-  "id": "fire-boundary",
+  "id": "fire_boundary",
   "type": "Feature",
   "conformsTo": [
     "http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
@@ -77,7 +77,7 @@
       "rel": "application",
       "type": "application/vnd.openeo+json;type=process",
       "title": "openEO Process Definition",
-      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire-boundary/openeo_udp/fire-boundary.json"
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire_boundary/openeo_udp/fire_boundary.json"
     },
     {
       "rel": "code",
@@ -89,7 +89,7 @@
       "rel": "webapp",
       "type": "text/html",
       "title": "OpenEO Web Editor",
-      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=fire-boundary&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire-boundary/openeo_udp/fire-boundary.json&server=openeofed.dataspace.copernicus.eu"
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=fire_boundary&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire_boundary/openeo_udp/fire_boundary.json&server=openeofed.dataspace.copernicus.eu"
     },
     {
       "rel": "service",
@@ -101,7 +101,7 @@
       "rel": "notebook",
       "type": "application/x-ipynb+json",
       "title": "Fire Boundary notebook",
-      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/fire_boundary_2.ipynb"
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/fire_boundary.ipynb"
     },
     {
       "rel": "platform",
@@ -119,13 +119,13 @@
       "rel": "preview",
       "type": "image/png",
       "title": "Fire Boundary Detection",
-      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire-boundary/records/preview.png"
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire_boundary/records/preview.png"
     },
     {
       "rel": "thumbnail",
       "type": "image/png",
       "title": "Thumbnail image",
-      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire-boundary/records/thumbnail.png"
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire_boundary/records/thumbnail.png"
     }
   ]
 }
