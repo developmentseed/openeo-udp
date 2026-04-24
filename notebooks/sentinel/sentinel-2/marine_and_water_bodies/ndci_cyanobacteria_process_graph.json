@@ -24,9 +24,7 @@
                   "x": {
                     "from_parameter": "value"
                   },
-                  "y": {
-                    "from_parameter": "cloud_cover"
-                  }
+                  "y": 20
                 },
                 "result": true
               }
@@ -34,11 +32,15 @@
           }
         },
         "spatial_extent": {
-          "from_parameter": "bounding_box"
+          "west": -9.42,
+          "south": 39.3,
+          "east": -9.32,
+          "north": 39.38
         },
-        "temporal_extent": {
-          "from_parameter": "time"
-        }
+        "temporal_extent": [
+          "2025-12-01",
+          "2026-03-01"
+        ]
       }
     },
     "reducedimension1": {
@@ -1800,10 +1802,20 @@
       "optional": true
     },
     {
-      "name": "cloud_cover",
-      "description": "Maximum cloud cover percentage",
+      "name": "bands",
+      "description": "Sentinel-2 bands required for NDCI calculation",
       "schema": {},
-      "default": 20,
+      "default": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12"
+      ],
       "optional": true
     }
   ],
