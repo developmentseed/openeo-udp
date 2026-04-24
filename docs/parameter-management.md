@@ -1,16 +1,17 @@
 # OpenEO UDP Parameter Management System
 
-The OpenEO UDP Parameter Management System provides a unified interface for managing algorithm parameters and backend connections across different OpenEO endpoints. This system eliminates the need for manual parameter editing when switching between locations, time periods, or OpenEO backends.
+The OpenEO UDP Parameter Management System provides a unified interface for managing algorithm parameters and backend connections across different OpenEO endpoints. This system eliminates the need for manual parameter editing when switching between locations, time periods, or OpenEO backends, and lets a single notebook produce both a synchronous preview **and** a reusable UDP export from the same parameterised graph.
 
-> 💡 **Reference Implementation**: The [APA (Aquatic Plants and Algae) notebook](../notebooks/sentinel/sentinel-2/marine_and_water_bodies/apa_aquatic_plants_algae.ipynb) provides a complete working example of this parameter management system.
+> 💡 **Reference Implementation**: The [NDCI cyanobacteria notebook](../notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb) is the canonical, up-to-date example. The [APA notebook](../notebooks/sentinel/sentinel-2/marine_and_water_bodies/apa_aquatic_plants_algae.ipynb) demonstrates the interactive-widget flow but still uses inline `.default` values for every parameter.
 
 ## Overview
 
-The parameter management system consists of three main components:
+The parameter management system consists of four main components:
 
-1. **Parameter Manager**: Core functionality for loading and managing parameter sets
-2. **Endpoint Configuration**: Python-based configurations for different OpenEO backends
-3. **Interactive Widgets**: User-friendly interface for parameter selection and connection
+1. **Parameter Manager**: Core functionality for loading parameter sets, resolving parameter references, and reconstructing DataCubes.
+2. **Endpoint Configuration**: Python-based configurations for different OpenEO backends, including backend-specific attributes (band naming, collection ID, reflectance scale, dimension names).
+3. **Interactive Widgets**: User-friendly interface for parameter selection and connection.
+4. **Parameter Resolver**: Substitutes `{"from_parameter": "name"}` nodes in a flat graph with concrete defaults so the graph can be executed synchronously while remaining exportable as a UDP.
 
 ## Usage Patterns
 
@@ -67,6 +68,57 @@ connection, current_params = param_manager.quick_connect(
 - You know the exact parameters needed
 - Building APIs or services
 
+## Intrinsic vs Runtime Parameters
+
+When building a graph that will also be exported as a UDP, split parameters into two categories:
+
+- **Intrinsic** — fixed by the algorithm itself. These should be passed to `load_collection` as `.default` values so they become literals in the graph. Examples: `collection`, `bands`, and the endpoint-derived keys `reflectance_scale`, `bands_dimension`, `time_dimension` (see [Endpoint Configuration](#endpoint-configuration)).
+- **Runtime** — the knobs a UDP consumer is expected to swap per invocation. Pass these as the `Parameter` object itself (without `.default`) so the graph contains `{"from_parameter": "name"}` references. Typical runtime parameters: `bounding_box`, `time`, `cloud_cover`.
+
+```python
+s2cube = connection.load_collection(
+    current_params["collection"].default,       # intrinsic → literal
+    bands=current_params["bands"].default,      # intrinsic → literal
+    spatial_extent=current_params["bounding_box"],  # runtime → from_parameter
+    temporal_extent=current_params["time"],         # runtime → from_parameter
+    properties={
+        "eo:cloud_cover": lambda x: x <= current_params["cloud_cover"],  # runtime
+    },
+)
+```
+
+## Parameter Resolution
+
+A parameterised graph cannot be executed synchronously: Copernicus Data Space (and openEO's `POST /result` endpoint in general) rejects graphs that still contain unresolved `{"from_parameter": ...}` nodes. Only the UDP registration and secondary-services APIs accept parameter definitions.
+
+`ParameterManager` provides two helpers to bridge this gap:
+
+```python
+# Low-level: walk a flat graph and replace from_parameter refs with defaults
+resolved_graph = param_manager.resolve_parameters(
+    chl_a_image.flat_graph(), current_params
+)
+
+# High-level: returns a new DataCube/SaveResult bound to the same connection
+resolved_cube = param_manager.resolve(chl_a_image, current_params)
+resolved_cube.download("output.png")
+```
+
+The same source `chl_a_image` can then be exported as a UDP with its parameter references preserved:
+
+```python
+udp = {
+    "process_graph": chl_a_image.flat_graph(),
+    "parameters": [
+        current_params["time"].to_dict(),
+        current_params["bounding_box"].to_dict(),
+        current_params["cloud_cover"].to_dict(),
+    ],
+    "id": "my_algorithm",
+    ...
+}
+```
+
 ## Interactive Workflow Example
 
 ```python
@@ -83,15 +135,23 @@ selection_widget = param_manager.interactive_parameter_selection()
 
 # Step 4: Get connection and parameters after user interaction
 connection, current_params = selection_widget()
-# After user clicks "Connect & Load Parameters", this returns the connection and parameters
 
-# Step 5: Use parameters in your OpenEO workflow
+# Step 5: Use parameters in your OpenEO workflow — intrinsic inline, runtime as refs
 s2cube = connection.load_collection(
     current_params["collection"].default,
-    temporal_extent=current_params["time"].default,
-    spatial_extent=current_params["bounding_box"].default,
-    bands=current_params["bands"].default
+    temporal_extent=current_params["time"],
+    spatial_extent=current_params["bounding_box"],
+    bands=current_params["bands"].default,
+    properties={
+        "eo:cloud_cover": lambda x: x <= current_params["cloud_cover"],
+    },
 )
+
+# ... build the rest of the graph ...
+
+# Step 6: Resolve parameters before synchronous execution
+resolved = param_manager.resolve(final_cube, current_params)
+resolved.download("result.png")
 ```
 
 ## Quick Start
@@ -115,13 +175,16 @@ connection, current_params = param_manager.quick_connect(
     endpoint='eopf_explorer'
 )
 
-# Use parameters in your OpenEO workflow
+# Build a parameterised graph (runtime params stay as Parameter refs)
 s2cube = connection.load_collection(
     current_params["collection"].default,
-    temporal_extent=current_params["time"].default,
-    spatial_extent=current_params["bounding_box"].default,
-    bands=current_params["bands"].default
+    temporal_extent=current_params["time"],
+    spatial_extent=current_params["bounding_box"],
+    bands=current_params["bands"].default,
 )
+
+# Resolve before synchronous download
+param_manager.resolve(s2cube, current_params).download("out.nc")
 ```
 
 ## Parameter Files
@@ -172,10 +235,11 @@ def get_parameters():
 
 ### Parameter Guidelines
 
-- **Use OpenEO Parameter objects**: All parameters except `location_name` should be `Parameter` objects
-- **Include descriptions**: Provide clear descriptions for each parameter
-- **Set sensible defaults**: Default values should work out-of-the-box
-- **Group related locations**: Organize parameter sets by geographic region or use case
+- **Use OpenEO Parameter objects**: All parameters except `location_name` should be `Parameter` objects.
+- **Include descriptions**: Provide clear descriptions for each parameter.
+- **Set sensible defaults**: Default values should work out-of-the-box.
+- **Group related locations**: Organize parameter sets by geographic region or use case.
+- **Decide intrinsic vs runtime at the call site, not in the param file**: All `Parameter` objects define a *potential* runtime knob. The notebook decides per-use whether to expose it (pass the `Parameter` itself) or to freeze it as a literal (pass `.default`). See [Intrinsic vs Runtime Parameters](#intrinsic-vs-runtime-parameters).
 
 ## Endpoint Configuration
 
@@ -183,15 +247,24 @@ The system supports multiple OpenEO backends with automatic parameter mapping to
 
 ### Available Endpoints
 
-| Endpoint | Description | Collection ID | Band Format |
-|----------|-------------|---------------|-------------|
-| **eopf_explorer** | EOPF Explorer API | `sentinel-2-l2a` | `reflectance\|{band}` |
-| **copernicus_dataspace** | Copernicus Data Space | `SENTINEL2_L2A` | `{band}` |
-| **ds_development** | Development Seed | `sentinel-2-l2a` | `{band}` |
+| Endpoint | Collection ID | Band Format | `reflectance_scale` | `bands_dimension` | `time_dimension` |
+| --- | --- | --- | --- | --- | --- |
+| **eopf_explorer** | `sentinel-2-l2a` | `reflectance\|{band}` | `1.0` | `bands` | `time` |
+| **copernicus_dataspace** | `SENTINEL2_L2A` | `{band}` | `10000.0` | `bands` | `t` |
+| **ds_development** | `sentinel-2-l2a` | `{band}` (+ resolution suffix) | `10000.0` | `bands` | `t` |
+| **localhost_dev** | `sentinel-2-l2a` | `{band}` (+ resolution suffix) | `10000.0` | `bands` | `t` |
 
 ### Parameter Mapping
 
-The system automatically transforms parameters for different backends:
+The system automatically transforms parameters for different backends. Beyond the collection-ID and band-name rewrites, each endpoint's `map_parameters` also injects three scalar values into `current_params` that the notebook can read directly:
+
+| Key | Purpose | Consumer in the notebook |
+| --- | --- | --- |
+| `reflectance_scale` | Divisor to convert raw band values to 0–1 reflectance (1.0 if already reflectance, 10000.0 for integer L2A) | `data[i] / current_params["reflectance_scale"]` inside UDPs |
+| `bands_dimension` | Name of the band/spectral dimension on this backend | `apply_dimension(dimension=current_params["bands_dimension"], ...)` |
+| `time_dimension` | Name of the time dimension on this backend (`"t"` or `"time"`) | `reduce_dimension(dimension=current_params["time_dimension"], ...)` |
+
+These are plain floats/strings, not `Parameter` objects, because they are intrinsic to the backend and should be baked into the graph as literals.
 
 ```python
 # Original parameters
@@ -201,6 +274,9 @@ bands: ['B02', 'B03', 'B04']
 # Mapped for EOPF Explorer
 collection: 'sentinel-2-l2a'
 bands: ['reflectance|b02', 'reflectance|b03', 'reflectance|b04']
+reflectance_scale: 1.0
+bands_dimension: 'bands'
+time_dimension: 'time'
 ```
 
 ## ParameterManager API
@@ -256,6 +332,26 @@ param_manager.print_options("My Algorithm")
 mapped_params = param_manager.apply_endpoint_mapping(params, 'eopf_explorer')
 ```
 
+#### Resolution Methods
+
+```python
+# Low-level: walk a flat graph and replace from_parameter refs whose name
+# appears in current_params with that parameter's .default. References whose
+# name is not in current_params (typically callback-scoped placeholders like
+# "data", "value", "x") are preserved unchanged.
+resolved_graph = param_manager.resolve_parameters(
+    datacube.flat_graph(),
+    current_params,   # optional, defaults to the current parameter set
+)
+
+# High-level: return a new DataCube/SaveResult with all refs resolved, bound
+# to the same connection as the input. Use this before any synchronous call
+# (.download(), .execute()) while keeping the original `datacube` parameterised
+# for UDP export.
+resolved_cube = param_manager.resolve(datacube, current_params)
+resolved_cube.download("output.png")
+```
+
 ## Interactive Widgets
 
 The system provides Jupyter-friendly widgets for interactive parameter selection.
@@ -301,13 +397,26 @@ ENDPOINT_CONFIG = {
     "auth_method": "oidc",
     "collection_id": "sentinel-2-l2a",
     "band_format": "{band}",
+    # Backend-specific intrinsic attributes; see the Endpoint Configuration
+    # table above for the meaning of each key.
+    "reflectance_scale": 10000.0,   # 1.0 if bands are already 0-1 reflectance
+    "bands_dimension": "bands",     # name of the band dimension on this backend
+    "time_dimension": "t",          # "t" or "time" depending on the backend
     "description": "Custom backend description",
-    "capabilities": ["load_collection", "apply_dimension"]
+    "capabilities": ["load_collection", "apply_dimension"],
+    "enabled": True,
 }
+
 
 def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
     """Map parameters for this endpoint."""
     mapped_params = params.copy()
+
+    # Propagate the intrinsic backend attributes so the notebook can read them
+    # from current_params as plain scalars.
+    mapped_params["reflectance_scale"] = ENDPOINT_CONFIG["reflectance_scale"]
+    mapped_params["bands_dimension"] = ENDPOINT_CONFIG["bands_dimension"]
+    mapped_params["time_dimension"] = ENDPOINT_CONFIG["time_dimension"]
 
     for param_name, param_value in params.items():
         if isinstance(param_value, Parameter):
@@ -315,7 +424,7 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
                 mapped_params[param_name] = Parameter(
                     param_value.name,
                     description=param_value.description,
-                    default=ENDPOINT_CONFIG["collection_id"]
+                    default=ENDPOINT_CONFIG["collection_id"],
                 )
             elif param_name == "bands" and isinstance(param_value.default, list):
                 # Apply custom band mapping logic here
@@ -417,12 +526,21 @@ connection = openeo.connect('https://openeo.example.com')
 ```
 
 **After:**
+
 ```python
-# Using parameter manager
+# Using parameter manager with runtime parameters kept as refs
 param_manager = ParameterManager('algorithm.params.py')
 connection, params = param_manager.quick_connect('venice_lagoon', 'eopf_explorer')
-bbox = params['bounding_box'].default
-time_range = params['time'].default
+
+s2cube = connection.load_collection(
+    params['collection'].default,
+    bands=params['bands'].default,
+    spatial_extent=params['bounding_box'],   # Parameter ref, not .default
+    temporal_extent=params['time'],
+)
+
+# Resolve before sync execution; the unresolved graph is still usable for UDP export.
+param_manager.resolve(s2cube, params).download('out.nc')
 ```
 
 ## Examples and Templates

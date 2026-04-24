@@ -72,16 +72,25 @@ connection, current_params = param_manager.quick_connect(
     endpoint='eopf_explorer'
 )
 
-# Use parameters in your analysis
+# Build a parameterised graph: algorithm-intrinsic values inline, runtime
+# knobs (AOI, TOI, cloud cover) as Parameter refs so the same graph can
+# later be exported as a UDP.
 s2cube = connection.load_collection(
     current_params["collection"].default,
-    temporal_extent=current_params["time"].default,
-    spatial_extent=current_params["bounding_box"].default,
-    bands=current_params["bands"].default
+    bands=current_params["bands"].default,
+    spatial_extent=current_params["bounding_box"],
+    temporal_extent=current_params["time"],
+    properties={
+        "eo:cloud_cover": lambda x: x <= current_params["cloud_cover"],
+    },
 )
+
+# Resolve parameters before synchronous execution (the synchronous /result
+# endpoint rejects unresolved from_parameter refs).
+param_manager.resolve(s2cube, current_params).download("preview.nc")
 ```
 
-This approach allows notebooks to work seamlessly with different OpenEO backends and parameter sets without code modifications.
+Each endpoint mapper also injects three backend-intrinsic values — `reflectance_scale`, `bands_dimension`, `time_dimension` — into `current_params`, so notebook UDPs stay fully backend-agnostic. This approach allows notebooks to work seamlessly with different OpenEO backends and parameter sets without code modifications.
 
 ### Data Loading and Exploration
 

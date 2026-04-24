@@ -13,9 +13,12 @@ from openeo.api.process import Parameter
 ENDPOINT_CONFIG = {
     "name": "Localhost Development TiTiler OpenEO Backend",
     "url": "http://localhost:8081/",
-    "auth_method": "oidc",
+    "auth_method": "oidc_authorization_code",
     "collection_id": "sentinel-2-l2a",
     "band_format": "{band}",
+    "reflectance_scale": 10000.0,
+    "bands_dimension": "bands",
+    "time_dimension": "t",
     "description": "Development and testing endpoint",
     "capabilities": ["load_collection", "apply_dimension", "save_result"],
     "cloud_cover_filter": True,
@@ -55,6 +58,9 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
         Mapped parameter dictionary
     """
     mapped_params = params.copy()
+    mapped_params["reflectance_scale"] = ENDPOINT_CONFIG["reflectance_scale"]
+    mapped_params["bands_dimension"] = ENDPOINT_CONFIG["bands_dimension"]
+    mapped_params["time_dimension"] = ENDPOINT_CONFIG["time_dimension"]
 
     # Track the collection to determine if we need to add resolution suffixes
     collection_id = ENDPOINT_CONFIG["collection_id"]

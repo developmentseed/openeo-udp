@@ -344,8 +344,17 @@ class TestParameterMapping:
         # Check collection mapping
         assert mapped_params["collection"].default == "sentinel-2-l2a"
 
-        # Check band mapping (should keep original bands)
-        expected_bands = ["B02", "B03", "B04", "B05", "B08", "B8A", "B11"]
+        # DS development appends a resolution suffix per band for L2A collections
+        # (the mapper consults BAND_RESOLUTIONS to decide the suffix).
+        expected_bands = [
+            "B02_10m",
+            "B03_10m",
+            "B04_10m",
+            "B05_20m",
+            "B08_10m",
+            "B8A_20m",
+            "B11_20m",
+        ]
         assert mapped_params["bands"].default == expected_bands
 
     def test_unknown_endpoint_mapping(self, temp_params_file):
@@ -361,6 +370,121 @@ class TestParameterMapping:
 
         # Should return original parameters unchanged
         assert mapped_params == raw_params
+
+
+class TestParameterResolution:
+    """Test cases for resolve_parameters / resolve (graph parameter materialization)."""
+
+    def test_resolve_parameters_substitutes_user_refs(self, temp_params_file):
+        """A from_parameter ref whose name is in current_params is replaced by .default."""
+        manager = ParameterManager(temp_params_file)
+        current = manager.get_parameter_set("venice_lagoon")
+
+        graph = {
+            "loadcollection1": {
+                "process_id": "load_collection",
+                "arguments": {
+                    "spatial_extent": {"from_parameter": "bounding_box"},
+                    "temporal_extent": {"from_parameter": "time"},
+                    "bands": ["B02"],
+                },
+            }
+        }
+
+        resolved = manager.resolve_parameters(graph, current)
+        args = resolved["loadcollection1"]["arguments"]
+        assert args["spatial_extent"] == current["bounding_box"].default
+        assert args["temporal_extent"] == current["time"].default
+        # Unchanged literal passes through.
+        assert args["bands"] == ["B02"]
+
+    def test_resolve_parameters_preserves_callback_refs(self, temp_params_file):
+        """Placeholders like 'data'/'value'/'x' are NOT in current_params and must be preserved."""
+        manager = ParameterManager(temp_params_file)
+        current = manager.get_parameter_set("venice_lagoon")
+
+        graph = {
+            "n1": {
+                "process_id": "apply_dimension",
+                "arguments": {
+                    "data": {"from_parameter": "data"},  # callback-scoped
+                    "process": {
+                        "process_graph": {
+                            "n2": {
+                                "process_id": "multiply",
+                                "arguments": {
+                                    "x": {"from_parameter": "x"},  # callback-scoped
+                                    "y": {"from_parameter": "cloud_cover"},  # user
+                                },
+                                "result": True,
+                            }
+                        }
+                    },
+                },
+            }
+        }
+
+        resolved = manager.resolve_parameters(graph, current)
+        args = resolved["n1"]["arguments"]
+        # Callback placeholders untouched.
+        assert args["data"] == {"from_parameter": "data"}
+        inner = args["process"]["process_graph"]["n2"]["arguments"]
+        assert inner["x"] == {"from_parameter": "x"}
+        # User ref substituted even inside nested child process graphs.
+        assert inner["y"] == current["cloud_cover"].default
+
+    def test_resolve_parameters_defaults_to_current_set(self, temp_params_file):
+        """When current_params is None, the method uses the manager's active set."""
+        manager = ParameterManager(temp_params_file)
+        manager.use_parameter_set("lake_victoria")
+
+        graph = {
+            "n1": {
+                "process_id": "noop",
+                "arguments": {"bbox": {"from_parameter": "bounding_box"}},
+            }
+        }
+
+        resolved = manager.resolve_parameters(graph)  # no current_params
+        expected = manager.get_parameter_set("lake_victoria")["bounding_box"].default
+        assert resolved["n1"]["arguments"]["bbox"] == expected
+
+    def test_resolve_parameters_handles_plain_scalars(self, temp_params_file):
+        """Non-Parameter values in current_params (e.g. reflectance_scale) must also be substitutable."""
+        manager = ParameterManager(temp_params_file)
+        current = {"reflectance_scale": 10000.0}  # plain scalar, no .default
+
+        graph = {
+            "n1": {
+                "process_id": "divide",
+                "arguments": {"x": 1, "y": {"from_parameter": "reflectance_scale"}},
+            }
+        }
+        resolved = manager.resolve_parameters(graph, current)
+        assert resolved["n1"]["arguments"]["y"] == 10000.0
+
+    def test_resolve_returns_cube_from_flat_graph(self, temp_params_file):
+        """resolve(datacube) calls datacube_from_flat_graph with a parameter-free graph."""
+        manager = ParameterManager(temp_params_file)
+        current = manager.get_parameter_set("venice_lagoon")
+
+        mock_cube = Mock()
+        mock_cube.flat_graph.return_value = {
+            "n1": {
+                "process_id": "load_collection",
+                "arguments": {"spatial_extent": {"from_parameter": "bounding_box"}},
+            }
+        }
+        returned_cube = Mock()
+        mock_cube.connection.datacube_from_flat_graph.return_value = returned_cube
+
+        result = manager.resolve(mock_cube, current)
+
+        mock_cube.flat_graph.assert_called_once()
+        mock_cube.connection.datacube_from_flat_graph.assert_called_once()
+        passed_graph = mock_cube.connection.datacube_from_flat_graph.call_args[0][0]
+        assert passed_graph["n1"]["arguments"]["spatial_extent"] == current["bounding_box"].default
+        assert result is returned_cube
 
 
 class TestIntegration:
