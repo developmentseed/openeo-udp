@@ -1,0 +1,1279 @@
+{
+  "id": "mago_water_quality",
+  "summary": "MAGO Water Quality Monitoring Tool",
+  "description": "Estimates water quality parameters (chlorophyll-a, cyanobacteria, turbidity, CDOM, TSS) in inland water bodies from Sentinel-2 imagery. The indicator is selectable at runtime via the 'indicator' parameter (0\u20137). Color scale is controlled by 'min_value' and 'max_value'. Non-water pixels (NDWI < 0) are rendered in true color.",
+  "parameters": [
+    {
+      "name": "time",
+      "description": "Temporal range for data acquisition",
+      "schema": {},
+      "default": [
+        "2025-01-15",
+        "2026-04-15"
+      ],
+      "optional": true
+    },
+    {
+      "name": "bounding_box",
+      "description": "Spatial extent for Barrage Lebna reservoir",
+      "schema": {},
+      "default": {
+        "west": 10.85,
+        "south": 36.7,
+        "east": 10.95,
+        "north": 36.79
+      },
+      "optional": true
+    },
+    {
+      "name": "bands",
+      "description": "Sentinel-2 bands required for MAGO indicators",
+      "schema": {},
+      "default": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B07",
+        "B08"
+      ],
+      "optional": true
+    },
+    {
+      "name": "indicator",
+      "description": "MAGO indicator to compute: 0=Chl-a NDCI, 1=Chl-a high, 2=Chl-a low, 3=Cyano cells/mL, 4=Cyano phycocyanin mg/m\u00b3, 5=Turbidity NTU, 6=CDOM \u00b5g/L, 7=TSS mg/L",
+      "schema": {
+        "type": "integer"
+      },
+      "default": 0,
+      "optional": true
+    },
+    {
+      "name": "min_value",
+      "description": "Lower bound of the color scale (Blue)",
+      "schema": {
+        "type": "number"
+      },
+      "default": 6,
+      "optional": true
+    },
+    {
+      "name": "max_value",
+      "description": "Upper bound of the color scale (Red)",
+      "schema": {
+        "type": "number"
+      },
+      "default": 12,
+      "optional": true
+    }
+  ],
+  "process_graph": {
+    "loadcollection1": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B07",
+          "B08"
+        ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte1": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": 20
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "west": 10.85,
+          "south": 36.7,
+          "east": 10.95,
+          "north": 36.79
+        },
+        "temporal_extent": [
+          "2025-01-15",
+          "2026-04-15"
+        ]
+      }
+    },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "first1": {
+              "process_id": "first",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "applydimension1": {
+      "process_id": "apply_dimension",
+      "arguments": {
+        "context": [
+          {
+            "from_parameter": "indicator"
+          },
+          {
+            "from_parameter": "min_value"
+          },
+          {
+            "from_parameter": "max_value"
+          }
+        ],
+        "data": {
+          "from_node": "reducedimension1"
+        },
+        "dimension": "bands",
+        "process": {
+          "process_graph": {
+            "arrayelement1": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 2
+              }
+            },
+            "divide1": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 10000
+              }
+            },
+            "multiply1": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide1"
+                },
+                "y": 3
+              }
+            },
+            "arrayelement2": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 1
+              }
+            },
+            "divide2": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement2"
+                },
+                "y": 10000
+              }
+            },
+            "multiply2": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide2"
+                },
+                "y": 3
+              }
+            },
+            "arrayelement3": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              }
+            },
+            "divide3": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement3"
+                },
+                "y": 10000
+              }
+            },
+            "multiply3": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": 3
+              }
+            },
+            "arraycreate1": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "multiply1"
+                  },
+                  {
+                    "from_node": "multiply2"
+                  },
+                  {
+                    "from_node": "multiply3"
+                  }
+                ]
+              }
+            },
+            "arrayelement4": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 3
+              }
+            },
+            "divide4": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement4"
+                },
+                "y": 10000
+              }
+            },
+            "subtract1": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide4"
+                },
+                "y": {
+                  "from_node": "divide1"
+                }
+              }
+            },
+            "add1": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "divide4"
+                },
+                "y": {
+                  "from_node": "divide1"
+                }
+              }
+            },
+            "divide5": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract1"
+                },
+                "y": {
+                  "from_node": "add1"
+                }
+              }
+            },
+            "multiply4": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 86.11,
+                "y": {
+                  "from_node": "divide5"
+                }
+              }
+            },
+            "add2": {
+              "process_id": "add",
+              "arguments": {
+                "x": 14.039,
+                "y": {
+                  "from_node": "multiply4"
+                }
+              }
+            },
+            "power1": {
+              "process_id": "power",
+              "arguments": {
+                "base": {
+                  "from_node": "divide5"
+                },
+                "p": 2
+              }
+            },
+            "multiply5": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 194.325,
+                "y": {
+                  "from_node": "power1"
+                }
+              }
+            },
+            "add3": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add2"
+                },
+                "y": {
+                  "from_node": "multiply5"
+                }
+              }
+            },
+            "divide6": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "divide4"
+                },
+                "y": {
+                  "from_node": "divide1"
+                }
+              }
+            },
+            "power2": {
+              "process_id": "power",
+              "arguments": {
+                "base": {
+                  "from_node": "divide6"
+                },
+                "p": 2.3051
+              }
+            },
+            "multiply6": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 19.866,
+                "y": {
+                  "from_node": "power2"
+                }
+              }
+            },
+            "max1": {
+              "process_id": "max",
+              "arguments": {
+                "data": {
+                  "from_node": "divide2"
+                },
+                "ignore_nodata": {
+                  "from_node": "divide3"
+                }
+              }
+            },
+            "divide7": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "max1"
+                },
+                "y": {
+                  "from_node": "divide2"
+                }
+              }
+            },
+            "log1": {
+              "process_id": "log",
+              "arguments": {
+                "base": 10,
+                "x": {
+                  "from_node": "divide7"
+                }
+              }
+            },
+            "multiply7": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -2.4792,
+                "y": {
+                  "from_node": "log1"
+                }
+              }
+            },
+            "subtract2": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply7"
+                },
+                "y": 0.0389
+              }
+            },
+            "power3": {
+              "process_id": "power",
+              "arguments": {
+                "base": 10,
+                "p": {
+                  "from_node": "subtract2"
+                }
+              }
+            },
+            "multiply8": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide2"
+                },
+                "y": {
+                  "from_node": "divide1"
+                }
+              }
+            },
+            "power4": {
+              "process_id": "power",
+              "arguments": {
+                "base": {
+                  "from_node": "divide3"
+                },
+                "p": 2
+              }
+            },
+            "divide8": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply8"
+                },
+                "y": {
+                  "from_node": "power4"
+                }
+              }
+            },
+            "power5": {
+              "process_id": "power",
+              "arguments": {
+                "base": {
+                  "from_node": "divide8"
+                },
+                "p": 2.38
+              }
+            },
+            "multiply9": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 115530.31,
+                "y": {
+                  "from_node": "power5"
+                }
+              }
+            },
+            "divide9": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "divide4"
+                },
+                "y": {
+                  "from_node": "divide1"
+                }
+              }
+            },
+            "power6": {
+              "process_id": "power",
+              "arguments": {
+                "base": {
+                  "from_node": "divide9"
+                },
+                "p": 3.4791
+              }
+            },
+            "multiply10": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 21.554,
+                "y": {
+                  "from_node": "power6"
+                }
+              }
+            },
+            "divide10": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "divide4"
+                },
+                "y": {
+                  "from_node": "divide3"
+                }
+              }
+            },
+            "multiply11": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide4"
+                },
+                "y": {
+                  "from_node": "divide10"
+                }
+              }
+            },
+            "multiply12": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 194.79,
+                "y": {
+                  "from_node": "multiply11"
+                }
+              }
+            },
+            "add4": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply12"
+                },
+                "y": 0.9061
+              }
+            },
+            "divide11": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "divide1"
+                },
+                "y": {
+                  "from_node": "divide3"
+                }
+              }
+            },
+            "multiply13": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2.4072,
+                "y": {
+                  "from_node": "divide11"
+                }
+              }
+            },
+            "add5": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply13"
+                },
+                "y": 0.0709
+              }
+            },
+            "arrayelement5": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 4
+              }
+            },
+            "divide12": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement5"
+                },
+                "y": 10000
+              }
+            },
+            "divide13": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "divide12"
+                },
+                "y": {
+                  "from_node": "divide3"
+                }
+              }
+            },
+            "multiply14": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 14.464,
+                "y": {
+                  "from_node": "divide13"
+                }
+              }
+            },
+            "add6": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply14"
+                },
+                "y": 16.336
+              }
+            },
+            "eq1": {
+              "process_id": "eq",
+              "arguments": {
+                "x": 0,
+                "y": 6
+              }
+            },
+            "if1": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add5"
+                },
+                "reject": {
+                  "from_node": "add6"
+                },
+                "value": {
+                  "from_node": "eq1"
+                }
+              }
+            },
+            "eq2": {
+              "process_id": "eq",
+              "arguments": {
+                "x": 0,
+                "y": 5
+              }
+            },
+            "if2": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add4"
+                },
+                "reject": {
+                  "from_node": "if1"
+                },
+                "value": {
+                  "from_node": "eq2"
+                }
+              }
+            },
+            "eq3": {
+              "process_id": "eq",
+              "arguments": {
+                "x": 0,
+                "y": 4
+              }
+            },
+            "if3": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "multiply10"
+                },
+                "reject": {
+                  "from_node": "if2"
+                },
+                "value": {
+                  "from_node": "eq3"
+                }
+              }
+            },
+            "eq4": {
+              "process_id": "eq",
+              "arguments": {
+                "x": 0,
+                "y": 3
+              }
+            },
+            "if4": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "multiply9"
+                },
+                "reject": {
+                  "from_node": "if3"
+                },
+                "value": {
+                  "from_node": "eq4"
+                }
+              }
+            },
+            "eq5": {
+              "process_id": "eq",
+              "arguments": {
+                "x": 0,
+                "y": 2
+              }
+            },
+            "if5": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "power3"
+                },
+                "reject": {
+                  "from_node": "if4"
+                },
+                "value": {
+                  "from_node": "eq5"
+                }
+              }
+            },
+            "eq6": {
+              "process_id": "eq",
+              "arguments": {
+                "x": 0,
+                "y": 1
+              }
+            },
+            "if6": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "multiply6"
+                },
+                "reject": {
+                  "from_node": "if5"
+                },
+                "value": {
+                  "from_node": "eq6"
+                }
+              }
+            },
+            "eq7": {
+              "process_id": "eq",
+              "arguments": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "if7": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add3"
+                },
+                "reject": {
+                  "from_node": "if6"
+                },
+                "value": {
+                  "from_node": "eq7"
+                }
+              }
+            },
+            "subtract3": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "if7"
+                },
+                "y": 6
+              }
+            },
+            "subtract4": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": 12,
+                "y": 6
+              }
+            },
+            "divide14": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract3"
+                },
+                "y": {
+                  "from_node": "subtract4"
+                }
+              }
+            },
+            "subtract5": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.5
+              }
+            },
+            "multiply15": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract5"
+                },
+                "y": 4
+              }
+            },
+            "lte2": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.75
+              }
+            },
+            "if8": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "multiply15"
+                },
+                "reject": 1,
+                "value": {
+                  "from_node": "lte2"
+                }
+              }
+            },
+            "lte3": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.5
+              }
+            },
+            "if9": {
+              "process_id": "if",
+              "arguments": {
+                "accept": 0,
+                "reject": {
+                  "from_node": "if8"
+                },
+                "value": {
+                  "from_node": "lte3"
+                }
+              }
+            },
+            "gt1": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 1
+              }
+            },
+            "if10": {
+              "process_id": "if",
+              "arguments": {
+                "accept": 1,
+                "reject": {
+                  "from_node": "if9"
+                },
+                "value": {
+                  "from_node": "gt1"
+                }
+              }
+            },
+            "lt1": {
+              "process_id": "lt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0
+              }
+            },
+            "if11": {
+              "process_id": "if",
+              "arguments": {
+                "accept": 0,
+                "reject": {
+                  "from_node": "if10"
+                },
+                "value": {
+                  "from_node": "lt1"
+                }
+              }
+            },
+            "subtract6": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.0
+              }
+            },
+            "multiply16": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract6"
+                },
+                "y": 4
+              }
+            },
+            "subtract7": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.75
+              }
+            },
+            "multiply17": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract7"
+                },
+                "y": 4
+              }
+            },
+            "subtract8": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": 1,
+                "y": {
+                  "from_node": "multiply17"
+                }
+              }
+            },
+            "lte4": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.75
+              }
+            },
+            "if12": {
+              "process_id": "if",
+              "arguments": {
+                "accept": 1,
+                "reject": {
+                  "from_node": "subtract8"
+                },
+                "value": {
+                  "from_node": "lte4"
+                }
+              }
+            },
+            "lte5": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.25
+              }
+            },
+            "if13": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "multiply16"
+                },
+                "reject": {
+                  "from_node": "if12"
+                },
+                "value": {
+                  "from_node": "lte5"
+                }
+              }
+            },
+            "gt2": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 1
+              }
+            },
+            "if14": {
+              "process_id": "if",
+              "arguments": {
+                "accept": 0,
+                "reject": {
+                  "from_node": "if13"
+                },
+                "value": {
+                  "from_node": "gt2"
+                }
+              }
+            },
+            "lt2": {
+              "process_id": "lt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0
+              }
+            },
+            "if15": {
+              "process_id": "if",
+              "arguments": {
+                "accept": 0,
+                "reject": {
+                  "from_node": "if14"
+                },
+                "value": {
+                  "from_node": "lt2"
+                }
+              }
+            },
+            "subtract9": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.25
+              }
+            },
+            "multiply18": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract9"
+                },
+                "y": 4
+              }
+            },
+            "subtract10": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": 1,
+                "y": {
+                  "from_node": "multiply18"
+                }
+              }
+            },
+            "lte6": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.5
+              }
+            },
+            "if16": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "subtract10"
+                },
+                "reject": 0,
+                "value": {
+                  "from_node": "lte6"
+                }
+              }
+            },
+            "lte7": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.25
+              }
+            },
+            "if17": {
+              "process_id": "if",
+              "arguments": {
+                "accept": 1,
+                "reject": {
+                  "from_node": "if16"
+                },
+                "value": {
+                  "from_node": "lte7"
+                }
+              }
+            },
+            "gt3": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 1
+              }
+            },
+            "if18": {
+              "process_id": "if",
+              "arguments": {
+                "accept": 0,
+                "reject": {
+                  "from_node": "if17"
+                },
+                "value": {
+                  "from_node": "gt3"
+                }
+              }
+            },
+            "lt3": {
+              "process_id": "lt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0
+              }
+            },
+            "if19": {
+              "process_id": "if",
+              "arguments": {
+                "accept": 1,
+                "reject": {
+                  "from_node": "if18"
+                },
+                "value": {
+                  "from_node": "lt3"
+                }
+              }
+            },
+            "arraycreate2": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "if11"
+                  },
+                  {
+                    "from_node": "if15"
+                  },
+                  {
+                    "from_node": "if19"
+                  }
+                ]
+              }
+            },
+            "arrayelement6": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 5
+              }
+            },
+            "divide15": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement6"
+                },
+                "y": 10000
+              }
+            },
+            "subtract11": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide2"
+                },
+                "y": {
+                  "from_node": "divide15"
+                }
+              }
+            },
+            "add7": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "divide2"
+                },
+                "y": {
+                  "from_node": "divide15"
+                }
+              }
+            },
+            "divide16": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract11"
+                },
+                "y": {
+                  "from_node": "add7"
+                }
+              }
+            },
+            "lt4": {
+              "process_id": "lt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide16"
+                },
+                "y": 0
+              }
+            },
+            "if20": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "arraycreate1"
+                },
+                "reject": {
+                  "from_node": "arraycreate2"
+                },
+                "value": {
+                  "from_node": "lt4"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "applydimension1"
+        },
+        "process": {
+          "process_graph": {
+            "linearscalerange1": {
+              "process_id": "linear_scale_range",
+              "arguments": {
+                "inputMax": 1,
+                "inputMin": 0,
+                "outputMax": 255,
+                "outputMin": 0,
+                "x": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "saveresult1": {
+      "process_id": "save_result",
+      "arguments": {
+        "data": {
+          "from_node": "apply1"
+        },
+        "format": "PNG",
+        "options": {}
+      },
+      "result": true
+    }
+  }
+}
