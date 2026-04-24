@@ -897,6 +897,18 @@ wheels = [
 ]
 
 [[package]]
+name = "ipynbname"
+version = "2025.8.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "ipykernel" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b9/e9/e791d0ec7125a41c5625dc348ee28c2e335bd79ff8b31e9971333f129337/ipynbname-2025.8.0.0.tar.gz", hash = "sha256:dcc8367c64c4a9f0baa6acea3e509fd6696bf5d81c9abceb386e2ad6efcac935", size = 4374, upload-time = "2025-08-17T16:43:28.581Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1b/93/aece384e71b25385bd6a176f09865ee52faa7bda8221acafff8753f3f30a/ipynbname-2025.8.0.0-py3-none-any.whl", hash = "sha256:66f6249ff26d99b0057db2aac5ced4ca8a2ccaad067b9a66d17cfc1725207966", size = 4534, upload-time = "2025-08-17T16:43:27.219Z" },
+]
+
+[[package]]
 name = "ipython"
 version = "9.10.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1894,6 +1906,7 @@ version = "0.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "ipykernel" },
+    { name = "ipynbname" },
     { name = "jupyter" },
     { name = "matplotlib" },
     { name = "numpy" },
@@ -1922,6 +1935,7 @@ docs = [
 [package.metadata]
 requires-dist = [
     { name = "ipykernel", specifier = ">=6.25.0" },
+    { name = "ipynbname", specifier = ">=2025.8.0.0" },
     { name = "jupyter", specifier = ">=1.0.0" },
     { name = "matplotlib", specifier = ">=3.7.0" },
     { name = "numpy", specifier = ">=1.24.0" },
