@@ -335,8 +335,10 @@ mapped_params = param_manager.apply_endpoint_mapping(params, 'eopf_explorer')
 #### Resolution Methods
 
 ```python
-# Low-level: walk a flat graph and replace from_parameter refs with defaults.
-# Raises KeyError if the graph references a parameter not in current_params.
+# Low-level: walk a flat graph and replace from_parameter refs whose name
+# appears in current_params with that parameter's .default. References whose
+# name is not in current_params (typically callback-scoped placeholders like
+# "data", "value", "x") are preserved unchanged.
 resolved_graph = param_manager.resolve_parameters(
     datacube.flat_graph(),
     current_params,   # optional, defaults to the current parameter set
