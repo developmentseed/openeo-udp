@@ -186,16 +186,27 @@ Before writing any code, thoroughly analyze the original evalscript:
   ```python
   # Initialize parameter manager
   param_manager = ParameterManager('your_algorithm.params.py')
-  
+
   # Option 1: Interactive approach (recommended for notebooks)
   selection_widget = param_manager.interactive_parameter_selection()
   connection, current_params = selection_widget()
-  
+
   # Option 2: Programmatic approach (for scripts)
   connection, current_params = param_manager.quick_connect(
       parameter_set='venice_lagoon', endpoint='eopf_explorer'
   )
   ```
+
+- **Decide intrinsic vs runtime per parameter** when wiring `load_collection`:
+  pass `.default` for values that are fixed by the algorithm (collection, bands),
+  and pass the `Parameter` object itself for runtime knobs (AOI, TOI, cloud
+  cover) so the graph contains `{"from_parameter": ...}` refs reusable as a UDP.
+  Before any synchronous `.download()` / `.execute()`, call
+  `param_manager.resolve(datacube, current_params)` to materialise the refs —
+  the synchronous `/result` endpoint does not accept unresolved parameters.
+  See [docs/parameter-management.md](docs/parameter-management.md#intrinsic-vs-runtime-parameters)
+  and the [NDCI notebook](notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb)
+  for the canonical pattern.
 
 - **Define your test area** by selecting a spatial extent where the algorithm should produce meaningful results:
   - Water quality algorithms (like NDCI): choose areas with known water bodies

@@ -241,6 +241,76 @@ class ParameterManager:
         current = self._current_set or "None"
         return f"ParameterManager({len(sets)} sets: {sets}, current: {current})"
 
+    def resolve_parameters(
+        self,
+        graph: Dict[str, Any],
+        current_params: Dict[str, Any] = None,
+    ) -> Dict[str, Any]:
+        """Replace ``{"from_parameter": name}`` refs in a flat graph with concrete values.
+
+        openEO synchronous execution (``POST /result``) does not accept unresolved
+        parameter references; this helper materializes them so the same parameterized
+        graph can be used for UDP export and for synchronous download/execute.
+
+        Args:
+            graph: A flat process graph (as returned by ``DataCube.flat_graph()``),
+                or a process dict with a ``"process_graph"`` key.
+            current_params: Mapping of parameter name to ``Parameter`` object (or any
+                object with a ``.default`` attribute). Defaults to the current
+                parameter set.
+
+        Returns:
+            A new graph dict with every ``{"from_parameter": name}`` node replaced by
+            the corresponding parameter's ``.default`` value.
+
+        Raises:
+            KeyError: if the graph references a parameter missing from ``current_params``.
+        """
+        if current_params is None:
+            current_params = self.get_parameter_set()
+
+        values = {
+            name: p.default if hasattr(p, "default") else p
+            for name, p in current_params.items()
+        }
+
+        def walk(node):
+            if isinstance(node, dict):
+                if set(node.keys()) == {"from_parameter"}:
+                    name = node["from_parameter"]
+                    if name not in values:
+                        raise KeyError(
+                            f"Graph references parameter {name!r} but it is not in current_params"
+                        )
+                    return values[name]
+                return {k: walk(v) for k, v in node.items()}
+            if isinstance(node, list):
+                return [walk(item) for item in node]
+            return node
+
+        return walk(graph)
+
+    def resolve(self, datacube, current_params: Dict[str, Any] = None):
+        """Return a new :py:class:`openeo.rest.datacube.DataCube` with all parameter refs resolved.
+
+        Wraps :py:meth:`resolve_parameters` and reconstructs a DataCube bound to the
+        same connection via :py:meth:`Connection.datacube_from_flat_graph`. The
+        returned cube can be passed to ``.download()``/``.execute()``/``.create_job()``
+        as usual.
+
+        Args:
+            datacube: A :py:class:`~openeo.rest.datacube.DataCube` built with
+                Parameter references in its graph.
+            current_params: Mapping of parameter name to ``Parameter`` (or any value
+                with a ``.default``). Defaults to the current parameter set.
+
+        Returns:
+            A new DataCube (or SaveResult) whose flat graph contains no
+            ``from_parameter`` nodes.
+        """
+        resolved_graph = self.resolve_parameters(datacube.flat_graph(), current_params)
+        return datacube.connection.datacube_from_flat_graph(resolved_graph)
+
     def interactive_parameter_selection(self):
         """Create interactive parameter selection widgets.
 
