@@ -13,7 +13,7 @@ from openeo.api.process import Parameter
 ENDPOINT_CONFIG = {
     "name": "Development Seed OpenEO Backend",
     "url": "https://openeo.ds.io/",
-    "auth_method": "oidc",
+    "auth_method": "oidc_authorization_code",
     "collection_id": "sentinel-2-l2a",
     "band_format": "{band}",
     "reflectance_scale": 10000.0,
