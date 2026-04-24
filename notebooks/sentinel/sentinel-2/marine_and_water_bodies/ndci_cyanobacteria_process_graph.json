@@ -4,17 +4,17 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "reflectance|b02",
-          "reflectance|b03",
-          "reflectance|b04",
-          "reflectance|b05",
-          "reflectance|b07",
-          "reflectance|b08",
-          "reflectance|b8a",
-          "reflectance|b11",
-          "reflectance|b12"
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B07",
+          "B08",
+          "B8A",
+          "B11",
+          "B12"
         ],
-        "id": "sentinel-2-l2a",
+        "id": "SENTINEL2_L2A",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
@@ -47,7 +47,7 @@
         "data": {
           "from_node": "loadcollection1"
         },
-        "dimension": "time",
+        "dimension": "t",
         "reducer": {
           "process_graph": {
             "first1": {
@@ -87,7 +87,7 @@
                 "x": {
                   "from_node": "arrayelement1"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply1": {
@@ -114,7 +114,7 @@
                 "x": {
                   "from_node": "arrayelement2"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply2": {
@@ -141,7 +141,7 @@
                 "x": {
                   "from_node": "arrayelement3"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply3": {
@@ -718,7 +718,7 @@
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract1": {
@@ -1075,7 +1075,7 @@
                 "x": {
                   "from_node": "arrayelement5"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "arrayelement6": {
@@ -1093,7 +1093,7 @@
                 "x": {
                   "from_node": "arrayelement6"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract3": {
@@ -1176,7 +1176,7 @@
                 "x": {
                   "from_node": "arrayelement7"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "arrayelement8": {
@@ -1194,7 +1194,7 @@
                 "x": {
                   "from_node": "arrayelement8"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract5": {
@@ -1369,7 +1369,7 @@
                 "x": {
                   "from_node": "arrayelement9"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply47": {
@@ -1800,20 +1800,10 @@
       "optional": true
     },
     {
-      "name": "bands",
-      "description": "Sentinel-2 bands required for NDCI calculation",
+      "name": "cloud_cover",
+      "description": "Maximum cloud cover percentage",
       "schema": {},
-      "default": [
-        "reflectance|b02",
-        "reflectance|b03",
-        "reflectance|b04",
-        "reflectance|b05",
-        "reflectance|b07",
-        "reflectance|b08",
-        "reflectance|b8a",
-        "reflectance|b11",
-        "reflectance|b12"
-      ],
+      "default": 20,
       "optional": true
     }
   ],
