@@ -1,5 +1,5 @@
 {
-  "id": "fire-boundary",
+  "id": "fire_boundary",
   "summary": "Fire Boundary using Sentinel-2",
   "description": "Computes fire coefficient and applying two-step brightness enhancer to discriminate the boundaries of wildfire over unaffected areas",
   "process_graph": {
