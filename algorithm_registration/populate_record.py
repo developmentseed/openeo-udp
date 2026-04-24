@@ -6,8 +6,9 @@ Usage:
     python populate_record.py <path-to-notebook>
 
 Example:
-    python populate_record.py ../notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/fire_boundary_2.ipynb
+    python populate_record.py ../notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/fire_boundary.ipynb
 """
+
 import base64
 import json
 import os
@@ -36,8 +37,8 @@ def extract_metadata_from_notebook(notebook_path: Path) -> dict:
     if metadata_source is None:
         raise ValueError(f"No code cell tagged 'notebook_metadata' found in {notebook_path}")
 
-    # Execute the cell in the notebook's directory so Path.cwd() resolves correctly
-    exec_globals = {"Path": Path, "json": json}
+    # Pre-inject _algorithm_id so the cell doesn't need ipynbname (which requires a live kernel)
+    exec_globals = {"Path": Path, "json": json, "_algorithm_id": notebook_path.stem}
     original_cwd = os.getcwd()
     os.chdir(notebook_path.parent)
     try:
