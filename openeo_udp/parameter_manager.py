@@ -260,12 +260,11 @@ class ParameterManager:
                 parameter set.
 
         Returns:
-            A new graph dict with every ``{"from_parameter": name}`` node (whose
-            ``name`` is present in ``current_params``) replaced by the corresponding
-            parameter's ``.default`` value. References whose name is *not* in
-            ``current_params`` are preserved unchanged — they are typically
-            callback-scoped placeholders (``data``, ``value``, ``x``, ``y``, ...)
-            bound by the parent process at execution time.
+            A new graph dict with every ``{"from_parameter": name}`` node replaced by
+            the corresponding parameter's ``.default`` value.
+
+        Raises:
+            KeyError: if the graph references a parameter missing from ``current_params``.
         """
         if current_params is None:
             current_params = self.get_parameter_set()
@@ -279,10 +278,11 @@ class ParameterManager:
             if isinstance(node, dict):
                 if set(node.keys()) == {"from_parameter"}:
                     name = node["from_parameter"]
-                    if name in values:
-                        return values[name]
-                    # Leave callback-scoped refs (data/value/x/etc.) untouched.
-                    return node
+                    if name not in values:
+                        raise KeyError(
+                            f"Graph references parameter {name!r} but it is not in current_params"
+                        )
+                    return values[name]
                 return {k: walk(v) for k, v in node.items()}
             if isinstance(node, list):
                 return [walk(item) for item in node]
