@@ -1,7 +1,4 @@
 {
-  "id": "fire_boundary",
-  "summary": "Fire Boundary using Sentinel-2",
-  "description": "Computes fire coefficient and applying two-step brightness enhancer to discriminate the boundaries of wildfire over unaffected areas",
   "process_graph": {
     "loadcollection1": {
       "process_id": "load_collection",
@@ -20,7 +17,9 @@
                   "x": {
                     "from_parameter": "value"
                   },
-                  "y": 30
+                  "y": {
+                    "from_parameter": "cloud_cover"
+                  }
                 },
                 "result": true
               }
@@ -28,15 +27,11 @@
           }
         },
         "spatial_extent": {
-          "west": 146.55,
-          "south": -37.79,
-          "east": 146.9,
-          "north": -37.55
+          "from_parameter": "bounding_box"
         },
-        "temporal_extent": [
-          "2019-03-04",
-          "2019-03-07"
-        ]
+        "temporal_extent": {
+          "from_parameter": "time"
+        }
       }
     },
     "reducedimension1": {
@@ -351,81 +346,36 @@
   },
   "parameters": [
     {
-      "name": "bbox",
-      "description": "Spatial extent specified as a bounding box with 'west', 'south', 'east' and 'north' fields.",
-      "schema": {
-        "type": "object",
-        "subtype": "bounding-box",
-        "required": [
-          "west",
-          "south",
-          "east",
-          "north"
-        ],
-        "properties": {
-          "west": {
-            "type": "number",
-            "description": "West (lower left corner, coordinate axis 1)."
-          },
-          "south": {
-            "type": "number",
-            "description": "South (lower left corner, coordinate axis 2)."
-          },
-          "east": {
-            "type": "number",
-            "description": "East (upper right corner, coordinate axis 1)."
-          },
-          "north": {
-            "type": "number",
-            "description": "North (upper right corner, coordinate axis 2)."
-          },
-          "crs": {
-            "description": "Coordinate reference system of the extent, specified as EPSG code or WKT2 CRS string. Defaults to EPSG:4326 unless explicitly set.",
-            "anyOf": [
-              {
-                "type": "integer",
-                "subtype": "epsg-code",
-                "title": "EPSG Code",
-                "minimum": 1000
-              },
-              {
-                "type": "string",
-                "subtype": "wkt2-definition",
-                "title": "WKT2 definition"
-              }
-            ],
-            "default": 4326
-          }
-        }
-      }
+      "name": "time",
+      "description": "Temporal range for data acquisition",
+      "schema": {},
+      "default": [
+        "2019-03-04",
+        "2019-03-07"
+      ],
+      "optional": true
     },
     {
-      "name": "temporal_extent",
-      "description": "Temporal extent specified as two-element array with start and end date/date-time.",
-      "schema": {
-        "type": "array",
-        "subtype": "temporal-interval",
-        "uniqueItems": true,
-        "minItems": 2,
-        "maxItems": 2,
-        "items": {
-          "anyOf": [
-            {
-              "type": "string",
-              "subtype": "date-time",
-              "format": "date-time"
-            },
-            {
-              "type": "string",
-              "subtype": "date",
-              "format": "date"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      }
+      "name": "bounding_box",
+      "description": "Spatial extent for Melbourne fire area",
+      "schema": {},
+      "default": {
+        "west": 146.55,
+        "south": -37.79,
+        "east": 146.9,
+        "north": -37.55
+      },
+      "optional": true
+    },
+    {
+      "name": "cloud_cover",
+      "description": "Maximum cloud cover percentage",
+      "schema": {},
+      "default": 30,
+      "optional": true
     }
-  ]
+  ],
+  "id": "fire_boundary",
+  "summary": "Detection of fire Boundary using Sentinel-2.",
+  "description": "Computes fire coefficient and applying two-step brightness enhancer to discriminate the boundaries of wildfire over unaffected areas"
 }
