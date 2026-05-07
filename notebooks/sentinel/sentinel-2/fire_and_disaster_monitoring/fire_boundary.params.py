@@ -19,6 +19,10 @@ def get_parameters():
         - collection: Data collection identifier as Parameter object
         - cloud_cover: Maximum cloud cover percentage as Parameter object
     """
+    
+    # Bands required for the fire boundary algorithm:
+    # B11 (SWIR 1), B12 (SWIR 2)
+    fire_boundary_bands = ["B11", "B12"]
 
     parameter_sets = {
         "melbourne_fire": {
@@ -36,7 +40,7 @@ def get_parameters():
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for fire boundary calculation",
-                default=["B11", "B12"],
+                default=fire_boundary_bands,
             ),
             "collection": Parameter(
                 "collection",
@@ -64,7 +68,7 @@ def get_parameters():
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for fire boundary calculation",
-                default=["B11", "B12"],
+                default=fire_boundary_bands,
             ),
             "collection": Parameter(
                 "collection",
@@ -92,7 +96,7 @@ def get_parameters():
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for fire boundary calculation",
-                default=["B11", "B12"],
+                default=fire_boundary_bands,
             ),
             "collection": Parameter(
                 "collection",
