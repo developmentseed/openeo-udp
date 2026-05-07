@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout openeo-udp
-        uses: actions/Checkout@v4
+        uses: actions/checkout@v4
         with:
           fetch-depth: 2
       
@@ -32,15 +32,18 @@ jobs:
           echo "alg=$ALG" >> $GITHUB_OUTPUT
     
       # Pipeline below happens in developmentseed/apex_algorithms repo
-      - name: Clone apex_algorithm repo
-        run: |
-          git clone https://github.com/developmentseed/apex_algorithms.git
+      - name: Clone apex_algorithms repo
+        uses: actions/checkout@v4
+        with:
+          repository: developmentseed/apex_algorithms
+          path: apex_algorithms
+          token: ${{ secrets.APEX_PAT }}
       
       - name: Create branch and copy records
         run: |
           cd apex_algorithms
           git checkout -b alg/${{ steps.detect.outputs.alg }}
-          cp -r ../openeo-udp/algorithm_registration/${{ steps.detect.outputs.alg }} algorithm_catalog/developmentseed
+          cp -r ../algorithm_registration/${{ steps.detect.outputs.alg }} algorithm_catalog/developmentseed
     
       - name: Set up uv
         uses: astral-sh/setup-uv@v4
@@ -48,7 +51,7 @@ jobs:
       - name: Run QA tests
         working-directory: apex_algorithms
         run: |
-            uv sync --frozen
+            uv pip install qa/tools -r qa/unittests/requirements.txt
             uv run pytest qa/unittests/tests/test_records.py
 
       - name: Push records only on success
