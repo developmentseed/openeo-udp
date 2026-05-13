@@ -55,7 +55,6 @@ jobs:
             uv run pytest qa/unittests/tests/test_records.py
 
       - name: Push records only on success
-        if: success() # Only runs if all tests succeeded
         run: |
           cd apex_algorithms
           git config user.name "github-actions[bot]"
