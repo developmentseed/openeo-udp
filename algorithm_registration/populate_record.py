@@ -90,6 +90,7 @@ def fill_template(template_str: str, metadata: dict) -> dict:
         "{{UPDATED}}":              metadata["updated"],
         "{{LICENSE}}":              metadata["license"],
         "{{NOTEBOOK_PATH}}":        metadata.get("notebook_github_location", ""),
+        "{{TARGET_OPENEO_BACKEND_TITLE}}": metadata.get("openeo_backend_title", ""),
         "{{TARGET_OPENEO_BACKEND}}": metadata.get("openeo_backend_url", ""),
         "{{PREVIEW_TITLE}}":        metadata.get("preview_title", "{{PREVIEW_TITLE}}"),
         "{{AUTHOR_NAME}}":          author_name,

@@ -17,9 +17,7 @@
                   "x": {
                     "from_parameter": "value"
                   },
-                  "y": {
-                    "from_parameter": "cloud_cover"
-                  }
+                  "y": 30
                 },
                 "result": true
               }
@@ -27,11 +25,15 @@
           }
         },
         "spatial_extent": {
-          "from_parameter": "bounding_box"
+          "west": 146.55,
+          "south": -37.79,
+          "east": 146.9,
+          "north": -37.55
         },
-        "temporal_extent": {
-          "from_parameter": "time"
-        }
+        "temporal_extent": [
+          "2019-03-04",
+          "2019-03-07"
+        ]
       }
     },
     "reducedimension1": {
@@ -338,7 +340,7 @@
         "data": {
           "from_node": "apply1"
         },
-        "format": "PNG",
+        "format": "GTiff",
         "options": {}
       },
       "result": true
