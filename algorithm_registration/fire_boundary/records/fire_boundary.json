@@ -94,7 +94,7 @@
     {
       "rel": "service",
       "type": "application/json",
-      "title": "CDSE openEO Federation",
+      "title": "CDSE OpenEO Federation",
       "href": "https://openeofed.dataspace.copernicus.eu"
     },
     {
