@@ -66,6 +66,15 @@ def fill_template(template_str: str, metadata: dict) -> dict:
     )
 
     # --- Simple string replacements ---
+    attribution = metadata.get("attribution", {})
+    authors = attribution.get("authors") or []
+    author_name = ", ".join(authors) if authors else "Author of the original SentinelHub script is not listed"
+    contact_instructions = (
+        "Original SentinelHub script."
+        if authors else
+        "Original SentinelHub script — author not listed."
+    )
+
     replacements = {
         "{{ID}}":                   metadata["id"],
         "{{TITLE}}":                metadata["title"],
@@ -77,6 +86,10 @@ def fill_template(template_str: str, metadata: dict) -> dict:
         "{{TARGET_OPENEO_BACKEND_TITLE}}": metadata.get("openeo_backend_title", ""),
         "{{TARGET_OPENEO_BACKEND}}": metadata.get("openeo_backend_url", ""),
         "{{PREVIEW_TITLE}}":        metadata.get("preview_title", "{{PREVIEW_TITLE}}"),
+        "{{AUTHOR_NAME}}":          author_name,
+        "{{CONTACT_INSTRUCTIONS}}": contact_instructions,
+        "{{ORIGINAL_SCRIPT}}":      attribution.get("original_script", ""),
+        "{{SOURCE_REPOSITORY}}":    attribution.get("source_repository", ""),
     }
 
     for placeholder, value in replacements.items():

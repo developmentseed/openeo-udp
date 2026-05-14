@@ -11,7 +11,7 @@
     "updated": "{{UPDATED}}",
     "type": "service",
     "title": "{{TITLE}}",
-    "description": "{{DESCRIPTION}}",
+    "description": "{{DESCRIPTION}} Adapted from a SentinelHub Custom Script by {{AUTHOR_NAME}}.",
     "keywords": "{{KEYWORDS}}",
     "language": {
       "code": "en-US",
@@ -38,6 +38,22 @@
         "contactInstructions": "Contact via Development Seed",
         "roles": [
           "processor"
+        ]
+      },
+      {
+        "name": "{{AUTHOR_NAME}}",
+        "organization": "Sentinel Hub",
+        "links": [
+          {
+            "href": "{{ORIGINAL_SCRIPT}}",
+            "title": "{{TITLE}} SentinelHub Script",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "{{CONTACT_INSTRUCTIONS}} See link below.",
+        "roles": [
+          "author"
         ]
       }
     ],
@@ -112,6 +128,12 @@
       "type": "image/png",
       "title": "Thumbnail image",
       "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/{{ID}}/records/thumbnail.png"
+    },
+    {
+      "rel": "script-source",
+      "type": "text/html",
+      "title": "Script Source Repository",
+      "href": "{{SOURCE_REPOSITORY}}"
     }
   ]
 }
