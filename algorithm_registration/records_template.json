@@ -11,7 +11,7 @@
     "updated": "{{UPDATED}}",
     "type": "service",
     "title": "{{TITLE}}",
-    "description": "{{DESCRIPTION}}",
+    "description": "{{DESCRIPTION}}{{DESCRIPTION_ATTRIBUTION}}",
     "keywords": "{{KEYWORDS}}",
     "language": {
       "code": "en-US",
@@ -38,6 +38,22 @@
         "contactInstructions": "Contact via Development Seed",
         "roles": [
           "processor"
+        ]
+      },
+      {
+        "name": "{{AUTHOR_NAME}}",
+        "organization": "Sentinel Hub",
+        "links": [
+          {
+            "href": "{{ORIGINAL_SCRIPT}}",
+            "title": "{{TITLE}} SentinelHub Script",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "{{CONTACT_INSTRUCTIONS}}",
+        "roles": [
+          "author"
         ]
       }
     ],
