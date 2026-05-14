@@ -54,7 +54,7 @@ jobs:
             uv pip install qa/tools -r qa/unittests/requirements.txt
             uv run pytest qa/unittests/tests/test_records.py
 
-      - name: Push records only on success
+      - name: Push records to APEx algorithm repository
         run: |
           cd apex_algorithms
           git config user.name "github-actions[bot]"
