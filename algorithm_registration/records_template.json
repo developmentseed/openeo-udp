@@ -11,7 +11,7 @@
     "updated": "{{UPDATED}}",
     "type": "service",
     "title": "{{TITLE}}",
-    "description": "{{DESCRIPTION}} Adapted from a SentinelHub Custom Script by {{AUTHOR_NAME}}.",
+    "description": "{{DESCRIPTION}}{{DESCRIPTION_ATTRIBUTION}}",
     "keywords": "{{KEYWORDS}}",
     "language": {
       "code": "en-US",
@@ -51,7 +51,7 @@
             "type": "text/html"
           }
         ],
-        "contactInstructions": "{{CONTACT_INSTRUCTIONS}} See link below.",
+        "contactInstructions": "{{CONTACT_INSTRUCTIONS}}",
         "roles": [
           "author"
         ]
