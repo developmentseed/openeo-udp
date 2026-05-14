@@ -144,7 +144,7 @@
       "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire_boundary/records/thumbnail.png"
     },
     {
-      "rel": "script-source",
+      "rel": "cite-as",
       "type": "text/html",
       "title": "Script Source Repository",
       "href": "https://github.com/sentinel-hub/custom-scripts"
