@@ -112,6 +112,12 @@
       "type": "image/png",
       "title": "Thumbnail image",
       "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/{{ID}}/records/thumbnail.png"
+    },
+    {
+      "rel": "cite-as",
+      "type": "text/html",
+      "title": "Script Source Repository",
+      "href": "{{SOURCE_REPOSITORY}}"
     }
   ]
 }
