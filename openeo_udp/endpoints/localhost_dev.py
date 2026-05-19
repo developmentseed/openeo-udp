@@ -12,7 +12,7 @@ from openeo.api.process import Parameter
 # Endpoint configuration
 ENDPOINT_CONFIG = {
     "name": "Localhost Development TiTiler OpenEO Backend",
-    "url": "http://localhost:8081/",
+    "url": "http://localhost:8082/",
     "auth_method": "oidc_authorization_code",
     "collection_id": "sentinel-2-l2a",
     "band_format": "{band}",
