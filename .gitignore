@@ -125,6 +125,7 @@ $RECYCLE.BIN/
 *.nc
 !**/docs/**/*.png
 !**/docs/**/*.jpg
+!algorithm_registration/**/records/*.png
 
 # Temporary files
 *.tmp
