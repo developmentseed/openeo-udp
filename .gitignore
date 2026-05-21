@@ -138,5 +138,5 @@ $RECYCLE.BIN/
 # OpenEO specific
 *.json.bak
 *.zarr
-
+notebooks/**/*.json
 .coverage
