@@ -86,6 +86,6 @@ jobs:
       - name: Run QA tests
         working-directory: apex_algorithms
         run: |
-          uv pip install pytest qa/tools -r qa/unittests/requirements.txt
-          uv run pytest qa/unittests/tests/test_records.py
+          pip install pytest qa/tools -r qa/unittests/requirements.txt
+          pytest qa/unittests/tests/test_records.py
 
