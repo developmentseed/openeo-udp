@@ -1,9 +1,7 @@
 name: Register Algorithm to APEx Catalogue
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
     paths:
       - 'algorithm_registration/**'
 
@@ -19,7 +17,7 @@ jobs:
       - name: Detect changed algorithms
         id: detect
         run: |
-          ALGS=$(git diff --name-only HEAD~1 HEAD -- algorithm_registration/ \
+          ALGS=$(git diff --name-only origin/main...HEAD -- algorithm_registration/ \
             | grep '^algorithm_registration/[^/]*/[^/]' \
             | awk -F'/' '{print $2}' \
             | sort -u)
