@@ -1,27 +1,93 @@
-name: Check Existence of the Algorithm
+name: Register Algorithm to APEx Catalogue
 
 on:
-  pull_request:
+  push:
     branches:
       - main
+    paths:
+      - 'algorithm_registration/**'
 
 jobs:
-  check:
+  register:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout openeo-udp
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-    
-      - name: Check if algorithm exists
+
+      - name: Detect changed algorithms
+        id: detect
         run: |
-          ALG=$(git diff --name-only origin/main...HEAD -- algorithm_registration/ \
+          ALGS=$(git diff --name-only HEAD~1 HEAD -- algorithm_registration/ \
             | grep '^algorithm_registration/[^/]*/[^/]' \
             | awk -F'/' '{print $2}' \
-            | sort -u \
-            | head -1)
-          if [ -z "$ALG" ]; then
-            echo "::warning::No algorithm directory changes detected. Did you forget to export OGC metadata and UDP?"
+            | sort -u)
+          if [ -z "$ALGS" ]; then
+            echo "No algorithm directory changes detected, skipping."
             exit 1
           fi
-          echo "Algorithm detected: $ALG"
+          echo "algs<<EOF" >> $GITHUB_OUTPUT
+          echo "$ALGS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Check required artifacts
+        run: |
+          MISSING=0
+          while IFS= read -r ALG; do
+            UDP="algorithm_registration/${ALG}/openeo_udp/${ALG}.json"
+            PREVIEW="algorithm_registration/${ALG}/records/preview.png"
+
+            if [ ! -f "$UDP" ]; then
+              echo "::error::UDP for '${ALG}' not found. Run: python algorithm_registration/set_up_record_dir.py <notebook.ipynb> --udp <path/to/${ALG}.json>"
+              MISSING=1
+            fi
+            if [ ! -f "$PREVIEW" ]; then
+              echo "::error::Preview image for '${ALG}' not found. Run: python algorithm_registration/set_up_record_dir.py <notebook.ipynb> --preview <path/to/preview.png>"
+              MISSING=1
+            fi
+          done <<< "${{ steps.detect.outputs.algs }}"
+          [ "$MISSING" -eq 0 ] || exit 1
+
+      - name: Generate missing records
+        run: |
+          while IFS= read -r ALG; do
+            OGC_RECORD="algorithm_registration/${ALG}/records/${ALG}.json"
+            if [ ! -f "$OGC_RECORD" ]; then
+              echo "::warning::OGC_RECORD for '${ALG}' has not been committed. Generating it now via populate_record.py."
+              NOTEBOOK=$(find notebooks/ -name "${ALG}.ipynb" -type f | head -1)
+              if [ -z "$NOTEBOOK" ]; then
+                echo "::error::No notebook found for '${ALG}'. Add a notebook named '${ALG}.ipynb' under notebooks/ and re-push."
+                exit 1
+              fi
+              uv run python algorithm_registration/populate_record.py "$NOTEBOOK"
+            fi
+          done <<< "${{ steps.detect.outputs.algs }}"
+
+      # Pipeline below happens in developmentseed/apex_algorithms repo
+      - name: Clone apex_algorithms repo
+        uses: actions/checkout@v4
+        with:
+          repository: developmentseed/apex_algorithms
+          path: apex_algorithms
+          token: ${{ secrets.APEX_PAT }}
+
+      - name: Configure apex_algorithms git
+        working-directory: apex_algorithms
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add target https://x-access-token:${{ secrets.APEX_PAT }}@github.com/developmentseed/apex_algorithms.git
+
+      - name: Run QA tests
+        working-directory: apex_algorithms
+        run: |
+          uv pip install qa/tools -r qa/unittests/requirements.txt
+          uv run pytest qa/unittests/tests/test_records.py
+
