@@ -9,7 +9,6 @@ Example:
     python populate_record.py ../notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/fire_boundary.ipynb
 """
 
-import base64
 import json
 import os
 import re
@@ -111,44 +110,15 @@ def fill_template(template_str: str, metadata: dict) -> dict:
     return json.loads(template_str)
 
 
-def export_images(notebook_path: Path, records_dir: Path) -> None:
-    """Extract the preview_image-tagged cell output and write preview.png and thumbnail.png."""
-    with open(notebook_path) as f:
-        nb = json.load(f)
-
-    preview_cell = next(
-        (
-            cell
-            for cell in nb["cells"]
-            if cell["cell_type"] == "code"
-            and "preview_image" in cell.get("metadata", {}).get("tags", [])
-        ),
-        None,
-    )
-
-    if preview_cell is None:
-        print("Warning: no cell tagged 'preview_image' found — skipping image export")
-        return
-
-    png_b64 = next(
-        (
-            output["data"]["image/png"]
-            for output in preview_cell.get("outputs", [])
-            if output.get("output_type") in ("display_data", "execute_result")
-            and "image/png" in output.get("data", {})
-        ),
-        None,
-    )
-
-    if png_b64 is None:
-        print("Warning: preview_image cell has no image/png output — skipping image export")
-        return
-
-    png_bytes = base64.b64decode(png_b64)
-
+def generate_thumbnail(records_dir: Path) -> None:
+    """Generate thumbnail.png from an existing preview.png in records_dir."""
     preview_path = records_dir / "preview.png"
-    preview_path.write_bytes(png_bytes)
-    print(f"Preview written: {preview_path}")
+
+    if not preview_path.exists():
+        raise FileNotFoundError(
+            f"preview.png not found in {records_dir}. "
+            "Run register.py with --preview to copy it first."
+        )
 
     with Image.open(preview_path) as img:
         thumb = img.resize((img.width // 2, img.height // 2), Image.LANCZOS)
@@ -181,7 +151,7 @@ def run(notebook_path: Path) -> Path:
 
     print(f"Record written: {output_path}")
 
-    export_images(notebook_path, output_path.parent)
+    generate_thumbnail(output_path.parent)
 
     return output_path
 
