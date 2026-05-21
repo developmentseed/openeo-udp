@@ -89,3 +89,15 @@ jobs:
           pip install pytest qa/tools -r qa/unittests/requirements.txt
           pytest qa/unittests/tests/test_records.py
 
+      - name: Push records to APEx algorithm repository
+        run: |
+          while IFS= read -r ALG; do
+            cd apex_algorithms
+            git checkout main
+            git checkout -b alg/${ALG}
+            cp -r ../algorithm_registration/${ALG} algorithm_catalog/developmentseed/${ALG}
+            git add algorithm_catalog/developmentseed/${ALG}
+            git commit -m "Add ${ALG} UDP"
+            git push target alg/${ALG}
+            cd ..
+          done <<< "${{ steps.detect.outputs.algs }}"
