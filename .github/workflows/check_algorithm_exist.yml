@@ -86,8 +86,9 @@ jobs:
       - name: Run QA tests
         working-directory: apex_algorithms
         run: |
-          pip install pytest qa/tools -r qa/unittests/requirements.txt
-          pytest qa/unittests/tests/test_records.py
+          conda create --name apex_algorithms_qa python pytest -y
+          conda run --name apex_algorithms_qa pip install qa/tools
+          conda run --name apex_algorithms_qa pytest qa/unittests/tests/test_records.py
 
       - name: Push records to APEx algorithm repository
         run: |
