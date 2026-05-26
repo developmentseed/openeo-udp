@@ -43,12 +43,13 @@ jobs:
           while IFS= read -r ALG; do
             UDP="algorithm_registration/${ALG}/openeo_udp/${ALG}.json"
             PREVIEW="algorithm_registration/${ALG}/records/preview.png"
+
             if [ ! -f "$UDP" ]; then
-              echo "::error::UDP for '${ALG}' not found. Run: python algorithm_registration/register.py <notebook.ipynb> --udp <path/to/${ALG}.json>"
+              echo "::error::UDP for '${ALG}' not found. Run: python algorithm_registration/set_up_record_dir.py <notebook.ipynb> --udp <path/to/${ALG}.json>"
               MISSING=1
             fi
             if [ ! -f "$PREVIEW" ]; then
-              echo "::error::Preview image for '${ALG}' not found. Run: python algorithm_registration/register.py <notebook.ipynb> --preview <path/to/preview.png>"
+              echo "::error::Preview image for '${ALG}' not found. Run: python algorithm_registration/set_up_record_dir.py <notebook.ipynb> --preview <path/to/preview.png>"
               MISSING=1
             fi
           done <<< "${{ steps.detect.outputs.algs }}"
@@ -57,9 +58,9 @@ jobs:
       - name: Generate missing records
         run: |
           while IFS= read -r ALG; do
-            RECORD="algorithm_registration/${ALG}/records/${ALG}.json"
-            if [ ! -f "$RECORD" ]; then
-              echo "::warning::Record for '${ALG}' has not been committed. Generating it now via populate_record.py."
+            OGC_RECORD="algorithm_registration/${ALG}/records/${ALG}.json"
+            if [ ! -f "$OGC_RECORD" ]; then
+              echo "::warning::OGC_RECORD for '${ALG}' has not been committed. Generating it now via populate_record.py."
               NOTEBOOK=$(find notebooks/ -name "${ALG}.ipynb" -type f | head -1)
               if [ -z "$NOTEBOOK" ]; then
                 echo "::error::No notebook found for '${ALG}'. Add a notebook named '${ALG}.ipynb' under notebooks/ and re-push."
