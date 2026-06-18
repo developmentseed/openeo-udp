@@ -17,7 +17,7 @@ ENDPOINT_CONFIG = {
     "collection_id": "sentinel-2-l2a",
     "band_format": "{band}",
     "reflectance_scale": 10000.0,
-    "bands_dimension": "bands",
+    "bands_dimension": "spectral",
     "time_dimension": "t",
     "description": "Development and testing endpoint",
     "capabilities": ["load_collection", "apply_dimension", "save_result"],
