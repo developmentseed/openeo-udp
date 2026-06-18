@@ -30,11 +30,11 @@
       "description": "Sentinel-2 bands required for SWBM indices",
       "schema": {},
       "default": [
-        "B02_10m",
-        "B03_10m",
-        "B04_10m",
-        "B08_10m",
-        "B11_20m"
+        "B02",
+        "B03",
+        "B04",
+        "B08",
+        "B11"
       ],
       "optional": true
     },
@@ -78,13 +78,13 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B02_10m",
-          "B03_10m",
-          "B04_10m",
-          "B08_10m",
-          "B11_20m"
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11"
         ],
-        "id": "sentinel-2-l2a",
+        "id": "SENTINEL2_L2A",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
