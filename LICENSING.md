@@ -56,3 +56,5 @@ Conversion: Development Seed (openEO-UDP project)
 - `notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb`
 - `notebooks/sentinel/sentinel-2/advanced_spectral_processing/cab_chlorophyll_content.ipynb`
 - `notebooks/sentinel/sentinel-2/advanced_spectral_processing/cab_chlorophyll_content.params.py`
+- `notebooks/sentinel/sentinel-2/advanced_spectral_processing/ndvi_anomaly_detection.ipynb`
+- `notebooks/sentinel/sentinel-2/advanced_spectral_processing/ndvi_anomaly_detection.params.py`
