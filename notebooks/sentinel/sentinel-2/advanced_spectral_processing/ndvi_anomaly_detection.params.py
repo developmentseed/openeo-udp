@@ -135,6 +135,96 @@ def get_parameters():
                 default=-1.0,
             ),
         },
+        # 2018 summer drought south of Leipzig, Germany — the representative
+        # example from the original Sentinel Hub script (peak in August, end in
+        # October). Requires the full Sentinel-2 archive (use the CDSE endpoint;
+        # the titiler/EOPF catalog does not cover 2018).
+        "leipzig_drought_2018_germany": {
+            "location_name": "South of Leipzig, Germany (2018 drought, August peak)",
+            "bounding_box": Parameter(
+                "bounding_box",
+                description="Spatial extent for the agricultural region south of Leipzig, Germany",
+                default={"west": 12.20, "south": 51.10, "east": 12.50, "north": 51.28},
+            ),
+            "time": Parameter(
+                "time",
+                description="Target month (current year) for the NDVI anomaly",
+                default=["2018-08-01", "2018-09-01"],
+            ),
+            "bands": Parameter(
+                "bands",
+                description="Sentinel-2 bands required for NDVI anomaly detection",
+                default=ndvi_anomaly_bands,
+            ),
+            "collection": Parameter(
+                "collection",
+                description="Data collection identifier",
+                default="SENTINEL2_L2A",
+            ),
+            "cloud_cover": Parameter(
+                "cloud_cover",
+                description="Maximum cloud cover percentage",
+                default=60,
+            ),
+            "nb_past_years": Parameter(
+                "nb_past_years",
+                description="Number of past years to average as the NDVI baseline",
+                default=3,
+            ),
+            "anomaly_clamp": Parameter(
+                "anomaly_clamp",
+                description="Symmetric clamp applied to the NDVI anomaly (pixelEvalMaxValue in the original script)",
+                default=0.7,
+            ),
+            "ndvi_min": Parameter(
+                "ndvi_min",
+                description="NDVI values at or below this threshold are treated as invalid",
+                default=-1.0,
+            ),
+        },
+        "leipzig_drought_2018_october_germany": {
+            "location_name": "South of Leipzig, Germany (2018 drought, October end)",
+            "bounding_box": Parameter(
+                "bounding_box",
+                description="Spatial extent for the agricultural region south of Leipzig, Germany",
+                default={"west": 12.20, "south": 51.10, "east": 12.50, "north": 51.28},
+            ),
+            "time": Parameter(
+                "time",
+                description="Target month (current year) for the NDVI anomaly",
+                default=["2018-10-01", "2018-11-01"],
+            ),
+            "bands": Parameter(
+                "bands",
+                description="Sentinel-2 bands required for NDVI anomaly detection",
+                default=ndvi_anomaly_bands,
+            ),
+            "collection": Parameter(
+                "collection",
+                description="Data collection identifier",
+                default="SENTINEL2_L2A",
+            ),
+            "cloud_cover": Parameter(
+                "cloud_cover",
+                description="Maximum cloud cover percentage",
+                default=70,
+            ),
+            "nb_past_years": Parameter(
+                "nb_past_years",
+                description="Number of past years to average as the NDVI baseline",
+                default=3,
+            ),
+            "anomaly_clamp": Parameter(
+                "anomaly_clamp",
+                description="Symmetric clamp applied to the NDVI anomaly (pixelEvalMaxValue in the original script)",
+                default=0.7,
+            ),
+            "ndvi_min": Parameter(
+                "ndvi_min",
+                description="NDVI values at or below this threshold are treated as invalid",
+                default=-1.0,
+            ),
+        },
     }
 
     return parameter_sets
