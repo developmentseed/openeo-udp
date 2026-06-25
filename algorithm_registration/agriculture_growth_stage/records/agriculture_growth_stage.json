@@ -1,0 +1,36 @@
+{
+  "id": "agriculture_growth_stage",
+  "title": "Agricultural Growth Stage",
+  "preview_title": "Agricultural Growth Stage",
+  "description": "Multi-temporal NDVI composite that assigns the mean NDVI of each of three calendar months to the red, green and blue channels, so colour encodes when in the season vegetation peaked and separates crops by growth stage.",
+  "keywords": [
+    "NDVI",
+    "Phenology",
+    "Growth stage",
+    "Agriculture",
+    "Multi-temporal",
+    "Sentinel-2"
+  ],
+  "themes": [
+    "VEGETATION",
+    "AGRICULTURE",
+    "REMOTE SENSING",
+    "Sentinel-2 MSI"
+  ],
+  "created": "2026-06-25T00:00:00Z",
+  "updated": "2026-06-25T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "CDSE openEO Federation",
+  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
+  "notebook_github_location": "notebooks/sentinel/sentinel-2/advanced_spectral_processing/agriculture_growth_stage.ipynb",
+  "collection_id": "SENTINEL2_L2A",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/agriculture_growth_stage/",
+    "authors": [
+      "@HarelDan",
+      "Andr\u00e1s Zlinszky"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
+    "citation": null
+  }
+}
