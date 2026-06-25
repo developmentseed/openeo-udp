@@ -1,0 +1,35 @@
+{
+  "id": "apa_aquatic_plants_algae",
+  "title": "Aquatic Plants and Algae Detection (APA)",
+  "preview_title": "Aquatic Plants and Algae (APA)",
+  "description": "Detects and visualizes aquatic plants and algae in water bodies from Sentinel-2 L2A reflectance using FAI, water-plants, NDWI and moisture indices. Based on the APA script by the University of Girona.",
+  "keywords": [
+    "Aquatic vegetation",
+    "Algae",
+    "Water quality",
+    "FAI",
+    "Sentinel-2"
+  ],
+  "themes": [
+    "IMAGERY",
+    "REMOTE SENSING",
+    "Sentinel-2 MSI"
+  ],
+  "created": "2026-06-25T00:00:00Z",
+  "updated": "2026-06-25T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "EOPF Explorer",
+  "openeo_backend_url": "https://api.explorer.eopf.copernicus.eu/openeo",
+  "notebook_github_location": "notebooks/sentinel/sentinel-2/marine_and_water_bodies/apa_aquatic_plants_algae.ipynb",
+  "collection_id": "sentinel-2-l2a",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/apa_script/",
+    "authors": [
+      "Anna Peliova",
+      "Carla Garcia-Lozano",
+      "Josep Sitjar"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
+    "citation": null
+  }
+}

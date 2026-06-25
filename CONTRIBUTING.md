@@ -282,6 +282,36 @@ def compute_index(data):
 This single change makes the same notebook run correctly on both integer and
 float backends without any manual adjustment.
 
+##### Practice 6 — Resolve bands with the band resolver, not fuzzy name search
+
+Backends rename bands (`B08` on CDSE, `B08_10m` on DS, `reflectance|b08` on EOPF
+Explorer), so a single algorithm cannot hardcode native band names. Avoid the
+brittle workaround of scanning `cube.metadata.band_names` with a prefix guess:
+
+```python
+# ❌ Fragile: depends on substring matching and breaks if a backend
+#    uses a different prefix/casing, or exposes two matching bands.
+nir_band = next(b for b in cube.metadata.band_names if b.lower().startswith("b08"))
+green_band = next(b for b in cube.metadata.band_names if b.lower().startswith("b03"))
+```
+
+Instead reference bands by their **canonical** name (the lowercase STAC-style ids
+defined in `openeo_udp/collections.py` and used in your `*.params.py` defaults)
+and let the resolver return the native name for the active endpoint:
+
+```python
+# ✅ Deterministic: canonical -> native lookup for this backend.
+bands = param_manager.band_name_map(current_params)
+nir_band = bands["b08"]
+green_band = bands["b03"]
+rank = cube.band(nir_band) / cube.band(green_band)
+```
+
+`band_name_map` zips the canonical band list with the endpoint-mapped names in
+`current_params`, so the lookup stays correct on every backend and fails loudly
+(`UnsupportedBandError`) at connect time if a band isn't mapped — rather than
+silently picking the wrong band or `StopIteration` at runtime.
+
 - **Define your test area** by selecting a spatial extent where the algorithm should produce meaningful results:
   - Water quality algorithms (like NDCI): choose areas with known water bodies
   - Vegetation indices: select regions with diverse vegetation types

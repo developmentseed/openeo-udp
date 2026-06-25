@@ -4,17 +4,17 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B02",
-          "B03",
-          "B04",
-          "B05",
-          "B07",
-          "B08",
-          "B8A",
-          "B11",
-          "B12"
+          "B02_10m",
+          "B03_10m",
+          "B04_10m",
+          "B05_20m",
+          "B07_20m",
+          "B08_10m",
+          "B8A_20m",
+          "B11_20m",
+          "B12_20m"
         ],
-        "id": "SENTINEL2_L2A",
+        "id": "sentinel-2-l2a",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
@@ -69,7 +69,7 @@
         "data": {
           "from_node": "reducedimension1"
         },
-        "dimension": "bands",
+        "dimension": "spectral",
         "process": {
           "process_graph": {
             "arrayelement1": {
@@ -87,7 +87,7 @@
                 "x": {
                   "from_node": "arrayelement1"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "multiply1": {
@@ -114,7 +114,7 @@
                 "x": {
                   "from_node": "arrayelement2"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "multiply2": {
@@ -141,7 +141,7 @@
                 "x": {
                   "from_node": "arrayelement3"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "multiply3": {
@@ -718,7 +718,7 @@
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "subtract1": {
@@ -1075,7 +1075,7 @@
                 "x": {
                   "from_node": "arrayelement5"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "arrayelement6": {
@@ -1093,7 +1093,7 @@
                 "x": {
                   "from_node": "arrayelement6"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "subtract3": {
@@ -1176,7 +1176,7 @@
                 "x": {
                   "from_node": "arrayelement7"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "arrayelement8": {
@@ -1194,7 +1194,7 @@
                 "x": {
                   "from_node": "arrayelement8"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "subtract5": {
@@ -1369,7 +1369,7 @@
                 "x": {
                   "from_node": "arrayelement9"
                 },
-                "y": 10000.0
+                "y": 1.0
               }
             },
             "multiply47": {
@@ -1782,20 +1782,20 @@
       "description": "Temporal range for data acquisition",
       "schema": {},
       "default": [
-        "2025-12-01",
-        "2026-03-01"
+        "2023-07-01",
+        "2023-09-30"
       ],
       "optional": true
     },
     {
       "name": "bounding_box",
-      "description": "Spatial extent for Peniche Bay",
+      "description": "Spatial extent for Lake Taihu",
       "schema": {},
       "default": {
-        "west": -9.42,
-        "south": 39.3,
-        "east": -9.32,
-        "north": 39.38
+        "west": 119.9,
+        "south": 30.9,
+        "east": 120.6,
+        "north": 31.55
       },
       "optional": true
     },
@@ -1803,7 +1803,7 @@
       "name": "cloud_cover",
       "description": "Maximum cloud cover percentage",
       "schema": {},
-      "default": 20,
+      "default": 30,
       "optional": true
     }
   ],

@@ -32,17 +32,17 @@ def get_parameters():
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
-                default=["2023-06-01", "2023-08-31"],
+                default=["2025-06-01", "2025-08-31"],
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for APA calculation",
-                default=["B02", "B03", "B04", "B05", "B08", "B8A", "B11"],
+                default=["b02", "b03", "b04", "b05", "b08", "b8a", "b11"],
             ),
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -65,7 +65,7 @@ def get_parameters():
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for APA calculation",
-                default=["B02", "B03", "B04", "B05", "B08", "B8A", "B11"],
+                default=["b02", "b03", "b04", "b05", "b08", "b8a", "b11"],
             ),
             "collection": Parameter(
                 "collection",
@@ -93,12 +93,12 @@ def get_parameters():
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for APA calculation",
-                default=["B02", "B03", "B04", "B05", "B08", "B8A", "B11"],
+                default=["b02", "b03", "b04", "b05", "b08", "b8a", "b11"],
             ),
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -121,12 +121,12 @@ def get_parameters():
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for APA calculation",
-                default=["B02", "B03", "B04", "B05", "B08", "B8A", "B11"],
+                default=["b02", "b03", "b04", "b05", "b08", "b8a", "b11"],
             ),
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -149,12 +149,12 @@ def get_parameters():
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for APA calculation",
-                default=["B02", "B03", "B04", "B05", "B08", "B8A", "B11"],
+                default=["b02", "b03", "b04", "b05", "b08", "b8a", "b11"],
             ),
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",

@@ -1,13 +1,13 @@
 """Endpoint configuration for Development Seed OpenEO Backend.
 
-This module contains both connection configuration and parameter mapping logic
-for the Development Seed OpenEO backend.
+This module contains both connection configuration and the canonical->native
+collection/band mapping table for the Development Seed OpenEO backend. The
+actual mapping logic lives in :func:`openeo_udp.collections.make_mapper`.
 """
 
-from typing import Any, Dict
-
 import openeo
-from openeo.api.process import Parameter
+
+from openeo_udp.collections import Collection, make_mapper
 
 # Endpoint configuration
 ENDPOINT_CONFIG = {
@@ -15,8 +15,7 @@ ENDPOINT_CONFIG = {
     "url": "https://openeo.ds.io/",
     "auth_method": "oidc_authorization_code",
     "collection_id": "sentinel-2-l2a",
-    "band_format": "{band}",
-    "reflectance_scale": 10000.0,
+    "reflectance_scale": 1.0,
     "bands_dimension": "spectral",
     "time_dimension": "t",
     "description": "Development and testing endpoint",
@@ -26,97 +25,31 @@ ENDPOINT_CONFIG = {
     "enabled": True,
 }
 
-# Sentinel-2 band resolution mapping
-BAND_RESOLUTIONS = {
-    "B01": 60,
-    "B02": 10,
-    "B03": 10,
-    "B04": 10,
-    "B05": 20,
-    "B06": 20,
-    "B07": 20,
-    "B08": 10,
-    "B8A": 20,
-    "B09": 60,
-    "B10": 60,
-    "B11": 20,
-    "B12": 20,
-    "SCL": 20,
+# Canonical (lowercase STAC-style) -> DS-native collection ids and band names.
+# Sentinel-2 bands carry an explicit resolution suffix (e.g. B04_10m).
+COLLECTIONS = {
+    Collection.SENTINEL2_L2A: {
+        "collection_id": "sentinel-2-l2a",
+        "bands": {
+            "b01": "B01_60m", "b02": "B02_10m", "b03": "B03_10m",
+            "b04": "B04_10m", "b05": "B05_20m", "b06": "B06_20m",
+            "b07": "B07_20m", "b08": "B08_10m", "b8a": "B8A_20m",
+            "b09": "B09_60m", "b10": "B10_60m", "b11": "B11_20m",
+            "b12": "B12_20m", "scl": "SCL_20m",
+            # Viewing-/sun-angle metadata bands (no resolution suffix).
+            "viewzenithmean": "viewZenithMean",
+            "viewazimuthmean": "viewAzimuthMean",
+            "sunzenithangles": "sunZenithAngles",
+            "sunazimuthangles": "sunAzimuthAngles",
+        },
+    },
+    Collection.SENTINEL1_GRD: {
+        "collection_id": "sentinel-1-grd",
+        "bands": {"vh": "vh", "vv": "vv"},
+    },
 }
 
-
-def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
-    """Map parameters for Development Seed endpoint.
-
-    Transforms:
-    - Collection IDs: SENTINEL2_L2A -> sentinel-2-l2a
-    - Band names: For sentinel-2-l2a collections, appends resolution suffix (B04 -> B04_10m)
-
-    Args:
-        params: Original parameter dictionary
-
-    Returns:
-        Mapped parameter dictionary
-    """
-    mapped_params = params.copy()
-    mapped_params["reflectance_scale"] = ENDPOINT_CONFIG["reflectance_scale"]
-    mapped_params["bands_dimension"] = ENDPOINT_CONFIG["bands_dimension"]
-    mapped_params["time_dimension"] = ENDPOINT_CONFIG["time_dimension"]
-
-    # Track the collection to determine if we need to add resolution suffixes
-    collection_id = ENDPOINT_CONFIG["collection_id"]
-
-    for param_name, param_value in params.items():
-        if isinstance(param_value, Parameter):
-            # Map collection parameter to DS format
-            if param_name == "collection":
-                mapped_params[param_name] = Parameter(
-                    param_value.name,
-                    description=(
-                        param_value.description
-                        if hasattr(param_value, "description")
-                        else param_value.name
-                    ),
-                    default=collection_id,
-                )
-
-            # Transform band names for sentinel-2-l2a collections
-            elif param_name == "bands" and isinstance(param_value.default, list):
-                # Add resolution suffix if collection starts with "sentinel-2-l2"
-                if collection_id.startswith("sentinel-2-l2"):
-                    mapped_bands = []
-                    for band in param_value.default:
-                        # Extract base band name (handle case variations)
-                        band_upper = band.upper()
-                        if band_upper in BAND_RESOLUTIONS:
-                            resolution = BAND_RESOLUTIONS[band_upper]
-                            mapped_bands.append(f"{band}_{resolution}m")
-                        else:
-                            # Keep original if not in mapping
-                            mapped_bands.append(band)
-
-                    mapped_params[param_name] = Parameter(
-                        param_value.name,
-                        description=(
-                            param_value.description
-                            if hasattr(param_value, "description")
-                            else param_value.name
-                        ),
-                        default=mapped_bands,
-                    )
-                else:
-                    # No transformation for non-sentinel-2-l2 collections
-                    mapped_params[param_name] = Parameter(
-                        param_value.name,
-                        description=(
-                            param_value.description
-                            if hasattr(param_value, "description")
-                            else param_value.name
-                        ),
-                        default=param_value.default,
-                    )
-
-    return mapped_params
+map_parameters = make_mapper(ENDPOINT_CONFIG, COLLECTIONS)
 
 
 def get_connection():

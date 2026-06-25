@@ -4,10 +4,7 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B02_10m",
-          "B03_10m",
           "B04_10m",
-          "B05_20m",
           "B08_10m",
           "SCL_20m"
         ],
@@ -21,7 +18,7 @@
                   "x": {
                     "from_parameter": "value"
                   },
-                  "y": 90
+                  "y": 60
                 },
                 "result": true
               }
@@ -29,10 +26,49 @@
           }
         },
         "spatial_extent": {
-          "from_parameter": "bounding_box"
+          "west": 14.09,
+          "south": 45.174,
+          "east": 14.27,
+          "north": 45.25
         },
-        "temporal_extent": {
-          "from_parameter": "time"
+        "temporal_extent": [
+          "2021-06-01",
+          "2024-07-01"
+        ]
+      }
+    },
+    "maskpolygon1": {
+      "process_id": "mask_polygon",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "mask": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                14.27,
+                45.174
+              ],
+              [
+                14.27,
+                45.25
+              ],
+              [
+                14.09,
+                45.25
+              ],
+              [
+                14.09,
+                45.174
+              ],
+              [
+                14.27,
+                45.174
+              ]
+            ]
+          ]
         }
       }
     },
@@ -40,7 +76,7 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "loadcollection1"
+          "from_node": "maskpolygon1"
         },
         "dimension": "spectral",
         "reducer": {
@@ -51,7 +87,7 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 5
+                "index": 2
               }
             },
             "eq1": {
@@ -152,21 +188,21 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "loadcollection1"
+          "from_node": "maskpolygon1"
         },
         "mask": {
           "from_node": "reducedimension1"
         }
       }
     },
-    "applydimension1": {
-      "process_id": "apply_dimension",
+    "reducedimension2": {
+      "process_id": "reduce_dimension",
       "arguments": {
         "data": {
           "from_node": "mask1"
         },
         "dimension": "spectral",
-        "process": {
+        "reducer": {
           "process_graph": {
             "arrayelement2": {
               "process_id": "array_element",
@@ -174,7 +210,7 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 2
+                "index": 1
               }
             },
             "divide1": {
@@ -186,22 +222,13 @@
                 "y": 1.0
               }
             },
-            "multiply1": {
-              "process_id": "multiply",
-              "arguments": {
-                "x": 2.8,
-                "y": {
-                  "from_node": "divide1"
-                }
-              }
-            },
             "arrayelement3": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 3
+                "index": 0
               }
             },
             "divide2": {
@@ -213,26 +240,31 @@
                 "y": 1.0
               }
             },
-            "multiply2": {
-              "process_id": "multiply",
+            "normalizeddifference1": {
+              "process_id": "normalized_difference",
               "arguments": {
-                "x": 0.1,
+                "x": {
+                  "from_node": "divide1"
+                },
                 "y": {
                   "from_node": "divide2"
                 }
-              }
-            },
-            "add1": {
-              "process_id": "add",
-              "arguments": {
-                "x": {
-                  "from_node": "multiply1"
-                },
-                "y": {
-                  "from_node": "multiply2"
-                }
-              }
-            },
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "reducedimension3": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask1"
+        },
+        "dimension": "spectral",
+        "reducer": {
+          "process_graph": {
             "arrayelement4": {
               "process_id": "array_element",
               "arguments": {
@@ -251,22 +283,13 @@
                 "y": 1.0
               }
             },
-            "multiply3": {
-              "process_id": "multiply",
-              "arguments": {
-                "x": 2.8,
-                "y": {
-                  "from_node": "divide3"
-                }
-              }
-            },
             "arrayelement5": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 4
+                "index": 0
               }
             },
             "divide4": {
@@ -278,156 +301,24 @@
                 "y": 1.0
               }
             },
-            "multiply4": {
-              "process_id": "multiply",
+            "normalizeddifference2": {
+              "process_id": "normalized_difference",
               "arguments": {
-                "x": 0.15,
+                "x": {
+                  "from_node": "divide3"
+                },
                 "y": {
                   "from_node": "divide4"
                 }
               }
             },
-            "add2": {
-              "process_id": "add",
+            "lt1": {
+              "process_id": "lt",
               "arguments": {
                 "x": {
-                  "from_node": "multiply3"
+                  "from_node": "normalizeddifference2"
                 },
-                "y": {
-                  "from_node": "multiply4"
-                }
-              }
-            },
-            "arrayelement6": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 0
-              }
-            },
-            "divide5": {
-              "process_id": "divide",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement6"
-                },
-                "y": 1.0
-              }
-            },
-            "multiply5": {
-              "process_id": "multiply",
-              "arguments": {
-                "x": 2.8,
-                "y": {
-                  "from_node": "divide5"
-                }
-              }
-            },
-            "arraycreate1": {
-              "process_id": "array_create",
-              "arguments": {
-                "data": [
-                  {
-                    "from_node": "add1"
-                  },
-                  {
-                    "from_node": "add2"
-                  },
-                  {
-                    "from_node": "multiply5"
-                  }
-                ]
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
-    "reducedimension2": {
-      "process_id": "reduce_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "mask1"
-        },
-        "dimension": "spectral",
-        "reducer": {
-          "process_graph": {
-            "arrayelement7": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 4
-              }
-            },
-            "arrayelement8": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 1
-              }
-            },
-            "divide6": {
-              "process_id": "divide",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement7"
-                },
-                "y": {
-                  "from_node": "arrayelement8"
-                }
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
-    "applydimension2": {
-      "process_id": "apply_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "reducedimension2"
-        },
-        "dimension": "t",
-        "process": {
-          "process_graph": {
-            "arrayapply1": {
-              "process_id": "array_apply",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "process": {
-                  "process_graph": {
-                    "max1": {
-                      "process_id": "max",
-                      "arguments": {
-                        "data": {
-                          "from_parameter": "data"
-                        }
-                      }
-                    },
-                    "neq1": {
-                      "process_id": "neq",
-                      "arguments": {
-                        "x": {
-                          "from_parameter": "x"
-                        },
-                        "y": {
-                          "from_node": "max1"
-                        }
-                      },
-                      "result": true
-                    }
-                  }
-                }
+                "y": -1.0
               },
               "result": true
             }
@@ -439,27 +330,146 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "applydimension1"
+          "from_node": "reducedimension2"
         },
         "mask": {
-          "from_node": "applydimension2"
+          "from_node": "reducedimension3"
         }
       }
     },
-    "reducedimension3": {
-      "process_id": "reduce_dimension",
+    "filtertemporal1": {
+      "process_id": "filter_temporal",
       "arguments": {
         "data": {
           "from_node": "mask2"
         },
+        "extent": [
+          "2024-06-01",
+          "2024-07-01"
+        ]
+      }
+    },
+    "reducedimension4": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "filtertemporal1"
+        },
         "dimension": "t",
         "reducer": {
           "process_graph": {
-            "max2": {
-              "process_id": "max",
+            "mean1": {
+              "process_id": "mean",
               "arguments": {
                 "data": {
                   "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "aggregatetemporal1": {
+      "process_id": "aggregate_temporal",
+      "arguments": {
+        "data": {
+          "from_node": "mask2"
+        },
+        "intervals": [
+          [
+            "2023-06-01",
+            "2023-07-01"
+          ],
+          [
+            "2022-06-01",
+            "2022-07-01"
+          ],
+          [
+            "2021-06-01",
+            "2021-07-01"
+          ]
+        ],
+        "reducer": {
+          "process_graph": {
+            "mean2": {
+              "process_id": "mean",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "reducedimension5": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "aggregatetemporal1"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "mean3": {
+              "process_id": "mean",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mergecubes1": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "reducedimension4"
+        },
+        "cube2": {
+          "from_node": "reducedimension5"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "subtract1": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "y"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "mergecubes1"
+        },
+        "process": {
+          "process_graph": {
+            "clip1": {
+              "process_id": "clip",
+              "arguments": {
+                "max": 0.7,
+                "min": -0.7,
+                "x": {
+                  "from_parameter": "x"
                 }
               },
               "result": true
@@ -472,7 +482,7 @@
       "process_id": "save_result",
       "arguments": {
         "data": {
-          "from_node": "reducedimension3"
+          "from_node": "apply1"
         },
         "format": "GTiff",
         "options": {}
@@ -483,7 +493,7 @@
   "parameters": [
     {
       "name": "time",
-      "description": "One-month window to composite",
+      "description": "Target month (current year) for the NDVI anomaly",
       "schema": {},
       "default": [
         "2024-06-01",
@@ -493,32 +503,39 @@
     },
     {
       "name": "bounding_box",
-      "description": "Spatial extent for West Corsica, France",
+      "description": "Spatial extent for Cropland Plain, Croatia",
       "schema": {},
       "default": {
-        "west": 8.53,
-        "south": 42.1,
-        "east": 8.72,
-        "north": 42.19
+        "west": 14.09,
+        "south": 45.174,
+        "east": 14.27,
+        "north": 45.25
       },
       "optional": true
     },
     {
       "name": "cloud_cover",
-      "description": "Maximum scene-level cloud cover percentage",
+      "description": "Maximum cloud cover percentage",
       "schema": {},
-      "default": 90,
+      "default": 60,
       "optional": true
     },
     {
-      "name": "gain",
-      "description": "Brightness gain for the enhanced natural-color stretch (2.8 in the original script)",
+      "name": "nb_past_years",
+      "description": "Number of past years to average as the NDVI baseline",
       "schema": {},
-      "default": 2.8,
+      "default": 3,
+      "optional": true
+    },
+    {
+      "name": "anomaly_clamp",
+      "description": "Symmetric clamp applied to the NDVI anomaly (pixelEvalMaxValue in the original script)",
+      "schema": {},
+      "default": 0.7,
       "optional": true
     }
   ],
-  "id": "monthly_composite",
-  "summary": "Monthly cloud-free greenest-pixel composite from Sentinel-2 imagery using openEO.",
-  "description": "Builds a single cloud-free RGB composite from one month of Sentinel-2 L2A imagery by selecting, per pixel, the acquisition with the maximum B08/B03 (NIR/Green) ratio after SCL cloud masking, then applying an enhanced natural-color stretch. Converted from the Sentinel Hub Monthly Composite evalscript by Nicolas Karasiak."
+  "id": "ndvi_anomaly_detection",
+  "summary": "NDVI anomaly detection from multi-year Sentinel-2 imagery using openEO.",
+  "description": "Computes the per-pixel NDVI anomaly from Sentinel-2 L2A imagery by comparing the current month's mean NDVI against the same-month average over the previous N years. Negative values indicate vegetation loss (e.g. drought or crop loss), positive values indicate vegetation gain. Converted from the Sentinel Hub NDVI Anomaly Detection evalscript."
 }

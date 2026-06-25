@@ -1,13 +1,13 @@
 """Endpoint configuration for Copernicus Data Space.
 
-This module contains both connection configuration and parameter mapping logic
-for the Copernicus Data Space OpenEO backend.
+This module contains both connection configuration and the canonical->native
+collection/band mapping table for the Copernicus Data Space OpenEO backend.
+The actual mapping logic lives in :func:`openeo_udp.collections.make_mapper`.
 """
 
-from typing import Any, Dict
-
 import openeo
-from openeo.api.process import Parameter
+
+from openeo_udp.collections import Collection, make_mapper
 
 # Endpoint configuration
 ENDPOINT_CONFIG = {
@@ -15,7 +15,6 @@ ENDPOINT_CONFIG = {
     "url": "https://openeo.dataspace.copernicus.eu/",
     "auth_method": "oidc",
     "collection_id": "SENTINEL2_L2A",
-    "band_format": "{band}",
     "reflectance_scale": 10000.0,
     "bands_dimension": "bands",
     "time_dimension": "t",
@@ -31,52 +30,30 @@ ENDPOINT_CONFIG = {
     "enabled": True,
 }
 
+# Canonical (lowercase STAC-style) -> CDSE-native collection ids and band names.
+# CDSE serves Sentinel-2 with uppercase B-numbers and Sentinel-1 with VH/VV.
+COLLECTIONS = {
+    Collection.SENTINEL2_L2A: {
+        "collection_id": "SENTINEL2_L2A",
+        "bands": {
+            "b01": "B01", "b02": "B02", "b03": "B03", "b04": "B04",
+            "b05": "B05", "b06": "B06", "b07": "B07", "b08": "B08",
+            "b8a": "B8A", "b09": "B09", "b10": "B10", "b11": "B11",
+            "b12": "B12", "scl": "SCL",
+            # Viewing-/sun-angle metadata bands (served under their original names).
+            "viewzenithmean": "viewZenithMean",
+            "viewazimuthmean": "viewAzimuthMean",
+            "sunzenithangles": "sunZenithAngles",
+            "sunazimuthangles": "sunAzimuthAngles",
+        },
+    },
+    Collection.SENTINEL1_GRD: {
+        "collection_id": "SENTINEL1_GRD",
+        "bands": {"vh": "VH", "vv": "VV"},
+    },
+}
 
-def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
-    """Map parameters for Copernicus Data Space endpoint.
-
-    Transforms:
-    - Collection IDs: Uses SENTINEL2_L2A (original format)
-    - Band names: Keep original band names (B02, B03, etc.)
-
-    Args:
-        params: Original parameter dictionary
-
-    Returns:
-        Mapped parameter dictionary
-    """
-    mapped_params = params.copy()
-    mapped_params["reflectance_scale"] = ENDPOINT_CONFIG["reflectance_scale"]
-    mapped_params["bands_dimension"] = ENDPOINT_CONFIG["bands_dimension"]
-    mapped_params["time_dimension"] = ENDPOINT_CONFIG["time_dimension"]
-
-    for param_name, param_value in params.items():
-        if isinstance(param_value, Parameter):
-            # Map collection parameter to CDSE format
-            if param_name == "collection":
-                mapped_params[param_name] = Parameter(
-                    param_value.name,
-                    description=(
-                        param_value.description
-                        if hasattr(param_value, "description")
-                        else param_value.name
-                    ),
-                    default=ENDPOINT_CONFIG["collection_id"],
-                )
-
-            # Keep original band names for CDSE
-            elif param_name == "bands" and isinstance(param_value.default, list):
-                mapped_params[param_name] = Parameter(
-                    param_value.name,
-                    description=(
-                        param_value.description
-                        if hasattr(param_value, "description")
-                        else param_value.name
-                    ),
-                    default=param_value.default,  # No transformation needed
-                )
-
-    return mapped_params
+map_parameters = make_mapper(ENDPOINT_CONFIG, COLLECTIONS)
 
 
 def get_connection():

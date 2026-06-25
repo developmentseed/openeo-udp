@@ -17,7 +17,7 @@ def get_parameters():
     cloud cover.
     """
 
-    bands_default = ["B02", "B03", "B04", "B08", "B11"]
+    bands_default = ["b02", "b03", "b04", "b08", "b11"]
 
     parameter_sets = {
         "lake_sainte_croix": {
@@ -40,7 +40,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -68,7 +68,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -96,7 +96,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -124,7 +124,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",

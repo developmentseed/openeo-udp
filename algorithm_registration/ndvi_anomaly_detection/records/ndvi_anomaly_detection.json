@@ -1,0 +1,35 @@
+{
+  "id": "ndvi_anomaly_detection",
+  "title": "NDVI Anomaly Detection",
+  "preview_title": "NDVI Anomaly Detection",
+  "description": "Computes the per-pixel NDVI anomaly from Sentinel-2 L2A imagery by comparing the current month's mean NDVI against the same-month average over the previous N years. Negative values indicate vegetation loss (e.g. drought or crop loss), positive values indicate vegetation gain.",
+  "keywords": [
+    "Agriculture",
+    "Vegetation",
+    "NDVI",
+    "Anomaly",
+    "Drought",
+    "Sentinel-2"
+  ],
+  "themes": [
+    "VEGETATION",
+    "AGRICULTURE",
+    "REMOTE SENSING",
+    "Sentinel-2 MSI"
+  ],
+  "created": "2026-06-19T00:00:00Z",
+  "updated": "2026-06-19T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "CDSE openEO Federation",
+  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
+  "notebook_github_location": "notebooks/sentinel/sentinel-2/advanced_spectral_processing/ndvi_anomaly_detection.ipynb",
+  "collection_id": "SENTINEL2_L2A",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/ndvi_anomaly_detection/",
+    "authors": [
+      "Jean-Baptiste Pleynet"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
+    "citation": null
+  }
+}

@@ -43,12 +43,12 @@ def get_parameters():
     # enhanced natural-color stretch and the B08/B03 "greenest pixel" ranking;
     # SCL (Scene Classification Layer) for cloud/shadow masking.
     monthly_composite_bands = [
-        "B02",
-        "B03",
-        "B04",
-        "B05",
-        "B08",
-        "SCL",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b08",
+        "scl",
     ]
 
     parameter_sets = {
@@ -72,7 +72,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -105,7 +105,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -140,7 +140,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
