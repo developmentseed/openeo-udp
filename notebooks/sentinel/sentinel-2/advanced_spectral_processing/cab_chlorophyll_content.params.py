@@ -39,14 +39,14 @@ def get_parameters():
     # sunAzimuthAngles (Sun azimuth angle)
 
     cab_bands = [
-        "B03",
-        "B04",
-        "B05",
-        "B06",
-        "B07",
-        "B8A",
-        "B11",
-        "B12",
+        "b03",
+        "b04",
+        "b05",
+        "b06",
+        "b07",
+        "b8a",
+        "b11",
+        "b12",
         "viewZenithMean",
         "viewAzimuthMean",
         "sunZenithAngles",
@@ -74,7 +74,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -107,7 +107,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -140,7 +140,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",

@@ -17,7 +17,7 @@ def get_parameters():
     cloud cover.
     """
 
-    bands_default = ["B02", "B03", "B04", "B05", "B07", "B08"]
+    bands_default = ["b02", "b03", "b04", "b05", "b07", "b08"]
 
     parameter_sets = {
         "barrage_lebna": {
@@ -40,7 +40,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -68,7 +68,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -96,7 +96,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -124,7 +124,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",

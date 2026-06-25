@@ -43,9 +43,9 @@ def get_parameters():
     # Bands required for the NDVI anomaly algorithm:
     # B04 (Red), B08 (NIR) for NDVI; SCL (Scene Classification Layer) for masking.
     ndvi_anomaly_bands = [
-        "B04",
-        "B08",
-        "SCL",
+        "b04",
+        "b08",
+        "scl",
     ]
 
     parameter_sets = {
@@ -69,7 +69,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -112,7 +112,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -159,7 +159,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
@@ -202,7 +202,7 @@ def get_parameters():
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
-                default="SENTINEL2_L2A",
+                default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",

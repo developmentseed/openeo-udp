@@ -17,6 +17,10 @@ from openeo.api.process import Parameter
 
 # Import the modules to test
 from openeo_udp import ParameterManager
+from openeo_udp.collections import (
+    UnsupportedBandError,
+    UnsupportedCollectionError,
+)
 from openeo_udp.endpoints import get_all_endpoints
 
 
@@ -32,16 +36,16 @@ def get_parameters():
             'location_name': 'Venice Lagoon',
             'bounding_box': Parameter('bounding_box', description='Spatial extent for Venice Lagoon', default={'west': 12.0, 'south': 45.3, 'east': 12.6, 'north': 45.6}),
             'time': Parameter('time', description='Temporal range for data acquisition', default=['2023-06-01', '2023-06-30']),
-            'bands': Parameter('bands', description='Sentinel-2 bands for analysis', default=['B02', 'B03', 'B04', 'B05', 'B08', 'B8A', 'B11']),
-            'collection': Parameter('collection', description='Data collection identifier', default='SENTINEL2_L2A'),
+            'bands': Parameter('bands', description='Sentinel-2 bands for analysis', default=['b02', 'b03', 'b04', 'b05', 'b08', 'b8a', 'b11']),
+            'collection': Parameter('collection', description='Data collection identifier', default='sentinel-2-l2a'),
             'cloud_cover': Parameter('cloud_cover', description='Maximum cloud cover percentage', default=30),
         },
         'lake_victoria': {
             'location_name': 'Lake Victoria',
             'bounding_box': Parameter('bounding_box', description='Spatial extent for Lake Victoria', default={'west': 31.5, 'south': -3.0, 'east': 34.5, 'north': 0.5}),
             'time': Parameter('time', description='Temporal range for data acquisition', default=['2023-07-01', '2023-07-31']),
-            'bands': Parameter('bands', description='Sentinel-2 bands for analysis', default=['B02', 'B03', 'B04', 'B05', 'B08', 'B8A', 'B11']),
-            'collection': Parameter('collection', description='Data collection identifier', default='SENTINEL2_L2A'),
+            'bands': Parameter('bands', description='Sentinel-2 bands for analysis', default=['b02', 'b03', 'b04', 'b05', 'b08', 'b8a', 'b11']),
+            'collection': Parameter('collection', description='Data collection identifier', default='sentinel-2-l2a'),
             'cloud_cover': Parameter('cloud_cover', description='Maximum cloud cover percentage', default=20),
         }
     }
@@ -156,7 +160,7 @@ class TestEndpointConfiguration:
         for config in all_endpoints.values():
             assert "url" in config
             assert "collection_id" in config
-            assert "band_format" in config
+            assert "reflectance_scale" in config
 
     def test_endpoint_config_structure(self):
         """Test that endpoint configurations have the expected structure."""
@@ -169,14 +173,12 @@ class TestEndpointConfiguration:
             explorer_config["url"] == "https://api.explorer.eopf.copernicus.eu/openeo"
         )
         assert explorer_config["collection_id"] == "sentinel-2-l2a"
-        assert explorer_config["band_format"] == "reflectance|{band}"
 
         # Test Copernicus Data Space endpoint
         cdse_config = all_endpoints.get("copernicus_dataspace")
         assert cdse_config is not None
         assert "dataspace.copernicus.eu" in cdse_config["url"]
         assert cdse_config["collection_id"] == "SENTINEL2_L2A"
-        assert cdse_config["band_format"] == "{band}"
 
 
 class TestParameterManagerMethods:
@@ -327,8 +329,19 @@ class TestParameterMapping:
             raw_params, "copernicus_dataspace"
         )
 
-        # Check collection mapping (should keep SENTINEL2_L2A)
+        # Check collection mapping (should map to native SENTINEL2_L2A)
         assert mapped_params["collection"].default == "SENTINEL2_L2A"
+
+        # CDSE serves Sentinel-2 with uppercase B-numbers.
+        assert mapped_params["bands"].default == [
+            "B02",
+            "B03",
+            "B04",
+            "B05",
+            "B08",
+            "B8A",
+            "B11",
+        ]
 
     def test_ds_development_mapping(self, temp_params_file):
         """Test parameter mapping for Development Seed endpoint."""
@@ -344,8 +357,8 @@ class TestParameterMapping:
         # Check collection mapping
         assert mapped_params["collection"].default == "sentinel-2-l2a"
 
-        # DS development appends a resolution suffix per band for L2A collections
-        # (the mapper consults BAND_RESOLUTIONS to decide the suffix).
+        # DS development maps each canonical band to a resolution-suffixed
+        # native name (e.g. b02 -> B02_10m) via its COLLECTIONS table.
         expected_bands = [
             "B02_10m",
             "B03_10m",
@@ -371,8 +384,71 @@ class TestParameterMapping:
         # Should return original parameters unchanged
         assert mapped_params == raw_params
 
+    def test_legacy_uppercase_collection_alias(self, temp_params_file):
+        """Legacy uppercase collection ids still resolve via the alias map."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="SENTINEL2_L2A"
+            ),
+            "bands": Parameter("bands", description="b", default=["b04"]),
+        }
+        mapped = param_manager.apply_endpoint_mapping(params, "ds_development")
+        assert mapped["collection"].default == "sentinel-2-l2a"
+        assert mapped["bands"].default == ["B04_10m"]
 
-class TestParameterResolution:
+    def test_sentinel1_mapping(self, temp_params_file):
+        """Sentinel-1 GRD canonical ids map to native collection + bands."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-1-grd"
+            ),
+            "bands": Parameter("bands", description="b", default=["vh", "vv"]),
+        }
+
+        ds = param_manager.apply_endpoint_mapping(params, "ds_development")
+        assert ds["collection"].default == "sentinel-1-grd"
+        assert ds["bands"].default == ["vh", "vv"]
+
+        cdse = param_manager.apply_endpoint_mapping(params, "copernicus_dataspace")
+        assert cdse["collection"].default == "SENTINEL1_GRD"
+        assert cdse["bands"].default == ["VH", "VV"]
+
+    def test_unsupported_collection_raises(self, temp_params_file):
+        """An unknown canonical collection raises rather than passing through."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="landsat-8-l2"
+            ),
+        }
+        with pytest.raises(UnsupportedCollectionError):
+            param_manager.apply_endpoint_mapping(params, "ds_development")
+
+    def test_unsupported_band_raises(self, temp_params_file):
+        """A band absent from the collection's band map raises."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-2-l2a"
+            ),
+            "bands": Parameter("bands", description="b", default=["b04", "b99"]),
+        }
+        with pytest.raises(UnsupportedBandError):
+            param_manager.apply_endpoint_mapping(params, "ds_development")
+
+    def test_band_name_map_resolves_canonical_to_native(self, temp_params_file):
+        """band_name_map zips canonical bands to their endpoint-native names."""
+        param_manager = ParameterManager(temp_params_file)
+        param_manager.use_parameter_set("venice_lagoon")
+        raw_params = param_manager.get_parameter_set()
+
+        mapped = param_manager.apply_endpoint_mapping(raw_params, "ds_development")
+        bands = param_manager.band_name_map(mapped)
+
+        assert bands["b04"] == "B04_10m"
+        assert bands["b8a"] == "B8A_20m"
     """Test cases for resolve_parameters / resolve (graph parameter materialization)."""
 
     def test_resolve_parameters_substitutes_user_refs(self, temp_params_file):

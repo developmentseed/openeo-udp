@@ -1,0 +1,33 @@
+{
+  "id": "hollstein_cloud_detection",
+  "title": "Hollstein Cloud Detection (L2A / titiler variant)",
+  "preview_title": "Hollstein Cloud Detection",
+  "description": "Decision-tree classification of clouds, cirrus, shadow, water, snow and clear sky from Sentinel-2 L2A reflectance, after Hollstein et al. (2016).",
+  "keywords": [
+    "Cloud detection",
+    "Cirrus",
+    "Cloud masking",
+    "Decision tree",
+    "Sentinel-2"
+  ],
+  "themes": [
+    "IMAGERY",
+    "REMOTE SENSING",
+    "Sentinel-2 MSI"
+  ],
+  "created": "2026-06-25T00:00:00Z",
+  "updated": "2026-06-25T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "EOPF Explorer",
+  "openeo_backend_url": "https://api.explorer.eopf.copernicus.eu/openeo",
+  "notebook_github_location": "notebooks/sentinel/sentinel-2/cloud_and_atmospheric_processing/hollstein_cloud_detection.ipynb",
+  "collection_id": "sentinel-2-l2a",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/hollstein/",
+    "authors": [
+      "Andr\u00e9 Hollstein"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
+    "citation": "Hollstein et al. (2016), Remote Sensing 8(8):666"
+  }
+}
