@@ -18,6 +18,7 @@ def get_parameters():
         - bands: Required Sentinel-2 bands as Parameter object
         - collection: Data collection identifier as Parameter object
         - cloud_cover: Maximum cloud cover percentage as Parameter object
+        - time_frame: Full-year temporal range for broad data acquisition as Parameter object
     """
 
     ml_bands = ["B02", "B03", "B04", "B05", "B07", "B08", "B8A", "B11", "B12"]
@@ -60,6 +61,11 @@ def get_parameters():
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
                 default=30,
+            ),
+            "time_frame": Parameter(
+                "time_frame",
+                description="Full-year temporal range for broad data acquisition",
+                default=["2024-01-01", "2024-12-30"],
             ),
         },
     }
