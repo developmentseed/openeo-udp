@@ -15,13 +15,14 @@ def get_parameters():
         - time: Temporal range for data acquisition as Parameter object
         - time_pre: Pre-fire temporal range as Parameter object
         - time_post: Post-fire temporal range as Parameter object
-        - bands: Required Sentinel-2 bands as Parameter object
+        - bands_fire: Sentinel-2 bands required for NBR/dNBR calculation as Parameter object
+        - bands_ml: Sentinel-2 bands required for ML classification as Parameter object
         - collection: Data collection identifier as Parameter object
         - cloud_cover: Maximum cloud cover percentage as Parameter object
         - reflectance_scale: Scale factor to convert band values to 0-1 reflectance as Parameter object
           (10000.0 for integer-scaled L2A, 1.0 for endpoints that already return reflectance)
     """
-
+    ml_bands = ["B04", "B08"]  
     fire_bands = ["B8A", "B12"]
     default_collection = "SENTINEL2_L2A"
     default_reflectance_scale = 10000.0
@@ -49,10 +50,15 @@ def get_parameters():
                 description="Post-fire temporal range",
                 default=["2025-10-15", "2025-10-16"],
             ),
-            "bands": Parameter(
-                "bands",
+            "bands_fire": Parameter(
+                "bands_fire",
                 description="Sentinel-2 bands required for NBR calculation",
                 default=fire_bands,
+            ),
+            "bands_ml": Parameter(
+                "bands_ml",
+                description="Sentinel-2 bands required for ML classification",
+                default=ml_bands,
             ),
             "collection": Parameter(
                 "collection",
@@ -92,10 +98,15 @@ def get_parameters():
                 description="Post-fire temporal range",
                 default=["2024-09-30", "2024-10-15"],
             ),
-            "bands": Parameter(
-                "bands",
+            "bands_fire": Parameter(
+                "bands_fire",
                 description="Sentinel-2 bands required for NBR calculation",
                 default=fire_bands,
+            ),
+            "bands_ml": Parameter(
+                "bands_ml",
+                description="Sentinel-2 bands required for ML classification",
+                default=ml_bands,
             ),
             "collection": Parameter(
                 "collection",
