@@ -2,7 +2,7 @@
   "id": "fire_boundary",
   "type": "Feature",
   "conformsTo": [
-    "http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
     "https://apex.esa.int/core/openeo-udp"
   ],
   "geometry": null,
@@ -105,7 +105,7 @@
       "rel": "webapp",
       "type": "text/html",
       "title": "OpenEO Web Editor",
-      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=fire_boundary&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire_boundary/openeo_udp/fire_boundary.json&server=openeofed.dataspace.copernicus.eu"
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=fire_boundary&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/fire_boundary/openeo_udp/fire_boundary.json&server=https://openeofed.dataspace.copernicus.eu"
     },
     {
       "rel": "service",

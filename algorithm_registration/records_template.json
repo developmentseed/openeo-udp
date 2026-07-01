@@ -2,7 +2,7 @@
   "id": "{{ID}}",
   "type": "Feature",
   "conformsTo": [
-    "http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
     "https://apex.esa.int/core/openeo-udp"
   ],
   "geometry": null,
@@ -97,7 +97,7 @@
       "rel": "service",
       "type": "application/json",
       "title": "{{TARGET_OPENEO_BACKEND_TITLE}}",
-      "href": "https://{{TARGET_OPENEO_BACKEND}}"
+      "href": "{{TARGET_OPENEO_BACKEND}}"
     },
     {
       "rel": "notebook",

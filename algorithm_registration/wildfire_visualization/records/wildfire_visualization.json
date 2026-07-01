@@ -2,7 +2,7 @@
   "id": "wildfire_visualization",
   "type": "Feature",
   "conformsTo": [
-    "http://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
     "https://apex.esa.int/core/openeo-udp"
   ],
   "geometry": null,
@@ -111,7 +111,7 @@
       "rel": "service",
       "type": "application/json",
       "title": "EOPF Explorer",
-      "href": "https://https://api.explorer.eopf.copernicus.eu/openeo"
+      "href": "https://api.explorer.eopf.copernicus.eu/openeo"
     },
     {
       "rel": "notebook",
