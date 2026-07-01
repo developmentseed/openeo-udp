@@ -30,7 +30,7 @@ dependencies = [
     "jupyter>=1.0.0",
     "ipykernel>=6.25.0",
     "requests>=2.28.0",
-    "pip>=25.3",
+    "pip>=25.3"
 ]
 
 [dependency-groups]
@@ -55,7 +55,7 @@ Repository = "https://github.com/developmentseed/openeo-udp"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["openeo_udp*"]
+include = ["openeo_udp*", "algorithm_registration*"]
 exclude = ["tests*"]
 
 [tool.setuptools]

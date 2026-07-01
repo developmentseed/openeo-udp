@@ -1,0 +1,383 @@
+{
+  "process_graph": {
+    "loadcollection1": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B11",
+          "B12"
+        ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte1": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": 30
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "west": 146.55,
+          "south": -37.79,
+          "east": 146.9,
+          "north": -37.55
+        },
+        "temporal_extent": [
+          "2019-03-04",
+          "2019-03-07"
+        ]
+      }
+    },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "first1": {
+              "process_id": "first",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "applydimension1": {
+      "process_id": "apply_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension1"
+        },
+        "dimension": "bands",
+        "process": {
+          "process_graph": {
+            "arrayelement1": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 1
+              }
+            },
+            "divide1": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 10000.0
+              }
+            },
+            "arrayelement2": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              }
+            },
+            "divide2": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement2"
+                },
+                "y": 10000.0
+              }
+            },
+            "subtract1": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide1"
+                },
+                "y": {
+                  "from_node": "divide2"
+                }
+              }
+            },
+            "multiply1": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 8.5,
+                "y": {
+                  "from_node": "subtract1"
+                }
+              }
+            },
+            "add1": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "divide1"
+                },
+                "y": {
+                  "from_node": "divide2"
+                }
+              }
+            },
+            "add2": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add1"
+                },
+                "y": 0.25
+              }
+            },
+            "divide3": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply1"
+                },
+                "y": {
+                  "from_node": "add2"
+                }
+              }
+            },
+            "subtract2": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": -1.0
+              }
+            },
+            "multiply2": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.46295,
+                "y": {
+                  "from_node": "subtract2"
+                }
+              }
+            },
+            "subtract3": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": 1.0
+              }
+            },
+            "multiply3": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.03705000000000003,
+                "y": {
+                  "from_node": "subtract3"
+                }
+              }
+            },
+            "add3": {
+              "process_id": "add",
+              "arguments": {
+                "x": 0.9259,
+                "y": {
+                  "from_node": "multiply3"
+                }
+              }
+            },
+            "gt1": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": 1.0
+              }
+            },
+            "lte2": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": 3.0
+              }
+            },
+            "and1": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "gt1"
+                },
+                "y": {
+                  "from_node": "lte2"
+                }
+              }
+            },
+            "if1": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add3"
+                },
+                "reject": 1.0,
+                "value": {
+                  "from_node": "and1"
+                }
+              }
+            },
+            "gt2": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": -1.0
+              }
+            },
+            "lte3": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": 1.0
+              }
+            },
+            "and2": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "gt2"
+                },
+                "y": {
+                  "from_node": "lte3"
+                }
+              }
+            },
+            "if2": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "multiply2"
+                },
+                "reject": {
+                  "from_node": "if1"
+                },
+                "value": {
+                  "from_node": "and2"
+                }
+              }
+            },
+            "lte4": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": -1.0
+              }
+            },
+            "if3": {
+              "process_id": "if",
+              "arguments": {
+                "accept": 0.0,
+                "reject": {
+                  "from_node": "if2"
+                },
+                "value": {
+                  "from_node": "lte4"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "applydimension1"
+        },
+        "process": {
+          "process_graph": {
+            "linearscalerange1": {
+              "process_id": "linear_scale_range",
+              "arguments": {
+                "inputMax": 1,
+                "inputMin": 0,
+                "outputMax": 255,
+                "outputMin": 0,
+                "x": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "saveresult1": {
+      "process_id": "save_result",
+      "arguments": {
+        "data": {
+          "from_node": "apply1"
+        },
+        "format": "GTiff",
+        "options": {}
+      },
+      "result": true
+    }
+  },
+  "parameters": [
+    {
+      "name": "time",
+      "description": "Temporal range for data acquisition",
+      "schema": {},
+      "default": [
+        "2019-03-04",
+        "2019-03-07"
+      ],
+      "optional": true
+    },
+    {
+      "name": "bounding_box",
+      "description": "Spatial extent for Melbourne fire area",
+      "schema": {},
+      "default": {
+        "west": 146.55,
+        "south": -37.79,
+        "east": 146.9,
+        "north": -37.55
+      },
+      "optional": true
+    },
+    {
+      "name": "cloud_cover",
+      "description": "Maximum cloud cover percentage",
+      "schema": {},
+      "default": 30,
+      "optional": true
+    }
+  ],
+  "id": "fire_boundary",
+  "summary": "Detection of fire Boundary using Sentinel-2.",
+  "description": "Computes fire coefficient and applying two-step brightness enhancer to discriminate the boundaries of wildfire over unaffected areas"
+}

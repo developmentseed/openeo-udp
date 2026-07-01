@@ -125,6 +125,7 @@ $RECYCLE.BIN/
 *.nc
 !**/docs/**/*.png
 !**/docs/**/*.jpg
+!algorithm_registration/**/records/*.png
 
 # Temporary files
 *.tmp
@@ -137,5 +138,5 @@ $RECYCLE.BIN/
 # OpenEO specific
 *.json.bak
 *.zarr
-
+notebooks/**/*.json
 .coverage
