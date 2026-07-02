@@ -1,0 +1,1828 @@
+{
+  "process_graph": {
+    "loadcollection1": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "reflectance|b02",
+          "reflectance|b03",
+          "reflectance|b04",
+          "reflectance|b08",
+          "reflectance|b11",
+          "reflectance|b12"
+        ],
+        "id": "sentinel-2-l2a",
+        "spatial_extent": {
+          "west": -17.94,
+          "south": 28.58,
+          "east": -17.86,
+          "north": 28.64
+        },
+        "temporal_extent": [
+          "2021-10-10",
+          "2021-10-11"
+        ]
+      }
+    },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "dimension": "time",
+        "reducer": {
+          "process_graph": {
+            "first1": {
+              "process_id": "first",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "applydimension1": {
+      "process_id": "apply_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension1"
+        },
+        "dimension": "bands",
+        "process": {
+          "process_graph": {
+            "arrayelement1": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 5
+              }
+            },
+            "multiply1": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "arrayelement1"
+                }
+              }
+            },
+            "multiply2": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply1"
+                },
+                "y": 1.2
+              }
+            },
+            "add1": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply2"
+                },
+                "y": -0.0
+              }
+            },
+            "sqrt1": {
+              "process_id": "sqrt",
+              "arguments": {
+                "x": {
+                  "from_node": "add1"
+                }
+              }
+            },
+            "arrayelement2": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 4
+              }
+            },
+            "multiply3": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "arrayelement2"
+                }
+              }
+            },
+            "multiply4": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply3"
+                },
+                "y": 1.4
+              }
+            },
+            "add2": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply4"
+                },
+                "y": -0.0
+              }
+            },
+            "sqrt2": {
+              "process_id": "sqrt",
+              "arguments": {
+                "x": {
+                  "from_node": "add2"
+                }
+              }
+            },
+            "arrayelement3": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 2
+              }
+            },
+            "multiply5": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "arrayelement3"
+                }
+              }
+            },
+            "add3": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply5"
+                },
+                "y": -0.0
+              }
+            },
+            "sqrt3": {
+              "process_id": "sqrt",
+              "arguments": {
+                "x": {
+                  "from_node": "add3"
+                }
+              }
+            },
+            "arraycreate1": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "sqrt1"
+                  },
+                  {
+                    "from_node": "sqrt2"
+                  },
+                  {
+                    "from_node": "sqrt3"
+                  }
+                ]
+              }
+            },
+            "arrayelement4": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate1"
+                },
+                "index": 0
+              }
+            },
+            "multiply6": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement4"
+                },
+                "y": 0.1
+              }
+            },
+            "multiply7": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2.5,
+                "y": {
+                  "from_node": "arrayelement3"
+                }
+              }
+            },
+            "add4": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply7"
+                },
+                "y": -0.0
+              }
+            },
+            "arrayelement5": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 1
+              }
+            },
+            "multiply8": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2.5,
+                "y": {
+                  "from_node": "arrayelement5"
+                }
+              }
+            },
+            "add5": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply8"
+                },
+                "y": -0.0
+              }
+            },
+            "arrayelement6": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              }
+            },
+            "multiply9": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2.5,
+                "y": {
+                  "from_node": "arrayelement6"
+                }
+              }
+            },
+            "add6": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply9"
+                },
+                "y": -0.0
+              }
+            },
+            "arraycreate2": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "add4"
+                  },
+                  {
+                    "from_node": "add5"
+                  },
+                  {
+                    "from_node": "add6"
+                  }
+                ]
+              }
+            },
+            "arrayelement7": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate2"
+                },
+                "index": 0
+              }
+            },
+            "multiply10": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement7"
+                },
+                "y": 0.4
+              }
+            },
+            "add7": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply6"
+                },
+                "y": {
+                  "from_node": "multiply10"
+                }
+              }
+            },
+            "multiply11": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "arrayelement3"
+                }
+              }
+            },
+            "add8": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply11"
+                },
+                "y": -0.0
+              }
+            },
+            "sqrt4": {
+              "process_id": "sqrt",
+              "arguments": {
+                "x": {
+                  "from_node": "add8"
+                }
+              }
+            },
+            "multiply12": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "arrayelement5"
+                }
+              }
+            },
+            "add9": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply12"
+                },
+                "y": -0.0
+              }
+            },
+            "sqrt5": {
+              "process_id": "sqrt",
+              "arguments": {
+                "x": {
+                  "from_node": "add9"
+                }
+              }
+            },
+            "multiply13": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "arrayelement6"
+                }
+              }
+            },
+            "add10": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply13"
+                },
+                "y": -0.0
+              }
+            },
+            "sqrt6": {
+              "process_id": "sqrt",
+              "arguments": {
+                "x": {
+                  "from_node": "add10"
+                }
+              }
+            },
+            "arraycreate3": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "sqrt4"
+                  },
+                  {
+                    "from_node": "sqrt5"
+                  },
+                  {
+                    "from_node": "sqrt6"
+                  }
+                ]
+              }
+            },
+            "arrayelement8": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate3"
+                },
+                "index": 0
+              }
+            },
+            "multiply14": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement8"
+                },
+                "y": 0.5
+              }
+            },
+            "add11": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add7"
+                },
+                "y": {
+                  "from_node": "multiply14"
+                }
+              }
+            },
+            "arrayelement9": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate1"
+                },
+                "index": 1
+              }
+            },
+            "multiply15": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement9"
+                },
+                "y": 0.1
+              }
+            },
+            "arrayelement10": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate2"
+                },
+                "index": 1
+              }
+            },
+            "multiply16": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement10"
+                },
+                "y": 0.4
+              }
+            },
+            "add12": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply15"
+                },
+                "y": {
+                  "from_node": "multiply16"
+                }
+              }
+            },
+            "arrayelement11": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate3"
+                },
+                "index": 1
+              }
+            },
+            "multiply17": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement11"
+                },
+                "y": 0.5
+              }
+            },
+            "add13": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add12"
+                },
+                "y": {
+                  "from_node": "multiply17"
+                }
+              }
+            },
+            "arrayelement12": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate1"
+                },
+                "index": 2
+              }
+            },
+            "multiply18": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement12"
+                },
+                "y": 0.1
+              }
+            },
+            "arrayelement13": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate2"
+                },
+                "index": 2
+              }
+            },
+            "multiply19": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement13"
+                },
+                "y": 0.4
+              }
+            },
+            "add14": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply18"
+                },
+                "y": {
+                  "from_node": "multiply19"
+                }
+              }
+            },
+            "arrayelement14": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate3"
+                },
+                "index": 2
+              }
+            },
+            "multiply20": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement14"
+                },
+                "y": 0.5
+              }
+            },
+            "add15": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add14"
+                },
+                "y": {
+                  "from_node": "multiply20"
+                }
+              }
+            },
+            "arraycreate4": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "add11"
+                  },
+                  {
+                    "from_node": "add13"
+                  },
+                  {
+                    "from_node": "add15"
+                  }
+                ]
+              }
+            },
+            "arrayelement15": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate4"
+                },
+                "index": 0
+              }
+            },
+            "arrayelement16": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate4"
+                },
+                "index": 1
+              }
+            },
+            "multiply21": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement16"
+                },
+                "y": 1.2
+              }
+            },
+            "multiply22": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply21"
+                },
+                "y": 2.0
+              }
+            },
+            "add16": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply22"
+                },
+                "y": 0.1
+              }
+            },
+            "arrayelement17": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate4"
+                },
+                "index": 1
+              }
+            },
+            "arrayelement18": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 3
+              }
+            },
+            "subtract1": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement18"
+                },
+                "y": {
+                  "from_node": "arrayelement3"
+                }
+              }
+            },
+            "add17": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement18"
+                },
+                "y": {
+                  "from_node": "arrayelement3"
+                }
+              }
+            },
+            "divide1": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract1"
+                },
+                "y": {
+                  "from_node": "add17"
+                }
+              }
+            },
+            "lt1": {
+              "process_id": "lt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide1"
+                },
+                "y": -0.15
+              }
+            },
+            "subtract2": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement5"
+                },
+                "y": {
+                  "from_node": "arrayelement18"
+                }
+              }
+            },
+            "add18": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement5"
+                },
+                "y": {
+                  "from_node": "arrayelement18"
+                }
+              }
+            },
+            "divide2": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract2"
+                },
+                "y": {
+                  "from_node": "add18"
+                }
+              }
+            },
+            "gt1": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide2"
+                },
+                "y": 0.15
+              }
+            },
+            "and1": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "lt1"
+                },
+                "y": {
+                  "from_node": "gt1"
+                }
+              }
+            },
+            "lt2": {
+              "process_id": "lt",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement3"
+                },
+                "y": 0.2
+              }
+            },
+            "and2": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "and1"
+                },
+                "y": {
+                  "from_node": "lt2"
+                }
+              }
+            },
+            "if1": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add16"
+                },
+                "reject": {
+                  "from_node": "arrayelement17"
+                },
+                "value": {
+                  "from_node": "and2"
+                }
+              }
+            },
+            "arrayelement19": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate4"
+                },
+                "index": 1
+              }
+            },
+            "if2": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "if1"
+                },
+                "reject": {
+                  "from_node": "arrayelement19"
+                },
+                "value": 0
+              }
+            },
+            "arrayelement20": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate4"
+                },
+                "index": 2
+              }
+            },
+            "multiply23": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement20"
+                },
+                "y": 1.5
+              }
+            },
+            "multiply24": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply23"
+                },
+                "y": 2.0
+              }
+            },
+            "add19": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply24"
+                },
+                "y": 0.2
+              }
+            },
+            "arrayelement21": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate4"
+                },
+                "index": 2
+              }
+            },
+            "if3": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add19"
+                },
+                "reject": {
+                  "from_node": "arrayelement21"
+                },
+                "value": {
+                  "from_node": "and2"
+                }
+              }
+            },
+            "arrayelement22": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate4"
+                },
+                "index": 2
+              }
+            },
+            "if4": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "if3"
+                },
+                "reject": {
+                  "from_node": "arrayelement22"
+                },
+                "value": 0
+              }
+            },
+            "arraycreate5": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "arrayelement15"
+                  },
+                  {
+                    "from_node": "if2"
+                  },
+                  {
+                    "from_node": "if4"
+                  }
+                ]
+              }
+            },
+            "arrayelement23": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate5"
+                },
+                "index": 0
+              }
+            },
+            "arrayelement24": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate5"
+                },
+                "index": 1
+              }
+            },
+            "add20": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement23"
+                },
+                "y": {
+                  "from_node": "arrayelement24"
+                }
+              }
+            },
+            "arrayelement25": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate5"
+                },
+                "index": 2
+              }
+            },
+            "add21": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add20"
+                },
+                "y": {
+                  "from_node": "arrayelement25"
+                }
+              }
+            },
+            "divide3": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "add21"
+                },
+                "y": 3
+              }
+            },
+            "multiply25": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": -0.10000000000000009
+              }
+            },
+            "multiply26": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement23"
+                },
+                "y": 1.1
+              }
+            },
+            "add22": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply25"
+                },
+                "y": {
+                  "from_node": "multiply26"
+                }
+              }
+            },
+            "multiply27": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": -0.10000000000000009
+              }
+            },
+            "multiply28": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement24"
+                },
+                "y": 1.1
+              }
+            },
+            "add23": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply27"
+                },
+                "y": {
+                  "from_node": "multiply28"
+                }
+              }
+            },
+            "multiply29": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": -0.10000000000000009
+              }
+            },
+            "multiply30": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement25"
+                },
+                "y": 1.1
+              }
+            },
+            "add24": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply29"
+                },
+                "y": {
+                  "from_node": "multiply30"
+                }
+              }
+            },
+            "arraycreate6": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "add22"
+                  },
+                  {
+                    "from_node": "add23"
+                  },
+                  {
+                    "from_node": "add24"
+                  }
+                ]
+              }
+            },
+            "arrayelement26": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate6"
+                },
+                "index": 0
+              }
+            },
+            "multiply31": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.6,
+                "y": {
+                  "from_node": "arrayelement1"
+                }
+              }
+            },
+            "gt2": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 0.8
+              }
+            },
+            "constant1": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq1": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "gt2"
+                },
+                "y": {
+                  "from_node": "constant1"
+                }
+              }
+            },
+            "gt3": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 0.5
+              }
+            },
+            "constant2": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq2": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "gt2"
+                },
+                "y": {
+                  "from_node": "constant2"
+                }
+              }
+            },
+            "and3": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "gt3"
+                },
+                "y": {
+                  "from_node": "eq2"
+                }
+              }
+            },
+            "constant3": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq3": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and3"
+                },
+                "y": {
+                  "from_node": "constant3"
+                }
+              }
+            },
+            "gt4": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 0.3
+              }
+            },
+            "constant4": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq4": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "gt2"
+                },
+                "y": {
+                  "from_node": "constant4"
+                }
+              }
+            },
+            "constant5": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq5": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and3"
+                },
+                "y": {
+                  "from_node": "constant5"
+                }
+              }
+            },
+            "and4": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "eq4"
+                },
+                "y": {
+                  "from_node": "eq5"
+                }
+              }
+            },
+            "constant6": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq6": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and4"
+                },
+                "y": {
+                  "from_node": "constant6"
+                }
+              }
+            },
+            "constant7": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq7": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "eq6"
+                },
+                "y": {
+                  "from_node": "constant7"
+                }
+              }
+            },
+            "and5": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "gt4"
+                },
+                "y": {
+                  "from_node": "eq7"
+                }
+              }
+            },
+            "constant8": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq8": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and5"
+                },
+                "y": {
+                  "from_node": "constant8"
+                }
+              }
+            },
+            "gt5": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 0.2
+              }
+            },
+            "constant9": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq9": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "gt2"
+                },
+                "y": {
+                  "from_node": "constant9"
+                }
+              }
+            },
+            "constant10": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq10": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and3"
+                },
+                "y": {
+                  "from_node": "constant10"
+                }
+              }
+            },
+            "constant11": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq11": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and5"
+                },
+                "y": {
+                  "from_node": "constant11"
+                }
+              }
+            },
+            "and6": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "eq10"
+                },
+                "y": {
+                  "from_node": "eq11"
+                }
+              }
+            },
+            "constant12": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq12": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and6"
+                },
+                "y": {
+                  "from_node": "constant12"
+                }
+              }
+            },
+            "constant13": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq13": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "eq12"
+                },
+                "y": {
+                  "from_node": "constant13"
+                }
+              }
+            },
+            "and7": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "eq9"
+                },
+                "y": {
+                  "from_node": "eq13"
+                }
+              }
+            },
+            "constant14": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq14": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and7"
+                },
+                "y": {
+                  "from_node": "constant14"
+                }
+              }
+            },
+            "constant15": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq15": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "eq14"
+                },
+                "y": {
+                  "from_node": "constant15"
+                }
+              }
+            },
+            "and8": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "gt5"
+                },
+                "y": {
+                  "from_node": "eq15"
+                }
+              }
+            },
+            "constant16": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq16": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and8"
+                },
+                "y": {
+                  "from_node": "constant16"
+                }
+              }
+            },
+            "and9": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "eq8"
+                },
+                "y": {
+                  "from_node": "eq16"
+                }
+              }
+            },
+            "constant17": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq17": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and9"
+                },
+                "y": {
+                  "from_node": "constant17"
+                }
+              }
+            },
+            "constant18": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq18": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "eq17"
+                },
+                "y": {
+                  "from_node": "constant18"
+                }
+              }
+            },
+            "and10": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "eq3"
+                },
+                "y": {
+                  "from_node": "eq18"
+                }
+              }
+            },
+            "constant19": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq19": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and10"
+                },
+                "y": {
+                  "from_node": "constant19"
+                }
+              }
+            },
+            "constant20": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq20": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "eq19"
+                },
+                "y": {
+                  "from_node": "constant20"
+                }
+              }
+            },
+            "and11": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "eq1"
+                },
+                "y": {
+                  "from_node": "eq20"
+                }
+              }
+            },
+            "constant21": {
+              "process_id": "constant",
+              "arguments": {
+                "x": false
+              }
+            },
+            "eq21": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "and11"
+                },
+                "y": {
+                  "from_node": "constant21"
+                }
+              }
+            },
+            "multiply32": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply31"
+                },
+                "y": {
+                  "from_node": "eq21"
+                }
+              }
+            },
+            "add25": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement26"
+                },
+                "y": {
+                  "from_node": "multiply32"
+                }
+              }
+            },
+            "arrayelement27": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate6"
+                },
+                "index": 1
+              }
+            },
+            "multiply33": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1,
+                "y": {
+                  "from_node": "arrayelement1"
+                }
+              }
+            },
+            "multiply34": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.5,
+                "y": {
+                  "from_node": "gt2"
+                }
+              }
+            },
+            "multiply35": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.3,
+                "y": {
+                  "from_node": "and3"
+                }
+              }
+            },
+            "add26": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply34"
+                },
+                "y": {
+                  "from_node": "multiply35"
+                }
+              }
+            },
+            "multiply36": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.15,
+                "y": {
+                  "from_node": "and5"
+                }
+              }
+            },
+            "add27": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add26"
+                },
+                "y": {
+                  "from_node": "multiply36"
+                }
+              }
+            },
+            "multiply37": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.0,
+                "y": {
+                  "from_node": "and8"
+                }
+              }
+            },
+            "add28": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add27"
+                },
+                "y": {
+                  "from_node": "multiply37"
+                }
+              }
+            },
+            "multiply38": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply33"
+                },
+                "y": {
+                  "from_node": "add28"
+                }
+              }
+            },
+            "add29": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement27"
+                },
+                "y": {
+                  "from_node": "multiply38"
+                }
+              }
+            },
+            "arrayelement28": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_node": "arraycreate6"
+                },
+                "index": 2
+              }
+            },
+            "arraycreate7": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "add25"
+                  },
+                  {
+                    "from_node": "add29"
+                  },
+                  {
+                    "from_node": "arrayelement28"
+                  }
+                ]
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "applydimension1"
+        },
+        "process": {
+          "process_graph": {
+            "linearscalerange1": {
+              "process_id": "linear_scale_range",
+              "arguments": {
+                "inputMax": 1,
+                "inputMin": 0,
+                "outputMax": 255,
+                "outputMin": 0,
+                "x": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "saveresult1": {
+      "process_id": "save_result",
+      "arguments": {
+        "data": {
+          "from_node": "apply1"
+        },
+        "format": "PNG",
+        "options": {}
+      },
+      "result": true
+    }
+  },
+  "parameters": [
+    {
+      "name": "time",
+      "description": "Temporal range for data acquisition",
+      "schema": {},
+      "default": [
+        "2021-10-10",
+        "2021-10-11"
+      ],
+      "optional": true
+    },
+    {
+      "name": "bounding_box",
+      "description": "Spatial extent for the Cumbre Vieja volcanic eruption area",
+      "schema": {},
+      "default": {
+        "west": -17.94,
+        "south": 28.58,
+        "east": -17.86,
+        "north": 28.64
+      },
+      "optional": true
+    }
+  ],
+  "id": "lava_visualization",
+  "summary": "Visualizes volcanic lava flows from Sentinel-2 imagery using SWIR Band 12 thermal-emission thresholds, with continuous-intensity heatmap, binary red/yellow, and context-preserving rendering styles, plus optional cloud avoidance to reduce false detections.",
+  "description": "Visualizes active volcanic lava flows from Sentinel-2 imagery using SWIR Band 12 thermal-emission thresholds blended into a base map that preserves soil, built-up areas, vegetation, and water bodies. Supports a continuous lava intensity heatmap, binary lava detection in red or yellow, and a context-preserving style that retains underlying land-cover information for situational awareness. Includes optional cloud avoidance logic to reduce false detections."
+}
