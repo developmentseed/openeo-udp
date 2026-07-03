@@ -407,7 +407,13 @@ Write comprehensive documentation within the notebook:
 
 `register()` (from `algorithm_registration.register_algorithm`) copies your UDP
 JSON and preview image into `algorithm_registration/<id>/` and generates the
-OGC API record. Add these cells as the last section of your notebook, in order:
+OGC API record. Add these cells as the last section of your notebook, in order.
+
+**Required outputs**:
+- UDP JSON file
+- Preview and thumbnail images
+- OGC API record carrying the UDP/notebook metadata (title, algorithm summary,
+  creation date, citation, etc.)
 
 1. **Provide the preview image via `preview_fig` (preferred) or
    `preview_path`** — one of the two is required for `register()` to register
@@ -434,11 +440,6 @@ OGC API record. Add these cells as the last section of your notebook, in order:
 
 2. **Tag the metadata cell `notebook_metadata`.** `populate_record.py` finds
    this cell by tag, not position, and `exec()`s it to build the OGC record.
-   Guard `_algorithm_id` so the cell works standalone:
-   ```python
-   if "_algorithm_id" not in globals():
-       _algorithm_id = "your_algorithm"
-   ```
 
 3. **When building the UDP `parameters` array, refer to the values already
    defined in your `.params.py` / `current_params` (ParameterManager) rather
