@@ -4,10 +4,10 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "vh",
-          "vv"
+          "VH",
+          "VV"
         ],
-        "id": "sentinel-1-grd",
+        "id": "SENTINEL1_GRD",
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
@@ -44,7 +44,7 @@
         "data": {
           "from_node": "reducedimension1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "process": {
           "process_graph": {
             "arrayelement1": {
@@ -56,22 +56,13 @@
                 "index": 0
               }
             },
-            "log1": {
-              "process_id": "log",
-              "arguments": {
-                "base": 10,
-                "x": {
-                  "from_node": "arrayelement1"
-                }
-              }
-            },
             "multiply1": {
               "process_id": "multiply",
               "arguments": {
-                "x": 10,
-                "y": {
-                  "from_node": "log1"
-                }
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 5.5
               }
             },
             "gt1": {
@@ -80,14 +71,14 @@
                 "x": {
                   "from_node": "multiply1"
                 },
-                "y": 22
+                "y": 0.5
               }
             },
             "if1": {
               "process_id": "if",
               "arguments": {
-                "accept": 31.0,
-                "reject": 17.0,
+                "accept": 1.0,
+                "reject": 0.0,
                 "value": {
                   "from_node": "gt1"
                 }
@@ -102,31 +93,13 @@
                 "index": 1
               }
             },
-            "log2": {
-              "process_id": "log",
-              "arguments": {
-                "base": 10,
-                "x": {
-                  "from_node": "arrayelement2"
-                }
-              }
-            },
             "multiply2": {
               "process_id": "multiply",
               "arguments": {
-                "x": 10,
-                "y": {
-                  "from_node": "log2"
-                }
-              }
-            },
-            "add1": {
-              "process_id": "add",
-              "arguments": {
                 "x": {
-                  "from_node": "multiply1"
+                  "from_node": "arrayelement1"
                 },
-                "y": 19.03
+                "y": 8
               }
             },
             "arraycreate1": {
@@ -137,10 +110,10 @@
                     "from_node": "if1"
                   },
                   {
-                    "from_node": "multiply2"
+                    "from_node": "arrayelement2"
                   },
                   {
-                    "from_node": "add1"
+                    "from_node": "multiply2"
                   }
                 ]
               },
@@ -161,8 +134,8 @@
             "linearscalerange1": {
               "process_id": "linear_scale_range",
               "arguments": {
-                "inputMax": 31,
-                "inputMin": 17,
+                "inputMax": 1,
+                "inputMin": 0,
                 "outputMax": 255,
                 "outputMin": 0,
                 "x": {
