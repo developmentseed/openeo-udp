@@ -4,14 +4,14 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "reflectance|b02",
-          "reflectance|b03",
-          "reflectance|b04",
-          "reflectance|b08",
-          "reflectance|b11",
-          "reflectance|b12"
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12"
         ],
-        "id": "sentinel-2-l2a",
+        "id": "SENTINEL2_L2A",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
@@ -29,10 +29,10 @@
           }
         },
         "spatial_extent": {
-          "west": -8.05,
-          "south": 40.03,
-          "east": -7.47,
-          "north": 40.45
+          "west": -7.91,
+          "south": 40.14,
+          "east": -7.62,
+          "north": 40.35
         },
         "temporal_extent": [
           "2025-08-19",
@@ -40,13 +40,48 @@
         ]
       }
     },
-    "reducedimension1": {
-      "process_id": "reduce_dimension",
+    "maskpolygon1": {
+      "process_id": "mask_polygon",
       "arguments": {
         "data": {
           "from_node": "loadcollection1"
         },
-        "dimension": "time",
+        "mask": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -7.62,
+                40.14
+              ],
+              [
+                -7.62,
+                40.35
+              ],
+              [
+                -7.91,
+                40.35
+              ],
+              [
+                -7.91,
+                40.14
+              ],
+              [
+                -7.62,
+                40.14
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "maskpolygon1"
+        },
+        "dimension": "t",
         "reducer": {
           "process_graph": {
             "first1": {
@@ -62,11 +97,33 @@
         }
       }
     },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension1"
+        },
+        "process": {
+          "process_graph": {
+            "divide1": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 10000.0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
     "applydimension1": {
       "process_id": "apply_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension1"
+          "from_node": "apply1"
         },
         "dimension": "bands",
         "process": {
@@ -250,7 +307,7 @@
                 }
               }
             },
-            "divide1": {
+            "divide2": {
               "process_id": "divide",
               "arguments": {
                 "x": {
@@ -265,7 +322,7 @@
               "process_id": "lt",
               "arguments": {
                 "x": {
-                  "from_node": "divide1"
+                  "from_node": "divide2"
                 },
                 "y": -0.25
               }
@@ -346,38 +403,13 @@
         }
       }
     },
-    "apply1": {
-      "process_id": "apply",
-      "arguments": {
-        "data": {
-          "from_node": "applydimension1"
-        },
-        "process": {
-          "process_graph": {
-            "linearscalerange1": {
-              "process_id": "linear_scale_range",
-              "arguments": {
-                "inputMax": 1,
-                "inputMin": 0,
-                "outputMax": 255,
-                "outputMin": 0,
-                "x": {
-                  "from_parameter": "x"
-                }
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
     "saveresult1": {
       "process_id": "save_result",
       "arguments": {
         "data": {
-          "from_node": "apply1"
+          "from_node": "applydimension1"
         },
-        "format": "PNG",
+        "format": "GTiff",
         "options": {}
       },
       "result": true
@@ -399,10 +431,10 @@
       "description": "Spatial extent for a plain in central Portugal",
       "schema": {},
       "default": {
-        "west": -8.05,
-        "south": 40.03,
-        "east": -7.47,
-        "north": 40.45
+        "west": -7.91,
+        "south": 40.14,
+        "east": -7.62,
+        "north": 40.35
       },
       "optional": true
     },

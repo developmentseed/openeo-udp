@@ -45,7 +45,7 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for a plain in central Portugal",
-                default={"west": -8.05, "south": 40.03, "east": -7.47, "north": 40.45},
+                default={"west": -7.91, "south": 40.14, "east": -7.62, "north": 40.35},
             ),
             "time": Parameter(
                 "time",
