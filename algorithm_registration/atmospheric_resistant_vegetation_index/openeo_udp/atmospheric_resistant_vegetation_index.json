@@ -1,0 +1,238 @@
+{
+  "process_graph": {
+    "loadcollection1": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B02",
+          "B04",
+          "B8A"
+        ],
+        "id": "SENTINEL2_L2A",
+        "spatial_extent": {
+          "west": 14.09,
+          "east": 14.27,
+          "south": 45.174,
+          "north": 45.25
+        },
+        "temporal_extent": [
+          "2025-05-10",
+          "2025-05-12"
+        ]
+      }
+    },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "first1": {
+              "process_id": "first",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension1"
+        },
+        "process": {
+          "process_graph": {
+            "divide1": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 10000.0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "applydimension1": {
+      "process_id": "apply_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "apply1"
+        },
+        "dimension": "bands",
+        "process": {
+          "process_graph": {
+            "arrayelement1": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 2
+              }
+            },
+            "arrayelement2": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 1
+              }
+            },
+            "subtract1": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": {
+                  "from_node": "arrayelement2"
+                }
+              }
+            },
+            "arrayelement3": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              }
+            },
+            "subtract2": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement2"
+                },
+                "y": {
+                  "from_node": "arrayelement3"
+                }
+              }
+            },
+            "multiply1": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.106,
+                "y": {
+                  "from_node": "subtract2"
+                }
+              }
+            },
+            "subtract3": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract1"
+                },
+                "y": {
+                  "from_node": "multiply1"
+                }
+              }
+            },
+            "add1": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": {
+                  "from_node": "arrayelement2"
+                }
+              }
+            },
+            "subtract4": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "add1"
+                },
+                "y": {
+                  "from_node": "multiply1"
+                }
+              }
+            },
+            "divide2": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract3"
+                },
+                "y": {
+                  "from_node": "subtract4"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply2": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "applydimension1"
+        },
+        "process": {
+          "process_graph": {
+            "linearscalerange1": {
+              "process_id": "linear_scale_range",
+              "arguments": {
+                "inputMax": 1,
+                "inputMin": 0,
+                "outputMax": 255,
+                "outputMin": 0,
+                "x": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      },
+      "result": true
+    }
+  },
+  "parameters": [
+    {
+      "name": "time",
+      "description": "Temporal range for data acquisition",
+      "schema": {},
+      "default": [
+        "2025-05-10",
+        "2025-05-12"
+      ],
+      "optional": true
+    },
+    {
+      "name": "bounding_box",
+      "description": "Spatial extent for the \u010cepi\u0107 plain agricultural area",
+      "schema": {},
+      "default": {
+        "west": 14.09,
+        "east": 14.27,
+        "south": 45.174,
+        "north": 45.25
+      },
+      "optional": true
+    }
+  ],
+  "id": "atmospheric_resistant_vegetation_index",
+  "summary": "Calculates the Atmospherically Resistant Vegetation Index (ARVI) from Sentinel-2 imagery using a blue-band self-correction to reduce atmospheric scattering effects compared to standard NDVI.",
+  "description": "Calculates the Atmospherically Resistant Vegetation Index (ARVI) from Sentinel-2 L2A imagery. ARVI extends standard NDVI by incorporating the blue band as a self-correction term for atmospheric scattering from haze, smoke, and aerosols, using an empirically derived weighting factor (y = 0.106). Suitable for monitoring crop health, detecting early vegetation stress, and mapping vegetation density gradients across regions with variable atmospheric conditions such as tropical or fire-affected areas."
+}
