@@ -33,6 +33,7 @@ dependencies = [
     "pip>=25.3",
     "scipy>=1.17.1",
     "scikit-learn>=1.9.0",
+    "geopandas>=1.1.4",
 ]
 
 [dependency-groups]
