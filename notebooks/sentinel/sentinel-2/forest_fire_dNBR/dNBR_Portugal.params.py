@@ -22,7 +22,7 @@ def get_parameters():
         - reflectance_scale: Scale factor to convert band values to 0-1 reflectance as Parameter object
           (10000.0 for integer-scaled L2A, 1.0 for endpoints that already return reflectance)
     """
-    ml_bands = ["B04", "B08"]  
+    ml_bands = ["B04", "B08", "B12"]  
     fire_bands = ["B8A", "B12"]
     default_collection = "SENTINEL2_L2A"
     default_reflectance_scale = 10000.0
@@ -38,7 +38,8 @@ def get_parameters():
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
-                default=["2025-07-25", "2025-07-31"],
+                # default=["2025-07-25", "2025-07-31"],
+                default=["2025-02-25", "2025-10-31"],
             ),
             "time_pre": Parameter(
                 "time_pre",
@@ -86,7 +87,7 @@ def get_parameters():
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
-                default=["2024-08-01", "2024-09-01"],
+                default=["2024-02-01", "2024-10-31"],
             ),
             "time_pre": Parameter(
                 "time_pre",
