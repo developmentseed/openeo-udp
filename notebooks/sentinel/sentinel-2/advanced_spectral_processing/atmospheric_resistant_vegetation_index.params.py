@@ -18,6 +18,7 @@ def get_parameters():
         - time: Temporal range as Parameter object
         - bands: Required Sentinel-2 bands as Parameter object
         - collection: Data collection identifier as Parameter object
+        - cloud_cover: Maximum cloud cover percentage as Parameter object
     """
 
     # Bands required for the ARVI algorithm: B02 (Blue), B04 (Red), B8A (Narrow NIR)
@@ -29,11 +30,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the Čepić plain agricultural area",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 14.09, "east": 14.27, "south": 45.174, "north": 45.25},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-05-10", "2025-05-12"],
             ),
             "bands": Parameter(
@@ -45,6 +48,12 @@ def get_parameters():
                 "collection",
                 description="Data collection identifier",
                 default="SENTINEL2_L2A",
+            ),
+            "cloud_cover": Parameter(
+                "cloud_cover",
+                description="Maximum cloud cover percentage",
+                schema={"type": "number"},
+                default=30,
             ),
         },
     }
