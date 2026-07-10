@@ -29,49 +29,10 @@
           }
         },
         "spatial_extent": {
-          "west": -7.91,
-          "south": 40.14,
-          "east": -7.62,
-          "north": 40.35
+          "from_parameter": "bounding_box"
         },
-        "temporal_extent": [
-          "2025-08-19",
-          "2025-08-22"
-        ]
-      }
-    },
-    "maskpolygon1": {
-      "process_id": "mask_polygon",
-      "arguments": {
-        "data": {
-          "from_node": "loadcollection1"
-        },
-        "mask": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [
-                -7.62,
-                40.14
-              ],
-              [
-                -7.62,
-                40.35
-              ],
-              [
-                -7.91,
-                40.35
-              ],
-              [
-                -7.91,
-                40.14
-              ],
-              [
-                -7.62,
-                40.14
-              ]
-            ]
-          ]
+        "temporal_extent": {
+          "from_parameter": "time"
         }
       }
     },
@@ -79,7 +40,7 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "maskpolygon1"
+          "from_node": "loadcollection1"
         },
         "dimension": "t",
         "reducer": {
@@ -419,7 +380,10 @@
     {
       "name": "time",
       "description": "Temporal range for data acquisition",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2025-08-19",
         "2025-08-22"
@@ -429,7 +393,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent for a plain in central Portugal",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": -7.91,
         "south": 40.14,
@@ -441,7 +408,9 @@
     {
       "name": "cloud_cover",
       "description": "Maximum cloud cover percentage",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 30,
       "optional": true
     }
