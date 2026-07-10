@@ -18,6 +18,7 @@ def get_parameters():
         - time: Temporal range as Parameter object
         - bands: Required Sentinel-2 bands as Parameter object
         - collection: Data collection identifier as Parameter object
+        - cloud_cover: Maximum cloud cover percentage as Parameter object
     """
 
     # Bands required for the EVI2 algorithm: B08 (NIR), B04 (Red)
@@ -29,11 +30,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Umag Town, Istria Coast, Croatia",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 13.4986, "south": 45.4166, "east": 13.5876, "north": 45.4558},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-05-12", "2025-05-13"],
             ),
             "bands": Parameter(
@@ -45,6 +48,12 @@ def get_parameters():
                 "collection",
                 description="Data collection identifier",
                 default="SENTINEL2_L2A",
+            ),
+            "cloud_cover": Parameter(
+                "cloud_cover",
+                description="Maximum cloud cover percentage",
+                schema={"type": "number"},
+                default=30,
             ),
         },
     }
