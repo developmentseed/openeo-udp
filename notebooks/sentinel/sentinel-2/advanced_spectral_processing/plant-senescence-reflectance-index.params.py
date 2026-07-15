@@ -48,6 +48,12 @@ def get_parameters():
                 description="Data collection identifier",
                 default="SENTINEL2_L2A",
             ),
+            "cloud_cover": Parameter(
+                "cloud_cover",
+                description="Maximum cloud cover percentage",
+                schema={"type": "number"},
+                default=30,
+            ),
         },
     }
 
