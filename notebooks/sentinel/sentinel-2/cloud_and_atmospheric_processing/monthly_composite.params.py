@@ -57,11 +57,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for West Corsica, France",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 8.53, "south": 42.10, "east": 8.72, "north": 42.19},
             ),
             "time": Parameter(
                 "time",
                 description="One-month window to composite",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-06-01", "2024-07-01"],
             ),
             "bands": Parameter(
@@ -77,11 +79,13 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
                 default=90,
             ),
             "gain": Parameter(
                 "gain",
                 description="Brightness gain for the enhanced natural-color stretch (2.8 in the original script)",
+                schema={"type": "number"},
                 default=2.8,
             ),
         },
@@ -90,11 +94,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the Po Valley agricultural plain, Italy",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 10.80, "south": 44.95, "east": 11.05, "north": 45.10},
             ),
             "time": Parameter(
                 "time",
                 description="One-month window to composite",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-07-01", "2024-08-01"],
             ),
             "bands": Parameter(
@@ -110,11 +116,13 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
                 default=90,
             ),
             "gain": Parameter(
                 "gain",
                 description="Brightness gain for the enhanced natural-color stretch (2.8 in the original script)",
+                schema={"type": "number"},
                 default=2.8,
             ),
         },
@@ -125,11 +133,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the Brittany coast, France",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": -4.00, "south": 48.00, "east": -3.70, "north": 48.20},
             ),
             "time": Parameter(
                 "time",
                 description="One-month window to composite",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-05-01", "2024-06-01"],
             ),
             "bands": Parameter(
@@ -145,11 +155,13 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
                 default=95,
             ),
             "gain": Parameter(
                 "gain",
                 description="Brightness gain for the enhanced natural-color stretch (2.8 in the original script)",
+                schema={"type": "number"},
                 default=2.8,
             ),
         },
