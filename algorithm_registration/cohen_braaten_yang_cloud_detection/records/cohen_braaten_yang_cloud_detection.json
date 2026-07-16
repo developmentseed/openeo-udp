@@ -1,0 +1,152 @@
+{
+  "id": "cohen_braaten_yang_cloud_detection",
+  "type": "Feature",
+  "conformsTo": [
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://apex.esa.int/core/openeo-udp"
+  ],
+  "geometry": null,
+  "properties": {
+    "created": "2026-07-16T00:00:00Z",
+    "updated": "2026-07-16T00:00:00Z",
+    "type": "service",
+    "title": "Braaten-Cohen-Yang Cloud Detection",
+    "description": "Detects thick and thin clouds in Sentinel-2 L2A imagery using the Braaten-Cohen-Yang algorithm, which applies simple threshold tests on the green band, NDGR (green/red normalized difference), and a SWIR constraint to reduce snow misclassification. Renders thick clouds with a blue tint, thin clouds with a red tint, and clear pixels in natural color. Suitable for cloud masking and quality screening ahead of further environmental data analysis. Adapted from a SentinelHub Custom Script by Authors not listed.",
+    "keywords": [
+      "Sentinel-2",
+      "Data Analysis and Visualization"
+    ],
+    "language": {
+      "code": "en-US",
+      "name": "English (United States)"
+    },
+    "languages": [
+      {
+        "code": "en-US",
+        "name": "English (United States)"
+      }
+    ],
+    "contacts": [
+      {
+        "name": "Development Seed",
+        "organization": "Development Seed",
+        "links": [
+          {
+            "href": "https://developmentseed.org",
+            "title": "Development Seed",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Contact via Development Seed",
+        "roles": [
+          "processor"
+        ]
+      },
+      {
+        "name": "Authors not listed",
+        "organization": "Sentinel Hub",
+        "links": [
+          {
+            "href": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/cby_cloud_detection/",
+            "title": "Braaten-Cohen-Yang Cloud Detection SentinelHub Script",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Original SentinelHub script. See link below.",
+        "roles": [
+          "author"
+        ]
+      }
+    ],
+    "themes": [
+      {
+        "concepts": [
+          {
+            "id": "IMAGERY"
+          },
+          {
+            "id": "REMOTE SENSING"
+          },
+          {
+            "id": "Sentinel-2 MSI"
+          }
+        ],
+        "scheme": "https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/sciencekeywords"
+      }
+    ],
+    "formats": [
+      {
+        "name": "GeoTiff"
+      },
+      {
+        "name": "PNG"
+      }
+    ],
+    "license": "CC-BY-SA-4.0"
+  },
+  "linkTemplates": [],
+  "links": [
+    {
+      "rel": "application",
+      "type": "application/vnd.openeo+json;type=process",
+      "title": "openEO Process Definition",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/cohen_braaten_yang_cloud_detection/openeo_udp/cohen_braaten_yang_cloud_detection.json"
+    },
+    {
+      "rel": "code",
+      "type": "text/html",
+      "title": "openeo-udp repository",
+      "href": "https://github.com/developmentseed/openeo-udp"
+    },
+    {
+      "rel": "webapp",
+      "type": "text/html",
+      "title": "OpenEO Web Editor",
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=cohen_braaten_yang_cloud_detection&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/cohen_braaten_yang_cloud_detection/openeo_udp/cohen_braaten_yang_cloud_detection.json&server=https://openeo.dataspace.copernicus.eu/"
+    },
+    {
+      "rel": "service",
+      "type": "application/json",
+      "title": "Copernicus Data Space - Production API",
+      "href": "https://openeo.dataspace.copernicus.eu/"
+    },
+    {
+      "rel": "notebook",
+      "type": "application/x-ipynb+json",
+      "title": "Braaten-Cohen-Yang Cloud Detection notebook",
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/cloud_and_atmospheric_processing/cohen_braaten_yang_cloud_detection.ipynb"
+    },
+    {
+      "rel": "platform",
+      "type": "application/json",
+      "title": "TiTiler openEO",
+      "href": "../../../../platform_catalog/titiler_openeo.json"
+    },
+    {
+      "rel": "provider",
+      "type": "application/json",
+      "title": "Development Seed",
+      "href": "../../record.json"
+    },
+    {
+      "rel": "preview",
+      "type": "image/png",
+      "title": "BCY Cloud Detection",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/cohen_braaten_yang_cloud_detection/records/preview.png"
+    },
+    {
+      "rel": "thumbnail",
+      "type": "image/png",
+      "title": "Thumbnail image",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/cohen_braaten_yang_cloud_detection/records/thumbnail.png"
+    },
+    {
+      "rel": "cite-as",
+      "type": "text/html",
+      "title": "Script Source Repository",
+      "href": "https://github.com/sentinel-hub/custom-scripts"
+    }
+  ]
+}
