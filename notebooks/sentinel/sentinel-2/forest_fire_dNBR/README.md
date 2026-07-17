@@ -19,6 +19,7 @@ This work was developed as part of my internship with Development Seed. Based on
   
 
 The setup is the same as described in the root README.
+
 Run the `dNBR_ML_UDF_Portugal.ipynb` notebook
   
 
@@ -74,7 +75,7 @@ The larger the dNBR, the more the vegetation was damaged due to the fire. To cre
 
   
 
-In the second step the vegetation type is classified for each pixel in the fire area. As labels, a file derived from the National Forest Inventory is used. The Portuguese NFI provides labels in a grid with 500m distance between the points (500 points in study area).
+In the second step the vegetation type is classified for each pixel in the fire area. As labels, a file derived from the National Forest Inventory is used. The Portuguese NFI provides labels in a grid with 500m distance between the points (516 points in study area).
 
   
 
@@ -122,7 +123,7 @@ The call of the UDF is limited to 2MB. This limits the models that are fed in si
 
   
 
-The labels are derived from the NFI, with 500m distance. They are sparse and only around 500 labeled points, which negatively impacts the performance of the classifier.
+The labels are derived from the NFI, with 500m distance. They are sparse and there are only 516 labeled points, which negatively impacts the performance of the classifier.
 
   
 
