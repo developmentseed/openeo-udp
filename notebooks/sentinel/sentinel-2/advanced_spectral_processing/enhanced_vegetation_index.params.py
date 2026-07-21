@@ -56,6 +56,42 @@ def get_parameters():
                 default=30,
             ),
         },
+        "greater_london_uk": {
+            "location_name": "Greater London, UK",
+            "bounding_box": Parameter(
+                "bounding_box",
+                description="Spatial extent for Greater London, UK",
+                schema={"type": "object", "subtype": "bounding-box"},
+                default={
+                    "east": -0.4650038555748272,
+                    "north": 51.84594346503951,
+                    "south": 51.29532901277588,
+                    "west": -1.485823840631227,
+                },
+            ),
+            "time": Parameter(
+                "time",
+                description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
+                default=["2026-07-01T00:00:00Z", "2026-07-15T00:00:00Z"],
+            ),
+            "bands": Parameter(
+                "bands",
+                description="Sentinel-2 bands required for EVI2 calculation",
+                default=evi2_bands,
+            ),
+            "collection": Parameter(
+                "collection",
+                description="Data collection identifier",
+                default="SENTINEL2_L2A",
+            ),
+            "cloud_cover": Parameter(
+                "cloud_cover",
+                description="Maximum cloud cover percentage",
+                schema={"type": "number"},
+                default=30,
+            ),
+        },
     }
 
     return parameter_sets
