@@ -1,6 +1,6 @@
 # Burned area detection and burned vegetation classification using openEO: dNBR and server-side machine learning
 
-This notebook estimates the CO2 emissions of a forest fire, running openEO processes on the Copernicus Data Space Ecosystem (CDSE) backend. The burned area is first detected from the difference in Normalized Burn Ratio (dNBR) between a pre- and post-fire image, then the vegetation within that area is classified per-pixel using a Random Forest model trained locally and applied server-side through a User-Defined Function (UDF). The resulting vegetation map is combined with species-specific factors to estimate CO2 emissions, using a formula provided by the Intergovernmental Panel on Climate Change (IPCC) [Add the citation here].
+This notebook estimates the CO2 emissions of a forest fire, running openEO processes on the Copernicus Data Space Ecosystem (CDSE) backend. The burned area is first detected from the difference in Normalized Burn Ratio (dNBR) between a pre- and post-fire image, then the vegetation within that area is classified per-pixel using a Random Forest model trained locally and applied server-side through a User-Defined Function (UDF). The resulting vegetation map is combined with species-specific factors to estimate CO2 emissions, using a formula provided by the Intergovernmental Panel on Climate Change (IPCC) [1].
 
 This work was developed based on the methodology Anton Donle developed: https://github.com/toschka123/ForestFireImpact
 
@@ -25,7 +25,7 @@ forest_fire_dNBR/
 ## Data
 
 - Sentinel-2 images accessed through openEO (CDSE): bands 4, 8 and 12 in time frame 01.01.2024 – 31.12.2024.
-- Vegetation labels derived from National Forest Inventory in GeoJSON format [Any reference/citation?].
+- Vegetation labels derived from National Forest Inventory [2] in GeoJSON format.
 
 ## Methodology
 
@@ -73,9 +73,16 @@ Each vegetation type is multiplied by species-specific factors to estimate the C
 - **Combustion Factor** — how much of the available biomass typically burns.
 - **Emission Factor** — how much CO2 is released per unit of burned biomass.
 
-The values were extracted from a report by the IPCC and research carried out in Portugal.
+The values were extracted from a report by the IPCC [1] and research carried out in Portugal [3].
 
 ## Limitations
 
 - The UDF call is limited to 2MB, which significantly constrains the size of the Random Forest classifier passed in via `context`, so it needs to stay small and simple.
-- The labels are derived from the NFI, with 500m distance. They are sparse and there are only 516 labeled points, which negatively impacts the performance of the classifier [can you elaborate the negative impacts more?]
+- The labels are derived from the NFI, with 500m distance. They are sparse and there are only 516 labeled points, which negatively impacts the performance of the classifier. Under-represented classes such as Eucalyptus have particularly few training samples, so they are classified less reliably than well-represented classes like Shrubland. 
+### References
+
+[1] Eggleston, H.S., Buendia, L., Miwa, K., Ngara, T., Tanabe, K. (eds.): 2006 IPCC Guidelines for National Greenhouse Gas Inventories. Institute for Global Environmental Strategies (IGES), Japan (2006).
+
+[2] Uva, J.S., Onofre, R., Moreira, J., Faias, S.P., Barreiro, S., Santos, E., Capelo, J., Corte-Real, L., Martins, J., Ribeiro, J.R., Cancela, J., Rainha, M., Amaral, N., Santos, C., Perpétua, J., Pinho, J., Araújo, J.M., Reis, L., Canaveira, P., Paulino, J., Pina, A., Binev, Y., Coelho, P.: Forestry Inventory 2015. ICNF – Instituto da Conservação da Natureza e das Florestas (2021). https://doi.org/10.15468/33hvm4
+
+[3] Alegria, C.: Aboveground biomass mapping and fire potential severity assessment: a case study for eucalypts and shrubland areas in the central inland region of Portugal. Forests 14(9), 1795 (2023). https://doi.org/10.3390/f14091795
