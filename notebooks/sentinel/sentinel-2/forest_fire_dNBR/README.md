@@ -79,7 +79,7 @@ The values were extracted from a report by the IPCC [1] and research carried out
 
 - The UDF call is limited to 2MB, which significantly constrains the size of the Random Forest classifier passed in via `context`, so it needs to stay small and simple.
 - The labels are derived from the NFI, with 500m distance. They are sparse and there are only 516 labeled points, which negatively impacts the performance of the classifier. Under-represented classes such as Eucalyptus have particularly few training samples, so they are classified less reliably than well-represented classes like Shrubland. 
-### References
+## References
 
 [1] Eggleston, H.S., Buendia, L., Miwa, K., Ngara, T., Tanabe, K. (eds.): 2006 IPCC Guidelines for National Greenhouse Gas Inventories. Institute for Global Environmental Strategies (IGES), Japan (2006).
 
