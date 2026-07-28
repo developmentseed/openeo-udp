@@ -4,15 +4,15 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B02_10m",
-          "B03_10m",
-          "B04_10m",
-          "B05_20m",
-          "B08_10m",
-          "B8A_20m",
-          "B11_20m"
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B08",
+          "B8A",
+          "B11"
         ],
-        "id": "sentinel-2-l2a",
+        "id": "SENTINEL2_L2A",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
@@ -80,7 +80,7 @@
         "data": {
           "from_node": "resamplespatial1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "process": {
           "process_graph": {
             "arrayelement1": {
@@ -98,7 +98,7 @@
                 "x": {
                   "from_node": "arrayelement1"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply1": {
@@ -125,7 +125,7 @@
                 "x": {
                   "from_node": "arrayelement2"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply2": {
@@ -152,7 +152,7 @@
                 "x": {
                   "from_node": "arrayelement3"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply3": {
@@ -195,7 +195,7 @@
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "arrayelement5": {
@@ -213,7 +213,7 @@
                 "x": {
                   "from_node": "arrayelement5"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract1": {
@@ -282,7 +282,7 @@
                 "x": {
                   "from_node": "arrayelement6"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract3": {
@@ -400,7 +400,7 @@
                 "x": {
                   "from_node": "arrayelement7"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract5": {
@@ -700,37 +700,6 @@
             }
           }
         }
-      }
-    },
-    "apply2": {
-      "process_id": "apply",
-      "arguments": {
-        "data": {
-          "from_node": "apply1"
-        },
-        "process": {
-          "process_graph": {
-            "trunc1": {
-              "process_id": "trunc",
-              "arguments": {
-                "x": {
-                  "from_parameter": "x"
-                }
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
-    "saveresult1": {
-      "process_id": "save_result",
-      "arguments": {
-        "data": {
-          "from_node": "apply2"
-        },
-        "format": "PNG",
-        "options": {}
       },
       "result": true
     }
@@ -739,7 +708,10 @@
     {
       "name": "time",
       "description": "Temporal range for data acquisition",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2025-06-01",
         "2025-08-31"
@@ -749,7 +721,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent for Venice Lagoon",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 12.2,
         "south": 45.3,
@@ -761,7 +736,9 @@
     {
       "name": "cloud_cover",
       "description": "Maximum cloud cover percentage",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 30,
       "optional": true
     }
