@@ -51,6 +51,21 @@ COLLECTIONS = {
         "collection_id": "SENTINEL1_GRD",
         "bands": {"vh": "VH", "vv": "VV"},
     },
+    # Sentinel-3 SLSTR. s7-s9/f1/f2 are brightness temperature in KELVIN, not
+    # reflectance — do not apply reflectance_scale to them.
+    Collection.SENTINEL3_SLSTR: {
+        "collection_id": "SENTINEL3_SLSTR",
+        "bands": {
+            "s1": "S1", "s2": "S2", "s3": "S3", "s4": "S4", "s5": "S5",
+            "s6": "S6", "s7": "S7", "s8": "S8", "s9": "S9",
+            "f1": "F1", "f2": "F2",
+        },
+    },
+    # Sentinel-3 OLCI L1B, delivered as 0-1 reflectance (not 0-10000).
+    Collection.SENTINEL3_OLCI_L1B: {
+        "collection_id": "SENTINEL3_OLCI_L1B",
+        "bands": {f"b{i:02d}": f"B{i:02d}" for i in range(1, 22)},
+    },
 }
 
 map_parameters = make_mapper(ENDPOINT_CONFIG, COLLECTIONS)

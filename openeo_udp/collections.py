@@ -7,8 +7,16 @@ mapping table from these canonical identifiers to its backend-native ids
 
 Canonical identifiers follow lowercase STAC-style conventions:
 
-- collections: ``sentinel-2-l2a``, ``sentinel-1-grd``
-- bands: ``b01``..``b12``, ``b8a``, ``scl`` (Sentinel-2); ``vh``, ``vv`` (Sentinel-1)
+- collections: ``sentinel-2-l2a``, ``sentinel-1-grd``, ``sentinel-3-slstr``,
+  ``sentinel-3-olci-l1b``
+- bands: ``b01``..``b12``, ``b8a``, ``scl`` (Sentinel-2); ``vh``, ``vv``
+  (Sentinel-1); ``s1``..``s9``, ``f1``, ``f2`` (SLSTR); ``b01``..``b21`` (OLCI)
+
+Note that ``reflectance_scale`` is an *endpoint*-level attribute, not a
+per-collection one. It describes the Sentinel-2 collections (0-10000 integers on
+CDSE). The Sentinel-3 collections do not follow it: OLCI L1B is delivered as 0-1
+reflectance and SLSTR's thermal bands as brightness temperature in Kelvin, so
+notebooks using Sentinel-3 must not divide by it.
 
 Anything an endpoint has no explicit mapping for raises
 :class:`UnsupportedCollectionError` or :class:`UnsupportedBandError` rather than
@@ -26,6 +34,8 @@ class Collection(str, Enum):
 
     SENTINEL2_L2A = "sentinel-2-l2a"
     SENTINEL1_GRD = "sentinel-1-grd"
+    SENTINEL3_SLSTR = "sentinel-3-slstr"
+    SENTINEL3_OLCI_L1B = "sentinel-3-olci-l1b"
 
 
 # Canonical band sets per collection (lowercase STAC-style). Used for
@@ -39,6 +49,14 @@ CANONICAL_BANDS: Dict[Collection, List[str]] = {
         "sunzenithangles", "sunazimuthangles",
     ],
     Collection.SENTINEL1_GRD: ["vh", "vv"],
+    # SLSTR: s1-s6 are reflective, s7-s9 thermal (brightness temperature in
+    # Kelvin), f1/f2 the dedicated active-fire thermal channels.
+    Collection.SENTINEL3_SLSTR: [
+        "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "f1", "f2",
+    ],
+    # OLCI L1B: 21 reflective bands, delivered as 0-1 reflectance (NOT scaled
+    # by ``reflectance_scale``, which applies to the Sentinel-2 collections).
+    Collection.SENTINEL3_OLCI_L1B: [f"b{i:02d}" for i in range(1, 22)],
 }
 
 
@@ -50,6 +68,10 @@ _COLLECTION_ALIASES: Dict[str, Collection] = {
     "sentinel-2-l2a": Collection.SENTINEL2_L2A,
     "sentinel1_grd": Collection.SENTINEL1_GRD,
     "sentinel-1-grd": Collection.SENTINEL1_GRD,
+    "sentinel3_slstr": Collection.SENTINEL3_SLSTR,
+    "sentinel-3-slstr": Collection.SENTINEL3_SLSTR,
+    "sentinel3_olci_l1b": Collection.SENTINEL3_OLCI_L1B,
+    "sentinel-3-olci-l1b": Collection.SENTINEL3_OLCI_L1B,
 }
 
 

@@ -415,6 +415,95 @@ class TestParameterMapping:
         assert cdse["collection"].default == "SENTINEL1_GRD"
         assert cdse["bands"].default == ["VH", "VV"]
 
+    def test_sentinel3_mapping(self, temp_params_file):
+        """Sentinel-3 SLSTR and OLCI canonical ids map to native names on CDSE."""
+        param_manager = ParameterManager(temp_params_file)
+
+        slstr = param_manager.apply_endpoint_mapping(
+            {
+                "collection": Parameter(
+                    "collection", description="c", default="sentinel-3-slstr"
+                ),
+                "bands": Parameter("bands", description="b", default=["s8", "s9"]),
+            },
+            "copernicus_dataspace",
+        )
+        assert slstr["collection"].default == "SENTINEL3_SLSTR"
+        assert slstr["bands"].default == ["S8", "S9"]
+
+        olci = param_manager.apply_endpoint_mapping(
+            {
+                "collection": Parameter(
+                    "collection", description="c", default="sentinel-3-olci-l1b"
+                ),
+                "bands": Parameter(
+                    "bands", description="b", default=["b06", "b08", "b17"]
+                ),
+            },
+            "copernicus_dataspace",
+        )
+        assert olci["collection"].default == "SENTINEL3_OLCI_L1B"
+        assert olci["bands"].default == ["B06", "B08", "B17"]
+
+    def test_sentinel3_slstr_rejects_olci_bands(self, temp_params_file):
+        """SLSTR and OLCI have disjoint band namespaces and must not cross-map."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-3-slstr"
+            ),
+            "bands": Parameter("bands", description="b", default=["b08"]),
+        }
+        with pytest.raises(UnsupportedBandError):
+            param_manager.apply_endpoint_mapping(params, "copernicus_dataspace")
+
+    def test_sentinel3_ds_development_mapping(self, temp_params_file):
+        """The DS backend serves the raw ESA products, with view/grid suffixes."""
+        param_manager = ParameterManager(temp_params_file)
+
+        slstr = param_manager.apply_endpoint_mapping(
+            {
+                "collection": Parameter(
+                    "collection", description="c", default="sentinel-3-slstr"
+                ),
+                "bands": Parameter("bands", description="b", default=["s8", "s1"]),
+            },
+            "ds_development",
+        )
+        assert slstr["collection"].default == "sentinel-3-sl-1-rbt-ntc"
+        # Thermal is nadir brightness temperature; reflective is nadir radiance.
+        assert slstr["bands"].default == ["S8_BT_in", "S1_radiance_an"]
+
+        olci = param_manager.apply_endpoint_mapping(
+            {
+                "collection": Parameter(
+                    "collection", description="c", default="sentinel-3-olci-l1b"
+                ),
+                "bands": Parameter(
+                    "bands", description="b", default=["b06", "b08", "b17"]
+                ),
+            },
+            "ds_development",
+        )
+        assert olci["collection"].default == "sentinel-3-olci-1-efr-ntc"
+        assert olci["bands"].default == [
+            "Oa06_radianceData",
+            "Oa08_radianceData",
+            "Oa17_radianceData",
+        ]
+
+    def test_sentinel3_unmapped_endpoint_raises(self, temp_params_file):
+        """Endpoints with no verified Sentinel-3 table raise rather than guessing."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-3-slstr"
+            ),
+            "bands": Parameter("bands", description="b", default=["s8"]),
+        }
+        with pytest.raises(UnsupportedCollectionError):
+            param_manager.apply_endpoint_mapping(params, "eopf_explorer")
+
     def test_unsupported_collection_raises(self, temp_params_file):
         """An unknown canonical collection raises rather than passing through."""
         param_manager = ParameterManager(temp_params_file)
