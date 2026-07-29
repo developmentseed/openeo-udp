@@ -1,0 +1,362 @@
+{
+  "process_graph": {
+    "loadcollection1": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B04_10m",
+          "B08_10m",
+          "SCL_20m"
+        ],
+        "id": "sentinel-2-l2a",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte1": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": 70
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": {
+          "from_parameter": "time"
+        }
+      }
+    },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "dimension": "spectral",
+        "reducer": {
+          "process_graph": {
+            "arrayelement1": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 2
+              }
+            },
+            "eq1": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 3
+              }
+            },
+            "eq2": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 8
+              }
+            },
+            "or1": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "eq1"
+                },
+                "y": {
+                  "from_node": "eq2"
+                }
+              }
+            },
+            "eq3": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 9
+              }
+            },
+            "or2": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "or1"
+                },
+                "y": {
+                  "from_node": "eq3"
+                }
+              }
+            },
+            "eq4": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 10
+              }
+            },
+            "or3": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "or2"
+                },
+                "y": {
+                  "from_node": "eq4"
+                }
+              }
+            },
+            "eq5": {
+              "process_id": "eq",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 11
+              }
+            },
+            "or4": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "or3"
+                },
+                "y": {
+                  "from_node": "eq5"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mask1": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "mask": {
+          "from_node": "reducedimension1"
+        }
+      }
+    },
+    "reducedimension2": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask1"
+        },
+        "dimension": "spectral",
+        "reducer": {
+          "process_graph": {
+            "arrayelement2": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 1
+              }
+            },
+            "divide1": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement2"
+                },
+                "y": 10000.0
+              }
+            },
+            "arrayelement3": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              }
+            },
+            "divide2": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement3"
+                },
+                "y": 10000.0
+              }
+            },
+            "normalizeddifference1": {
+              "process_id": "normalized_difference",
+              "arguments": {
+                "x": {
+                  "from_node": "divide1"
+                },
+                "y": {
+                  "from_node": "divide2"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "aggregatetemporal1": {
+      "process_id": "aggregate_temporal",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension2"
+        },
+        "intervals": [
+          [
+            "2024-04-01",
+            "2024-05-01"
+          ],
+          [
+            "2024-05-01",
+            "2024-06-01"
+          ],
+          [
+            "2024-06-01",
+            "2024-07-01"
+          ]
+        ],
+        "labels": [
+          "2024-04-01",
+          "2024-05-01",
+          "2024-06-01"
+        ],
+        "reducer": {
+          "process_graph": {
+            "mean1": {
+              "process_id": "mean",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "applydimension1": {
+      "process_id": "apply_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "aggregatetemporal1"
+        },
+        "dimension": "t",
+        "process": {
+          "process_graph": {
+            "arrayapply1": {
+              "process_id": "array_apply",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "process": {
+                  "process_graph": {
+                    "subtract1": {
+                      "process_id": "subtract",
+                      "arguments": {
+                        "x": {
+                          "from_parameter": "x"
+                        },
+                        "y": 0.1
+                      }
+                    },
+                    "divide3": {
+                      "process_id": "divide",
+                      "arguments": {
+                        "x": {
+                          "from_node": "subtract1"
+                        },
+                        "y": 0.6
+                      }
+                    },
+                    "clip1": {
+                      "process_id": "clip",
+                      "arguments": {
+                        "max": 1.0,
+                        "min": 0.0,
+                        "x": {
+                          "from_node": "divide3"
+                        }
+                      },
+                      "result": true
+                    }
+                  }
+                }
+              },
+              "result": true
+            }
+          }
+        },
+        "target_dimension": "spectral"
+      }
+    },
+    "saveresult1": {
+      "process_id": "save_result",
+      "arguments": {
+        "data": {
+          "from_node": "applydimension1"
+        },
+        "format": "GTiff",
+        "options": {}
+      },
+      "result": true
+    }
+  },
+  "parameters": [
+    {
+      "name": "time",
+      "description": "Three-month growing-season window (oldest->R, middle->G, newest->B)",
+      "schema": {},
+      "default": [
+        "2024-04-01",
+        "2024-07-01"
+      ],
+      "optional": true
+    },
+    {
+      "name": "bounding_box",
+      "description": "Spatial extent for the Po Valley agricultural plain, Italy",
+      "schema": {},
+      "default": {
+        "west": 10.8,
+        "south": 44.95,
+        "east": 11.05,
+        "north": 45.1
+      },
+      "optional": true
+    },
+    {
+      "name": "cloud_cover",
+      "description": "Maximum scene-level cloud cover percentage",
+      "schema": {},
+      "default": 70,
+      "optional": true
+    }
+  ],
+  "id": "agriculture_growth_stage",
+  "summary": "Multi-temporal NDVI growth-stage RGB composite from Sentinel-2 imagery using openEO.",
+  "description": "Builds an RGB composite from a three-month window of Sentinel-2 L2A imagery by computing a mean NDVI for each calendar month (after SCL cloud masking) and assigning the oldest, middle and most recent monthly means to the red, green and blue channels. Colour therefore encodes crop phenology / growth stage. Converted from the Sentinel Hub Agricultural Growth Stage evalscript by @HarelDan (quarterly adaptation by Andr\u00e1s Zlinszky)."
+}

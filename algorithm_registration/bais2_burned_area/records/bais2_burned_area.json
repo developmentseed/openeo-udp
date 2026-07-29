@@ -1,0 +1,33 @@
+{
+  "id": "bais2_burned_area",
+  "title": "Burned Area Index for Sentinel-2 (BAIS2)",
+  "preview_title": "BAIS2 Burned Area",
+  "description": "Maps burned areas and active fires from Sentinel-2 L2A red-edge, NIR and SWIR reflectance using the BAIS2 index (Filipponi, 2018).",
+  "keywords": [
+    "Burned area",
+    "Wildfire",
+    "Fire severity",
+    "BAIS2",
+    "Sentinel-2"
+  ],
+  "themes": [
+    "IMAGERY",
+    "REMOTE SENSING",
+    "Sentinel-2 MSI"
+  ],
+  "created": "2026-06-25T00:00:00Z",
+  "updated": "2026-06-25T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "Development Seed OpenEO Backend",
+  "openeo_backend_url": "https://openeo.ds.io/",
+  "notebook_github_location": "notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/bais2_burned_area.ipynb",
+  "collection_id": "sentinel-2-l2a",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/sentinel-2/bais2/",
+    "authors": [
+      "Harel Dan"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
+    "citation": "Filipponi, F. (2018). BAIS2 - Burned Area Index for Sentinel-2. Proceedings 2(7), 364."
+  }
+}

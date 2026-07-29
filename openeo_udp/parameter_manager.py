@@ -235,6 +235,41 @@ class ParameterManager:
         else:
             return params
 
+    def band_name_map(
+        self,
+        current_params: Dict[str, Any],
+        set_name: str = None,
+    ) -> Dict[str, str]:
+        """Map each canonical band name to its backend-native name.
+
+        The endpoint mapper rewrites the requested bands to backend-native names
+        (e.g. ``b08`` -> ``B08_10m`` or ``reflectance|b08``) while preserving order.
+        This helper zips the canonical band list (from the raw parameter set) with
+        the mapped list in ``current_params`` so notebooks can resolve an
+        individual band by its canonical name instead of fuzzy-searching
+        ``cube.metadata.band_names``::
+
+            bands = param_manager.band_name_map(current_params)
+            nir = s2cube.band(bands["b08"])
+
+        Args:
+            current_params: Mapped parameters returned by ``quick_connect`` /
+                ``apply_endpoint_mapping``.
+            set_name: Parameter set to read canonical bands from. Defaults to the
+                current set.
+
+        Returns:
+            ``{canonical_band: native_band}`` for the active parameter set.
+        """
+        canonical = self.get_parameter("bands", set_name).default
+        native_param = current_params.get("bands")
+        native = (
+            native_param.default
+            if hasattr(native_param, "default")
+            else canonical
+        )
+        return dict(zip(canonical, native))
+
     def __str__(self) -> str:
         """String representation."""
         sets = list(self._parameter_sets.keys())

@@ -1,13 +1,13 @@
 """Endpoint configuration for EOPF Explorer (Copernicus Explorer).
 
-This module contains both connection configuration and parameter mapping logic
-for the EOPF Explorer OpenEO backend.
+This module contains both connection configuration and the canonical->native
+collection/band mapping table for the EOPF Explorer OpenEO backend. The actual
+mapping logic lives in :func:`openeo_udp.collections.make_mapper`.
 """
 
-from typing import Any, Dict
-
 import openeo
-from openeo.api.process import Parameter
+
+from openeo_udp.collections import Collection, make_mapper
 
 # Endpoint configuration
 ENDPOINT_CONFIG = {
@@ -15,7 +15,6 @@ ENDPOINT_CONFIG = {
     "url": "https://api.explorer.eopf.copernicus.eu/openeo",
     "auth_method": "oidc_authorization_code",
     "collection_id": "sentinel-2-l2a",
-    "band_format": "reflectance|{band}",
     "reflectance_scale": 1.0,
     "bands_dimension": "bands",
     "time_dimension": "time",
@@ -31,55 +30,39 @@ ENDPOINT_CONFIG = {
     "enabled": True,
 }
 
+# Canonical (lowercase STAC-style) -> EOPF-native collection ids and band names.
+# Sentinel-2 bands are served under the "reflectance|" asset prefix.
+#
+# TODO: verify the Sentinel-1 GRD collection id and band asset names on EOPF
+# Explorer. The values below are placeholders and must be confirmed before
+# relying on S1 here.
+_S1_COLLECTION_ID = "sentinel-1-l1-grd"  # TODO: verify
+COLLECTIONS = {
+    Collection.SENTINEL2_L2A: {
+        "collection_id": "sentinel-2-l2a",
+        "bands": {
+            "b01": "reflectance|b01", "b02": "reflectance|b02",
+            "b03": "reflectance|b03", "b04": "reflectance|b04",
+            "b05": "reflectance|b05", "b06": "reflectance|b06",
+            "b07": "reflectance|b07", "b08": "reflectance|b08",
+            "b8a": "reflectance|b8a", "b09": "reflectance|b09",
+            "b10": "reflectance|b10", "b11": "reflectance|b11",
+            "b12": "reflectance|b12", "scl": "reflectance|scl",
+            # Viewing-/sun-angle metadata bands.
+            # TODO: verify the native asset names for these on EOPF Explorer.
+            "viewzenithmean": "viewZenithMean",
+            "viewazimuthmean": "viewAzimuthMean",
+            "sunzenithangles": "sunZenithAngles",
+            "sunazimuthangles": "sunAzimuthAngles",
+        },
+    },
+    Collection.SENTINEL1_GRD: {
+        "collection_id": _S1_COLLECTION_ID,
+        "bands": {"vh": "grd|vh", "vv": "grd|vv"},  # TODO: verify
+    },
+}
 
-def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
-    """Map parameters for EOPF Explorer endpoint.
-
-    Transforms:
-    - Collection IDs: SENTINEL2_L2A -> sentinel-2-l2a
-    - Band names: B02 -> reflectance|B02
-
-    Args:
-        params: Original parameter dictionary
-
-    Returns:
-        Mapped parameter dictionary
-    """
-    mapped_params = params.copy()
-    mapped_params["reflectance_scale"] = ENDPOINT_CONFIG["reflectance_scale"]
-    mapped_params["bands_dimension"] = ENDPOINT_CONFIG["bands_dimension"]
-    mapped_params["time_dimension"] = ENDPOINT_CONFIG["time_dimension"]
-
-    for param_name, param_value in params.items():
-        if isinstance(param_value, Parameter):
-            # Map collection parameter
-            if param_name == "collection":
-                mapped_params[param_name] = Parameter(
-                    param_value.name,
-                    description=(
-                        param_value.description
-                        if hasattr(param_value, "description")
-                        else param_value.name
-                    ),
-                    default=ENDPOINT_CONFIG["collection_id"],
-                )
-
-            # Map bands parameter with reflectance prefix
-            elif param_name == "bands" and isinstance(param_value.default, list):
-                mapped_bands = [
-                    f"reflectance|{band.lower()}" for band in param_value.default
-                ]
-                mapped_params[param_name] = Parameter(
-                    param_value.name,
-                    description=(
-                        param_value.description
-                        if hasattr(param_value, "description")
-                        else param_value.name
-                    ),
-                    default=mapped_bands,
-                )
-
-    return mapped_params
+map_parameters = make_mapper(ENDPOINT_CONFIG, COLLECTIONS)
 
 
 def get_connection():

@@ -1,0 +1,33 @@
+{
+  "id": "monthly_composite",
+  "title": "Monthly Cloud-Free Composite",
+  "preview_title": "Monthly Cloud-Free Composite",
+  "description": "Builds a single cloud-free RGB composite from one month of Sentinel-2 L2A imagery by selecting, per pixel, the clearest greenest acquisition (maximum B08/B03 ratio after SCL cloud masking) and applying an enhanced natural-color stretch.",
+  "keywords": [
+    "Composite",
+    "Mosaic",
+    "Cloud-free",
+    "Best Available Pixel",
+    "Sentinel-2"
+  ],
+  "themes": [
+    "IMAGERY",
+    "REMOTE SENSING",
+    "Sentinel-2 MSI"
+  ],
+  "created": "2026-06-22T00:00:00Z",
+  "updated": "2026-06-22T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "CDSE openEO Federation",
+  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
+  "notebook_github_location": "notebooks/sentinel/sentinel-2/cloud_and_atmospheric_processing/monthly_composite.ipynb",
+  "collection_id": "SENTINEL2_L2A",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/monthly_composite/",
+    "authors": [
+      "Nicolas Karasiak"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
+    "citation": null
+  }
+}

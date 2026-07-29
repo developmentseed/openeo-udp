@@ -11,18 +11,38 @@ Each endpoint is configured in a separate Python file:
 - `ds_development.py` - Development Seed OpenEO Backend configuration
 - `localhost_dev.py` - Local TiTiler-openEO development backend
 
+## Canonical collections and bands
+
+`*.params.py` files reference **canonical** collection ids and band names
+(lowercase STAC-style), defined once in `openeo_udp/collections.py`:
+
+- collections: `sentinel-2-l2a`, `sentinel-1-grd` (see the `Collection` enum)
+- bands: `b01`..`b12`, `b8a`, `scl` (Sentinel-2); `vh`, `vv` (Sentinel-1); plus
+  the viewing-/sun-angle metadata bands.
+
+Each endpoint declares an explicit `COLLECTIONS` table that maps these canonical
+identifiers to its backend-native ids. The shared mapper
+(`openeo_udp.collections.make_mapper`) rewrites the `collection` and `bands`
+Parameters using that table and **raises** rather than guessing:
+
+- `UnsupportedCollectionError` — the endpoint's `COLLECTIONS` has no entry for the
+  requested canonical collection.
+- `UnsupportedBandError` — the requested band is not in that collection's band map.
+
+Band lookups are case-insensitive, so `B04` and `b04` both resolve to the same
+canonical band.
+
 ## ENDPOINT_CONFIG keys
 
-Each `ENDPOINT_CONFIG` dict must define the connection metadata and the
+Each `ENDPOINT_CONFIG` dict defines the connection metadata and the
 backend-intrinsic attributes that notebooks read at graph-build time. The
-attributes flow into `current_params` via `map_parameters` (see below) so
-notebook code stays backend-agnostic.
+attributes flow into `current_params` via `map_parameters` so notebook code stays
+backend-agnostic.
 
 | Key | Purpose |
 | --- | --- |
 | `name`, `url`, `auth_method` | Connection metadata. |
-| `collection_id` | Canonical collection identifier on this backend (e.g. `SENTINEL2_L2A` vs `sentinel-2-l2a`). |
-| `band_format` | Template for band names, e.g. `{band}` or `reflectance\|{band}`. |
+| `collection_id` | Default/display collection id for this backend (informational; the per-collection `COLLECTIONS` table is the mapping source). |
 | `reflectance_scale` | Divisor to convert raw band values to 0-1 reflectance. `1.0` if the backend already serves reflectance; `10000.0` for integer L2A. |
 | `bands_dimension` | Name of the band/spectral dimension (openEO spec default is `bands`; some backends still use `spectral`). |
 | `time_dimension` | Name of the time dimension (`t` per spec; a few backends use `time`). |
@@ -30,22 +50,22 @@ notebook code stays backend-agnostic.
 
 ## Adding New Endpoints
 
-To add a new endpoint, create a new Python file with:
+To add a new endpoint, create a new Python file with an `ENDPOINT_CONFIG`, a
+`COLLECTIONS` mapping table, and delegate `map_parameters` to the shared mapper:
 
 ```python
 """Endpoint configuration for Your Backend."""
 
-from typing import Any, Dict
+import openeo
 
-from openeo.api.process import Parameter
+from openeo_udp.collections import Collection, make_mapper
 
 # Endpoint configuration
 ENDPOINT_CONFIG = {
     "name": "Your Backend Name",
     "url": "https://your-backend-url/",
     "auth_method": "oidc",  # or "basic", "oidc_authorization_code"
-    "collection_id": "your-collection-id",
-    "band_format": "{band}",  # or "prefix|{band}"
+    "collection_id": "your-default-collection-id",
     # Backend-intrinsic attributes consumed by notebook UDPs
     "reflectance_scale": 10000.0,  # 1.0 if bands are already 0-1 reflectance
     "bands_dimension": "bands",    # name of the band dimension on this backend
@@ -57,19 +77,22 @@ ENDPOINT_CONFIG = {
     "enabled": True,
 }
 
+# Map canonical collection/band ids to this backend's native names. Only declare
+# the collections this backend actually serves; anything else raises an error.
+COLLECTIONS = {
+    Collection.SENTINEL2_L2A: {
+        "collection_id": "your-native-s2-id",
+        "bands": {"b02": "...", "b04": "...", "b08": "..."},  # canonical -> native
+    },
+}
 
-def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
-    """Map parameters for your endpoint."""
-    mapped_params = params.copy()
+map_parameters = make_mapper(ENDPOINT_CONFIG, COLLECTIONS)
 
-    # Propagate intrinsic backend attributes into current_params so notebooks
-    # can read them as plain scalars via current_params["reflectance_scale"] etc.
-    mapped_params["reflectance_scale"] = ENDPOINT_CONFIG["reflectance_scale"]
-    mapped_params["bands_dimension"] = ENDPOINT_CONFIG["bands_dimension"]
-    mapped_params["time_dimension"] = ENDPOINT_CONFIG["time_dimension"]
 
-    # Add any collection / band name rewrites here
-    return mapped_params
+def get_connection():
+    connection = openeo.connect(ENDPOINT_CONFIG["url"])
+    connection.authenticate_oidc()
+    return connection
 ```
 
 ## Advantages of Python-Only Configuration

@@ -1,0 +1,37 @@
+{
+  "id": "s2_s1_forest_fire_progression",
+  "title": "Forest Fire Progression (S2/S1 Fusion)",
+  "preview_title": "Forest Fire Progression (S2/S1 Fusion)",
+  "description": "Multitemporal Sentinel-2 / Sentinel-1 data fusion that maps forest fire progression under cloud cover by combining optical burned-area indices at t1 with the SAR VH backscatter change between t1 and t2.",
+  "keywords": [
+    "Wildfire",
+    "Fire progression",
+    "Burned area",
+    "Data fusion",
+    "SAR",
+    "Sentinel-1",
+    "Sentinel-2"
+  ],
+  "themes": [
+    "WILDFIRES",
+    "DISASTER MONITORING",
+    "REMOTE SENSING",
+    "Sentinel-1 SAR",
+    "Sentinel-2 MSI"
+  ],
+  "created": "2026-06-26T00:00:00Z",
+  "updated": "2026-06-26T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "CDSE openEO Federation",
+  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
+  "notebook_github_location": "notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/s2_s1_forest_fire_progression.ipynb",
+  "collection_id": "SENTINEL2_L2A",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/data-fusion/s2_s1_forest_fire_progression/",
+    "authors": [
+      "Max Kampen"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
+    "citation": "Belenguer-Plomer et al. (2019)"
+  }
+}

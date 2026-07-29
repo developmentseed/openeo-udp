@@ -179,34 +179,138 @@ Before writing any code, thoroughly analyze the original evalscript:
 - **Set up parameter management** to support multiple locations and backends:
   - Create a `.params.py` file alongside your notebook with parameter sets for different locations
   - Use the parameter manager for flexible backend connections and parameter handling
-  - Choose the appropriate approach:
-    - **Interactive widgets** for user-friendly parameter selection in notebooks
-    - **Programmatic approach** for scripts and automated workflows
+  - Follow the five practices below consistently across all notebooks
 
-  ```python
-  # Initialize parameter manager
-  param_manager = ParameterManager('your_algorithm.params.py')
+#### ParameterManager Best Practices
 
-  # Option 1: Interactive approach (recommended for notebooks)
-  selection_widget = param_manager.interactive_parameter_selection()
-  connection, current_params = selection_widget()
+These five practices keep notebooks consistent, portable across backends, and
+ready for UDP export. The
+[Monthly Composite notebook](notebooks/sentinel/sentinel-2/cloud_and_atmospheric_processing/monthly_composite.ipynb)
+is the canonical reference.
 
-  # Option 2: Programmatic approach (for scripts)
-  connection, current_params = param_manager.quick_connect(
-      parameter_set='venice_lagoon', endpoint='eopf_explorer'
-  )
-  ```
+##### Practice 1 — Initialize and display options
 
-- **Decide intrinsic vs runtime per parameter** when wiring `load_collection`:
-  pass `.default` for values that are fixed by the algorithm (collection, bands),
-  and pass the `Parameter` object itself for runtime knobs (AOI, TOI, cloud
-  cover) so the graph contains `{"from_parameter": ...}` refs reusable as a UDP.
-  Before any synchronous `.download()` / `.execute()`, call
-  `param_manager.resolve(datacube, current_params)` to materialise the refs —
-  the synchronous `/result` endpoint does not accept unresolved parameters.
-  See [docs/parameter-management.md](docs/parameter-management.md#intrinsic-vs-runtime-parameters)
-  and the [NDCI notebook](notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb)
-  for the canonical pattern.
+In the imports cell, initialize the `ParameterManager` with the co-located
+`.params.py` file and call `print_options()` so contributors can see available
+parameter sets and endpoints at a glance:
+
+```python
+from openeo_udp import ParameterManager
+
+_algorithm_id = "your_algorithm"
+param_manager = ParameterManager('your_algorithm.params.py')
+param_manager.print_options("your algorithm")
+```
+
+##### Practice 2 — Connect with `quick_connect` by default
+
+Use `param_manager.quick_connect()` as the standard connection pattern, passing a
+concrete `param_set` and `endpoint`. This keeps the notebook reproducible without
+requiring interactive widgets:
+
+```python
+connection, current_params = param_manager.quick_connect(
+    param_set="use_case_1",
+    endpoint="ds_development",
+)
+```
+
+Reserve `param_manager.interactive_parameter_selection()` for notebooks explicitly
+designed for interactive exploration.
+
+##### Practice 3 — Wire `load_collection` via `current_params`
+
+Pass `.default` for algorithm-intrinsic values (collection, bands) and the bare
+`Parameter` object for runtime knobs (spatial_extent, temporal_extent,
+cloud_cover). This keeps `{"from_parameter": ...}` references in the exported
+process graph, making it a reusable UDP. Before any synchronous `.download()` /
+`.execute()`, call `param_manager.resolve(datacube, current_params)` to
+materialise the refs — the synchronous `/result` endpoint does not accept
+unresolved parameters:
+
+```python
+s2cube = connection.load_collection(
+    current_params["collection"].default,
+    temporal_extent=current_params["time"],
+    spatial_extent=current_params["bounding_box"],
+    bands=current_params["bands"].default,
+    properties={
+        "eo:cloud_cover": lambda x: x <= current_params["cloud_cover"].default,
+    },
+)
+
+# Before download, materialise Parameter refs:
+resolved = param_manager.resolve(s2cube, current_params)
+resolved.download(filename)
+```
+
+See [docs/parameter-management.md](docs/parameter-management.md#intrinsic-vs-runtime-parameters)
+for the full explanation.
+
+##### Practice 4 — Resolve dimension names from `current_params`
+
+Never hardcode temporal (`"t"`) or spectral (`"bands"`) dimension names —
+backends use different conventions. Always read them from `current_params`:
+
+```python
+rank_mask = rank.apply_dimension(
+    dimension=current_params["time_dimension"],
+    process=keep_only_max,
+)
+rgb = masked.apply_dimension(
+    dimension=current_params["bands_dimension"],
+    process=enhanced_rgb,
+)
+```
+
+##### Practice 5 — Always apply `reflectance_scale` on reflectance bands
+
+Integer-encoded backends (e.g. CDSE stores values as 0–10000) must be divided
+by `reflectance_scale` before any index computation or color stretch.
+Read the scale from `current_params` — it resolves to `10000.0` on integer
+backends and `1.0` where the collection already delivers float reflectance:
+
+```python
+scale = current_params["reflectance_scale"]
+
+def compute_index(data):
+    b04 = data[0] / scale
+    b08 = data[1] / scale
+    return (b08 - b04) / (b08 + b04)
+```
+
+This single change makes the same notebook run correctly on both integer and
+float backends without any manual adjustment.
+
+##### Practice 6 — Resolve bands with the band resolver, not fuzzy name search
+
+Backends rename bands (`B08` on CDSE, `B08_10m` on DS, `reflectance|b08` on EOPF
+Explorer), so a single algorithm cannot hardcode native band names. Avoid the
+brittle workaround of scanning `cube.metadata.band_names` with a prefix guess:
+
+```python
+# ❌ Fragile: depends on substring matching and breaks if a backend
+#    uses a different prefix/casing, or exposes two matching bands.
+nir_band = next(b for b in cube.metadata.band_names if b.lower().startswith("b08"))
+green_band = next(b for b in cube.metadata.band_names if b.lower().startswith("b03"))
+```
+
+Instead reference bands by their **canonical** name (the lowercase STAC-style ids
+defined in `openeo_udp/collections.py` and used in your `*.params.py` defaults)
+and let the resolver return the native name for the active endpoint:
+
+```python
+# ✅ Deterministic: canonical -> native lookup for this backend.
+bands = param_manager.band_name_map(current_params)
+nir_band = bands["b08"]
+green_band = bands["b03"]
+rank = cube.band(nir_band) / cube.band(green_band)
+```
+
+`band_name_map` zips the canonical band list with the endpoint-mapped names in
+`current_params`, so the lookup stays correct on every backend and fails loudly
+(`UnsupportedBandError`) at connect time if a band isn't mapped — rather than
+silently picking the wrong band or `StopIteration` at runtime.
 
 - **Define your test area** by selecting a spatial extent where the algorithm should produce meaningful results:
   - Water quality algorithms (like NDCI): choose areas with known water bodies
