@@ -1,0 +1,39 @@
+{
+  "id": "urban_s1_s2",
+  "title": "Urban Detection (S1/S2 Fusion)",
+  "preview_title": "Urban Detection (S1/S2 Fusion)",
+  "description": "Multi-sensor data fusion that maps built-up areas by thresholding Sentinel-1 backscatter after masking out vegetation and water with Sentinel-2 NDVI and NDMI, rendering each pixel from whichever sensor best describes it.",
+  "keywords": [
+    "Urban",
+    "Built-up",
+    "Settlement mapping",
+    "Data fusion",
+    "SAR",
+    "NDVI",
+    "NDMI",
+    "Sentinel-1",
+    "Sentinel-2"
+  ],
+  "themes": [
+    "URBAN AREAS",
+    "LAND COVER",
+    "HUMAN SETTLEMENTS",
+    "REMOTE SENSING",
+    "Sentinel-1 SAR",
+    "Sentinel-2 MSI"
+  ],
+  "created": "2026-07-29T00:00:00Z",
+  "updated": "2026-07-29T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "CDSE openEO Federation",
+  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
+  "notebook_github_location": "notebooks/sentinel/sentinel-2/land-cover/urban_s1_s2.ipynb",
+  "collection_id": "SENTINEL2_L1C",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/data-fusion/urban_s1_s2/",
+    "authors": [
+      "Monja B. \u0160ebela"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts"
+  }
+}

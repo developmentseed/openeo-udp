@@ -1,0 +1,38 @@
+{
+  "id": "multitemporal_burnt_area",
+  "title": "Multitemporal Burnt Area Analysis (dNBR)",
+  "preview_title": "Multitemporal Burnt Area Analysis (dNBR)",
+  "description": "Bi-temporal Sentinel-2 burn severity mapping that differences the Normalized Burn Ratio between a pre-fire and a post-fire acquisition and classifies the result into unburned, moderate and severe, rendered over a natural-colour view of the post-fire scene.",
+  "keywords": [
+    "Wildfire",
+    "Burn severity",
+    "Burned area",
+    "dNBR",
+    "NBR",
+    "Change detection",
+    "Sentinel-2"
+  ],
+  "themes": [
+    "WILDFIRES",
+    "DISASTER MONITORING",
+    "LAND COVER",
+    "REMOTE SENSING",
+    "Sentinel-2 MSI"
+  ],
+  "created": "2026-07-29T00:00:00Z",
+  "updated": "2026-07-29T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "CDSE openEO Federation",
+  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
+  "notebook_github_location": "notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/multitemporal_burnt_area.ipynb",
+  "collection_id": "SENTINEL2_L2A",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/burned_area/",
+    "authors": [
+      "FC Basson",
+      "Pierre Markuse"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
+    "citation": "Key, C.H., Benson, N.C. (2006). Landscape Assessment (LA): Sampling and Analysis Methods. USDA Forest Service General Technical Report RMRS-GTR-164-CD."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "flood_mapping",
+  "title": "Flood Mapping (Sentinel-1)",
+  "preview_title": "Flood Mapping (Sentinel-1)",
+  "description": "Bi-temporal Sentinel-1 VV change detection that maps flood extent by comparing backscatter from before and during a flood, rendering newly inundated land in red, permanent water in black and flooded built-up areas in cyan.",
+  "keywords": [
+    "Flood",
+    "Flood mapping",
+    "Inundation",
+    "Change detection",
+    "SAR",
+    "Backscatter",
+    "Sentinel-1"
+  ],
+  "themes": [
+    "FLOODS",
+    "DISASTER MONITORING",
+    "INLAND WATERS",
+    "REMOTE SENSING",
+    "Sentinel-1 SAR"
+  ],
+  "created": "2026-07-28T00:00:00Z",
+  "updated": "2026-07-28T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "CDSE openEO Federation",
+  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
+  "notebook_github_location": "notebooks/sentinel/sentinel-1/water_and_flood_monitoring/flood_mapping.ipynb",
+  "collection_id": "SENTINEL1_GRD",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-1/flood_mapping/",
+    "authors": [
+      "Maryam Salehi"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
+    "citation": "Martinis, S., Kersten, J., Twele, A. (2015). A fully automated TerraSAR-X based flood service. ISPRS Journal of Photogrammetry and Remote Sensing, 104, 203-212."
+  }
+}

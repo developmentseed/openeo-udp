@@ -47,6 +47,20 @@ COLLECTIONS = {
             "sunazimuthangles": "sunAzimuthAngles",
         },
     },
+    # Top-of-atmosphere L1C: same uppercase band names as L2A, minus SCL.
+    Collection.SENTINEL2_L1C: {
+        "collection_id": "SENTINEL2_L1C",
+        "bands": {
+            "b01": "B01", "b02": "B02", "b03": "B03", "b04": "B04",
+            "b05": "B05", "b06": "B06", "b07": "B07", "b08": "B08",
+            "b8a": "B8A", "b09": "B09", "b10": "B10", "b11": "B11",
+            "b12": "B12",
+            "viewzenithmean": "viewZenithMean",
+            "viewazimuthmean": "viewAzimuthMean",
+            "sunzenithangles": "sunZenithAngles",
+            "sunazimuthangles": "sunAzimuthAngles",
+        },
+    },
     Collection.SENTINEL1_GRD: {
         "collection_id": "SENTINEL1_GRD",
         "bands": {"vh": "VH", "vv": "VV"},
