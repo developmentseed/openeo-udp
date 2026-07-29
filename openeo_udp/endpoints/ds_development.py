@@ -43,6 +43,17 @@ COLLECTIONS = {
             "sunazimuthangles": "sunAzimuthAngles",
         },
     },
+    # L1C is served without the resolution suffix that L2A carries, and has no
+    # SCL layer. Angle bands are not exposed, so they are deliberately unmapped.
+    Collection.SENTINEL2_L1C: {
+        "collection_id": "sentinel-2-l1c",
+        "bands": {
+            "b01": "B01", "b02": "B02", "b03": "B03", "b04": "B04",
+            "b05": "B05", "b06": "B06", "b07": "B07", "b08": "B08",
+            "b8a": "B8A", "b09": "B09", "b10": "B10", "b11": "B11",
+            "b12": "B12",
+        },
+    },
     Collection.SENTINEL1_GRD: {
         "collection_id": "sentinel-1-grd",
         "bands": {"vh": "vh", "vv": "vv"},

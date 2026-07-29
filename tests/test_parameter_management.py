@@ -415,6 +415,51 @@ class TestParameterMapping:
         assert cdse["collection"].default == "SENTINEL1_GRD"
         assert cdse["bands"].default == ["VH", "VV"]
 
+    def test_sentinel2_l1c_mapping(self, temp_params_file):
+        """Sentinel-2 L1C canonical ids map to native collection + bands."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-2-l1c"
+            ),
+            "bands": Parameter(
+                "bands", description="b", default=["b02", "b04", "b08", "b11"]
+            ),
+        }
+
+        cdse = param_manager.apply_endpoint_mapping(params, "copernicus_dataspace")
+        assert cdse["collection"].default == "SENTINEL2_L1C"
+        assert cdse["bands"].default == ["B02", "B04", "B08", "B11"]
+
+        # L1C on the DS backend has no resolution suffix, unlike its L2A.
+        ds = param_manager.apply_endpoint_mapping(params, "ds_development")
+        assert ds["collection"].default == "sentinel-2-l1c"
+        assert ds["bands"].default == ["B02", "B04", "B08", "B11"]
+
+    def test_sentinel2_l1c_has_no_scl(self, temp_params_file):
+        """L1C carries no scene classification layer, so `scl` must not map."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-2-l1c"
+            ),
+            "bands": Parameter("bands", description="b", default=["scl"]),
+        }
+        with pytest.raises(UnsupportedBandError):
+            param_manager.apply_endpoint_mapping(params, "copernicus_dataspace")
+
+    def test_sentinel2_l1c_unmapped_endpoint_raises(self, temp_params_file):
+        """Endpoints with no verified L1C table raise rather than guessing."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-2-l1c"
+            ),
+            "bands": Parameter("bands", description="b", default=["b04"]),
+        }
+        with pytest.raises(UnsupportedCollectionError):
+            param_manager.apply_endpoint_mapping(params, "eopf_explorer")
+
     def test_unsupported_collection_raises(self, temp_params_file):
         """An unknown canonical collection raises rather than passing through."""
         param_manager = ParameterManager(temp_params_file)
