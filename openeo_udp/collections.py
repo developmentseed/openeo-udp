@@ -7,8 +7,9 @@ mapping table from these canonical identifiers to its backend-native ids
 
 Canonical identifiers follow lowercase STAC-style conventions:
 
-- collections: ``sentinel-2-l2a``, ``sentinel-1-grd``
-- bands: ``b01``..``b12``, ``b8a``, ``scl`` (Sentinel-2); ``vh``, ``vv`` (Sentinel-1)
+- collections: ``sentinel-2-l2a``, ``sentinel-2-l1c``, ``sentinel-1-grd``
+- bands: ``b01``..``b12``, ``b8a``, ``scl`` (Sentinel-2 L2A; L1C has no ``scl``);
+  ``vh``, ``vv`` (Sentinel-1)
 
 Anything an endpoint has no explicit mapping for raises
 :class:`UnsupportedCollectionError` or :class:`UnsupportedBandError` rather than
@@ -25,6 +26,7 @@ class Collection(str, Enum):
     """Canonical collection identifiers used in ``*.params.py`` defaults."""
 
     SENTINEL2_L2A = "sentinel-2-l2a"
+    SENTINEL2_L1C = "sentinel-2-l1c"
     SENTINEL1_GRD = "sentinel-1-grd"
 
 
@@ -34,6 +36,15 @@ CANONICAL_BANDS: Dict[Collection, List[str]] = {
     Collection.SENTINEL2_L2A: [
         "b01", "b02", "b03", "b04", "b05", "b06", "b07",
         "b08", "b8a", "b09", "b10", "b11", "b12", "scl",
+        # Viewing-/sun-angle metadata bands.
+        "viewzenithmean", "viewazimuthmean",
+        "sunzenithangles", "sunazimuthangles",
+    ],
+    # Top-of-atmosphere product: same optical bands as L2A but no scene
+    # classification layer, so ``scl`` is deliberately absent here.
+    Collection.SENTINEL2_L1C: [
+        "b01", "b02", "b03", "b04", "b05", "b06", "b07",
+        "b08", "b8a", "b09", "b10", "b11", "b12",
         # Viewing-/sun-angle metadata bands.
         "viewzenithmean", "viewazimuthmean",
         "sunzenithangles", "sunazimuthangles",
@@ -48,6 +59,8 @@ CANONICAL_BANDS: Dict[Collection, List[str]] = {
 _COLLECTION_ALIASES: Dict[str, Collection] = {
     "sentinel2_l2a": Collection.SENTINEL2_L2A,
     "sentinel-2-l2a": Collection.SENTINEL2_L2A,
+    "sentinel2_l1c": Collection.SENTINEL2_L1C,
+    "sentinel-2-l1c": Collection.SENTINEL2_L1C,
     "sentinel1_grd": Collection.SENTINEL1_GRD,
     "sentinel-1-grd": Collection.SENTINEL1_GRD,
 }
