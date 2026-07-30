@@ -538,6 +538,9 @@ class TestParameterMapping:
 
         assert bands["b04"] == "B04_10m"
         assert bands["b8a"] == "B8A_20m"
+
+
+class TestParameterResolution:
     """Test cases for resolve_parameters / resolve (graph parameter materialization)."""
 
     def test_resolve_parameters_substitutes_user_refs(self, temp_params_file):
@@ -648,7 +651,10 @@ class TestParameterMapping:
         mock_cube.flat_graph.assert_called_once()
         mock_cube.connection.datacube_from_flat_graph.assert_called_once()
         passed_graph = mock_cube.connection.datacube_from_flat_graph.call_args[0][0]
-        assert passed_graph["n1"]["arguments"]["spatial_extent"] == current["bounding_box"].default
+        assert (
+            passed_graph["n1"]["arguments"]["spatial_extent"]
+            == current["bounding_box"].default
+        )
         assert result is returned_cube
 
 
@@ -680,9 +686,7 @@ class TestIntegration:
 
         # Test quick connect
         connection, current_params = param_manager.quick_connect(
-            param_set="venice_lagoon",
-            endpoint="eopf_explorer",
-            silent=True
+            param_set="venice_lagoon", endpoint="eopf_explorer", silent=True
         )
 
         assert connection == mock_connection
