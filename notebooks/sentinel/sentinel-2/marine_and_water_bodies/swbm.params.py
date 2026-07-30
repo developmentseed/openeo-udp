@@ -25,11 +25,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Lake of Sainte-Croix",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 6.10, "south": 43.72, "east": 6.27, "north": 43.82},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2022-08-01", "2022-08-31"],
             ),
             "bands": Parameter(
@@ -44,8 +46,9 @@ def get_parameters():
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
-                description="Maximum cloud cover percentage",
-                default=22,
+                description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
+                default=30,
             ),
         },
         "oroville_dam": {
@@ -53,11 +56,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Oroville Dam reservoir",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": -121.55, "south": 39.45, "east": -121.40, "north": 39.60},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2017-01-30", "2017-12-21"],
             ),
             "bands": Parameter(
@@ -72,8 +77,9 @@ def get_parameters():
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
-                description="Maximum cloud cover percentage",
-                default=20,
+                description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
+                default=30,
             ),
         },
         "aral_sea": {
@@ -81,11 +87,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the Aral Sea",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 58.00, "south": 44.50, "east": 61.50, "north": 46.80},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2023-07-01", "2023-09-30"],
             ),
             "bands": Parameter(
@@ -100,8 +108,9 @@ def get_parameters():
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
-                description="Maximum cloud cover percentage",
-                default=20,
+                description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
+                default=30,
             ),
         },
         "poyang_lake": {
@@ -109,11 +118,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Poyang Lake",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 115.80, "south": 28.80, "east": 116.80, "north": 29.80},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2023-07-01", "2023-09-30"],
             ),
             "bands": Parameter(
@@ -128,8 +139,9 @@ def get_parameters():
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
-                description="Maximum cloud cover percentage",
-                default=20,
+                description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
+                default=30,
             ),
         },
     }

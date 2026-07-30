@@ -25,11 +25,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Barrage Lebna reservoir",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 10.85, "south": 36.70, "east": 10.95, "north": 36.79},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-01-15", "2026-04-15"],
             ),
             "bands": Parameter(
@@ -45,6 +47,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=20,
             ),
         },
@@ -53,11 +56,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Alqueva reservoir",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": -7.55, "south": 38.15, "east": -7.25, "north": 38.45},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2023-07-01", "2023-08-31"],
             ),
             "bands": Parameter(
@@ -73,6 +78,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=20,
             ),
         },
@@ -81,11 +87,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for L'Albufera lagoon",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": -0.37, "south": 39.30, "east": -0.28, "north": 39.37},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2023-07-01", "2023-09-30"],
             ),
             "bands": Parameter(
@@ -101,6 +109,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=20,
             ),
         },
@@ -109,11 +118,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Mar Menor lagoon",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": -0.90, "south": 37.60, "east": -0.70, "north": 37.80},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2022-06-01", "2022-08-31"],
             ),
             "bands": Parameter(
@@ -129,6 +140,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=20,
             ),
         },

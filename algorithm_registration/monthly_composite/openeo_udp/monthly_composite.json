@@ -4,14 +4,14 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B02_10m",
-          "B03_10m",
-          "B04_10m",
-          "B05_20m",
-          "B08_10m",
-          "SCL_20m"
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B08",
+          "SCL"
         ],
-        "id": "sentinel-2-l2a",
+        "id": "SENTINEL2_L2A",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
@@ -42,7 +42,7 @@
         "data": {
           "from_node": "loadcollection1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "reducer": {
           "process_graph": {
             "arrayelement1": {
@@ -165,7 +165,7 @@
         "data": {
           "from_node": "mask1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "process": {
           "process_graph": {
             "arrayelement2": {
@@ -183,7 +183,7 @@
                 "x": {
                   "from_node": "arrayelement2"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply1": {
@@ -210,7 +210,7 @@
                 "x": {
                   "from_node": "arrayelement3"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply2": {
@@ -248,7 +248,7 @@
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply3": {
@@ -275,7 +275,7 @@
                 "x": {
                   "from_node": "arrayelement5"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply4": {
@@ -313,7 +313,7 @@
                 "x": {
                   "from_node": "arrayelement6"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply5": {
@@ -352,7 +352,7 @@
         "data": {
           "from_node": "mask1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "reducer": {
           "process_graph": {
             "arrayelement7": {
@@ -484,7 +484,10 @@
     {
       "name": "time",
       "description": "One-month window to composite",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2024-06-01",
         "2024-07-01"
@@ -494,7 +497,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent for West Corsica, France",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 8.53,
         "south": 42.1,
@@ -506,19 +512,23 @@
     {
       "name": "cloud_cover",
       "description": "Maximum scene-level cloud cover percentage",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 90,
       "optional": true
     },
     {
       "name": "gain",
       "description": "Brightness gain for the enhanced natural-color stretch (2.8 in the original script)",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 2.8,
       "optional": true
     }
   ],
   "id": "monthly_composite",
   "summary": "Monthly cloud-free greenest-pixel composite from Sentinel-2 imagery using openEO.",
-  "description": "Builds a single cloud-free RGB composite from one month of Sentinel-2 L2A imagery by selecting, per pixel, the acquisition with the maximum B08/B03 (NIR/Green) ratio after SCL cloud masking, then applying an enhanced natural-color stretch. Converted from the Sentinel Hub Monthly Composite evalscript by Nicolas Karasiak."
+  "description": "Builds a single cloud-free RGB composite from one month of Sentinel-2 L2A imagery by selecting, per pixel, the clearest greenest acquisition (maximum B08/B03 ratio after SCL cloud masking) and applying an enhanced natural-color stretch."
 }

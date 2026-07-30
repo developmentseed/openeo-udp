@@ -30,11 +30,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Melbourne fire area",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 146.55, "south": -37.79, "east": 146.90, "north": -37.55},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-03-04", "2019-03-07"],
             ),
             "bands": Parameter(
@@ -50,6 +52,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=30,
             ),
         },
@@ -58,11 +61,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for California wildfire area",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": -120.5, "south": 36.0, "east": -119.5, "north": 37.0},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2020-09-01", "2020-09-15"],
             ),
             "bands": Parameter(
@@ -78,6 +83,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=20,
             ),
         },
@@ -86,11 +92,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Australia bushfire area",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 149.0, "south": -37.0, "east": 150.0, "north": -36.0},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-12-01", "2019-12-15"],
             ),
             "bands": Parameter(
@@ -106,6 +114,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=25,
             ),
         },

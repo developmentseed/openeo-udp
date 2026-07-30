@@ -2011,6 +2011,6 @@
     }
   ],
   "id": "fapar",
-  "summary": "Calculation of Fraction of Absorbed Photosynthetically Active Radiation (FAPAR)using Sentinel-2 imagery with the OpenEO API",
+  "summary": "Calculates the Fraction of Absorbed Photosynthetically Active Radiation (FAPAR) from Sentinel-2 imagery using a neural network algorithm ported from SNAP.",
   "description": "Calculates the Fraction of Absorbed Photosynthetically Active Radiation (FAPAR) from Sentinel-2 L2A imagery using a neural network algorithm ported from SNAP. FAPAR is a dimensionless fraction (0\u20131) representing the proportion of incoming solar radiation in the 400\u2013700 nm range absorbed by live green vegetation for photosynthesis. The neural network takes 8 spectral bands and 4 angular inputs (view and sun geometry) and applies the SNAP BVNet weights. Suitable for monitoring vegetation health, canopy development, and carbon flux estimation across croplands, forests, and natural ecosystems."
 }

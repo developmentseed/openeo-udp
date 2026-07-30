@@ -27,11 +27,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Venice Lagoon",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 12.2, "south": 45.3, "east": 12.6, "north": 45.6},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-06-01", "2025-08-31"],
             ),
             "bands": Parameter(
@@ -47,6 +49,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=30,
             ),
         },
@@ -55,11 +58,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Lake Victoria",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 33.94, "south": -0.53, "east": 34.88, "north": -0.10},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2023-07-01", "2023-09-30"],
             ),
             "bands": Parameter(
@@ -74,7 +79,8 @@ def get_parameters():
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
-                description="Maximum cloud cover percentage",
+                description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
                 default=25,
             ),
         },
@@ -83,11 +89,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Nile Delta",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 30.5, "south": 30.8, "east": 31.8, "north": 31.6},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2023-05-03", "2023-05-31"],
             ),
             "bands": Parameter(
@@ -102,7 +110,8 @@ def get_parameters():
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
-                description="Maximum cloud cover percentage",
+                description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
                 default=50,
             ),
         },
@@ -111,11 +120,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Florida Everglades",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": -81.0, "south": 25.3, "east": -80.3, "north": 25.9},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2023-07-04", "2023-08-31"],
             ),
             "bands": Parameter(
@@ -130,7 +141,8 @@ def get_parameters():
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
-                description="Maximum cloud cover percentage",
+                description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
                 default=30,
             ),
         },
@@ -139,11 +151,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Tonle Sap Lake",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 103.5, "south": 12.8, "east": 104.5, "north": 13.5},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2023-08-10", "2023-10-31"],
             ),
             "bands": Parameter(
@@ -158,7 +172,8 @@ def get_parameters():
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
-                description="Maximum cloud cover percentage",
+                description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
                 default=35,
             ),
         },

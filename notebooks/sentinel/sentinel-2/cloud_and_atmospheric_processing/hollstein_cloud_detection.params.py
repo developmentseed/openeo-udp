@@ -60,6 +60,7 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for an area in Veneto, Italy",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={
                     "west": 12.3793,
                     "south": 45.8996,
@@ -70,6 +71,7 @@ def get_parameters():
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-05-12", "2025-05-13"],
             ),
             "bands": Parameter(
@@ -85,6 +87,7 @@ def get_parameters():
             "gain": Parameter(
                 "gain",
                 description="Brightness gain for the clear/shadow natural-color output",
+                schema={"type": "number"},
                 default=2.5,
             ),
         },
@@ -93,6 +96,7 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for an area in Slovenia",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={
                     "west": 14.95484125321093,
                     "south": 45.80183674806176,
@@ -103,6 +107,7 @@ def get_parameters():
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-05-12", "2025-05-13"],
             ),
             "bands": Parameter(
@@ -118,6 +123,7 @@ def get_parameters():
             "gain": Parameter(
                 "gain",
                 description="Brightness gain for the clear/shadow natural-color output",
+                schema={"type": "number"},
                 default=2.5,
             ),
         },

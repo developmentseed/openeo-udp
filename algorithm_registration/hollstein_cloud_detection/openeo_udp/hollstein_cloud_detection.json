@@ -4,18 +4,18 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B01_60m",
-          "B02_10m",
-          "B03_10m",
-          "B04_10m",
-          "B05_20m",
-          "B06_20m",
-          "B07_20m",
-          "B8A_20m",
-          "B09_60m",
-          "B11_20m"
+          "B01",
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B8A",
+          "B09",
+          "B11"
         ],
-        "id": "sentinel-2-l2a",
+        "id": "SENTINEL2_L2A",
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
@@ -52,7 +52,7 @@
         "data": {
           "from_node": "reducedimension1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "process": {
           "process_graph": {
             "arrayelement1": {
@@ -70,7 +70,7 @@
                 "x": {
                   "from_node": "arrayelement1"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply1": {
@@ -97,7 +97,7 @@
                 "x": {
                   "from_node": "arrayelement2"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply2": {
@@ -124,7 +124,7 @@
                 "x": {
                   "from_node": "arrayelement3"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply3": {
@@ -210,7 +210,7 @@
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "arrayelement5": {
@@ -228,7 +228,7 @@
                 "x": {
                   "from_node": "arrayelement5"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract1": {
@@ -375,7 +375,7 @@
                 "x": {
                   "from_node": "arrayelement6"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract3": {
@@ -527,7 +527,7 @@
                 "x": {
                   "from_node": "arrayelement7"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "lt6": {
@@ -611,7 +611,7 @@
                 "x": {
                   "from_node": "arrayelement8"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract4": {
@@ -663,7 +663,7 @@
                 "x": {
                   "from_node": "arrayelement9"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "lt8": {
@@ -727,7 +727,7 @@
                 "x": {
                   "from_node": "arrayelement10"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "divide12": {
@@ -892,38 +892,13 @@
         }
       }
     },
-    "apply1": {
-      "process_id": "apply",
-      "arguments": {
-        "data": {
-          "from_node": "applydimension1"
-        },
-        "process": {
-          "process_graph": {
-            "linearscalerange1": {
-              "process_id": "linear_scale_range",
-              "arguments": {
-                "inputMax": 1,
-                "inputMin": 0,
-                "outputMax": 255,
-                "outputMin": 0,
-                "x": {
-                  "from_parameter": "x"
-                }
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
     "saveresult1": {
       "process_id": "save_result",
       "arguments": {
         "data": {
-          "from_node": "apply1"
+          "from_node": "applydimension1"
         },
-        "format": "PNG",
+        "format": "GTiff",
         "options": {}
       },
       "result": true
@@ -933,7 +908,10 @@
     {
       "name": "time",
       "description": "Temporal range for data acquisition",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2025-05-12",
         "2025-05-13"
@@ -943,7 +921,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent for an area in Veneto, Italy",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 12.3793,
         "south": 45.8996,
@@ -955,7 +936,9 @@
     {
       "name": "gain",
       "description": "Brightness gain for the clear/shadow natural-color output",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 2.5,
       "optional": true
     }

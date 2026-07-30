@@ -396,9 +396,82 @@ Write comprehensive documentation within the notebook:
   - Acknowledge any modifications you made during conversion
   - Thank relevant institutions or funding sources
 
-- **Export the final process graph** (TBD for automation):
-  - Capture the built graph in a variable that can be serialized to JSON
-  - Include a cell that demonstrates this export and saves the JSON to an appropriate location
+- **Export the final process graph and register the algorithm to APEx Algorithm Catalogue** using
+  `register()`. See the practices below — the
+  [Lava Visualization notebook](notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/lava_visualization.ipynb)
+  is a reference example, and the
+  [`templates/simple_openeo_notebook.ipynb`](templates/simple_openeo_notebook.ipynb)
+  template is the recommended starting point for new notebooks.
+
+#### Registration Best Practices (`register()`)
+
+`register()` (from `algorithm_registration.register_algorithm`) copies your UDP
+JSON and preview image into `algorithm_registration/<id>/` and generates the
+OGC API record. Add these cells as the last section of your notebook, in order.
+
+**Required outputs**:
+- UDP JSON file
+- Preview and thumbnail images
+- OGC API record carrying the UDP/notebook metadata (title, algorithm summary,
+  creation date, citation, etc.)
+
+1. **Provide the preview image via `preview_fig` (preferred) or
+   `preview_path`** — one of the two is required for `register()` to register
+   a preview image to the APEx Algorithm Catalogue. Keep a reference to the
+   `Figure` you plot and pass it directly:
+   ```python
+   fig, ax = plt.subplots(figsize=(14, 10), dpi=100)
+   ax.imshow(img)
+   ...
+   plt.show()
+
+   register(..., preview_fig=fig)
+   ```
+   If you'd rather save a file yourself, give it an algorithm-specific name
+   (not `preview.png`, to avoid collisions with other notebooks sharing the
+   working directory) and pass its path via `preview_path` instead — the two
+   are mutually exclusive:
+   ```python
+   plt.savefig("algorithm_preview.png", bbox_inches="tight", dpi=150)
+   plt.show()
+
+   register(..., preview_path=Path("algorithm_preview.png"))
+   ```
+
+2. **Tag the metadata cell `notebook_metadata`.** `populate_record.py` finds
+   this cell by tag, not position, and `exec()`s it to build the OGC record.
+
+3. **When building the UDP `parameters` array, refer to the values already
+   defined in your `.params.py` / `current_params` (ParameterManager) rather
+   than re-declaring them.** Only list the runtime `Parameter` objects (e.g.
+   `current_params["time"]`, `current_params["bounding_box"]`,
+   `current_params["cloud_cover"]`) via `.to_dict()`. Algorithm-intrinsic
+   values (collection, bands) stay baked into the graph via `.default` and
+   should not be exposed as UDP parameters.
+
+4. **Call `register()` last**, after the UDP JSON is written:
+   ```python
+   register(
+       notebook_path=Path.cwd() / f"{_algorithm_id}.ipynb",
+       udp_path=Path(f"{_algorithm_id}.json"),
+       preview_fig=fig,
+   )
+   ```
+
+5. **UDP and OGC API records are generated automatically** and stored in
+   `algorithm_registration/<id>/openeo_udp/<id>.json` and
+   `algorithm_registration/<id>/records/<id>.json`. These are regenerated from
+   the notebook on every run of the export cell, so avoid hand-editing them —
+   they can be used as-is to register the UDP in the
+   [APEx Algorithm Catalogue](https://algorithm-catalogue.apex.esa.int/).
+
+6. **Check the console output** for `Warning: unfilled placeholders` — it
+   means a key is missing from your `metadata` dict and the record JSON has
+   literal `{{PLACEHOLDER}}` strings in it.
+
+7. **Commit the whole generated directory**, not just the notebook —
+   `openeo_udp/<id>.json`, `records/<id>.json`, `records/preview.png`, and
+   `records/thumbnail.png` are the actual deliverable.
 
 ## Coding Standards
 

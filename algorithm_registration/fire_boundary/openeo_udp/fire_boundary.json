@@ -25,15 +25,11 @@
           }
         },
         "spatial_extent": {
-          "west": 146.55,
-          "south": -37.79,
-          "east": 146.9,
-          "north": -37.55
+          "from_parameter": "bounding_box"
         },
-        "temporal_extent": [
-          "2019-03-04",
-          "2019-03-07"
-        ]
+        "temporal_extent": {
+          "from_parameter": "time"
+        }
       }
     },
     "reducedimension1": {
@@ -350,7 +346,10 @@
     {
       "name": "time",
       "description": "Temporal range for data acquisition",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2019-03-04",
         "2019-03-07"
@@ -360,7 +359,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent for Melbourne fire area",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 146.55,
         "south": -37.79,
@@ -372,7 +374,9 @@
     {
       "name": "cloud_cover",
       "description": "Maximum cloud cover percentage",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 30,
       "optional": true
     }
