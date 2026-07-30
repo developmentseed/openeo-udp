@@ -453,6 +453,10 @@ class TestParameterMapping:
                 "collection", description="c", default="sentinel-3-slstr"
             ),
             "bands": Parameter("bands", description="b", default=["b08"]),
+        }
+        with pytest.raises(UnsupportedBandError):
+            param_manager.apply_endpoint_mapping(params, "copernicus_dataspace")
+
     def test_sentinel2_l1c_mapping(self, temp_params_file):
         """Sentinel-2 L1C canonical ids map to native collection + bands."""
         param_manager = ParameterManager(temp_params_file)
@@ -529,6 +533,10 @@ class TestParameterMapping:
                 "collection", description="c", default="sentinel-3-slstr"
             ),
             "bands": Parameter("bands", description="b", default=["s8"]),
+        }
+        with pytest.raises(UnsupportedCollectionError):
+            param_manager.apply_endpoint_mapping(params, "eopf_explorer")
+
     def test_sentinel2_l1c_unmapped_endpoint_raises(self, temp_params_file):
         """Endpoints with no verified L1C table raise rather than guessing."""
         param_manager = ParameterManager(temp_params_file)
