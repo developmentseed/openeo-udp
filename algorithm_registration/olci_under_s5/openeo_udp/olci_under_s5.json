@@ -1,0 +1,1219 @@
+{
+  "process_graph": {
+    "loadcollection1": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B04",
+          "B06",
+          "B08"
+        ],
+        "id": "SENTINEL3_OLCI_L1B",
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": {
+          "from_parameter": "time"
+        }
+      }
+    },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "mean1": {
+              "process_id": "mean",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "loadcollection2": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "CLOUD_TOP_PRESSURE"
+        ],
+        "id": "SENTINEL_5P_L2",
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": {
+          "from_parameter": "time"
+        }
+      }
+    },
+    "reducedimension2": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection2"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "mean2": {
+              "process_id": "mean",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "resamplecubespatial1": {
+      "process_id": "resample_cube_spatial",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension2"
+        },
+        "method": "near",
+        "target": {
+          "from_node": "reducedimension1"
+        }
+      }
+    },
+    "mergecubes1": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "reducedimension1"
+        },
+        "cube2": {
+          "from_node": "resamplecubespatial1"
+        }
+      }
+    },
+    "reducedimension3": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mergecubes1"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement1": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 3
+              }
+            },
+            "subtract1": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 10000.0
+              }
+            },
+            "divide1": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract1"
+                },
+                "y": 12500.0
+              }
+            },
+            "multiply1": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide1"
+                },
+                "y": 0.0
+              }
+            },
+            "add1": {
+              "process_id": "add",
+              "arguments": {
+                "x": 0.0,
+                "y": {
+                  "from_node": "multiply1"
+                }
+              }
+            },
+            "subtract2": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 22500.0
+              }
+            },
+            "divide2": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract2"
+                },
+                "y": 25000.0
+              }
+            },
+            "multiply2": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide2"
+                },
+                "y": 0.0
+              }
+            },
+            "add2": {
+              "process_id": "add",
+              "arguments": {
+                "x": 0.0,
+                "y": {
+                  "from_node": "multiply2"
+                }
+              }
+            },
+            "subtract3": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 47500.0
+              }
+            },
+            "divide3": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract3"
+                },
+                "y": 25000.0
+              }
+            },
+            "multiply3": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": 1.0
+              }
+            },
+            "add3": {
+              "process_id": "add",
+              "arguments": {
+                "x": 0.0,
+                "y": {
+                  "from_node": "multiply3"
+                }
+              }
+            },
+            "subtract4": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 72500.0
+              }
+            },
+            "divide4": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract4"
+                },
+                "y": 25000.0
+              }
+            },
+            "multiply4": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide4"
+                },
+                "y": 0.0
+              }
+            },
+            "add4": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "multiply4"
+                }
+              }
+            },
+            "subtract5": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 97500.0
+              }
+            },
+            "divide5": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract5"
+                },
+                "y": 12500.0
+              }
+            },
+            "multiply5": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide5"
+                },
+                "y": -0.5
+              }
+            },
+            "add5": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "multiply5"
+                }
+              }
+            },
+            "lte1": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 110000.0
+              }
+            },
+            "if1": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add5"
+                },
+                "reject": 0.5,
+                "value": {
+                  "from_node": "lte1"
+                }
+              }
+            },
+            "lte2": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 97500.0
+              }
+            },
+            "if2": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add4"
+                },
+                "reject": {
+                  "from_node": "if1"
+                },
+                "value": {
+                  "from_node": "lte2"
+                }
+              }
+            },
+            "lte3": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 72500.0
+              }
+            },
+            "if3": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add3"
+                },
+                "reject": {
+                  "from_node": "if2"
+                },
+                "value": {
+                  "from_node": "lte3"
+                }
+              }
+            },
+            "lte4": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 47500.0
+              }
+            },
+            "if4": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add2"
+                },
+                "reject": {
+                  "from_node": "if3"
+                },
+                "value": {
+                  "from_node": "lte4"
+                }
+              }
+            },
+            "lte5": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 22500.0
+              }
+            },
+            "if5": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add1"
+                },
+                "reject": {
+                  "from_node": "if4"
+                },
+                "value": {
+                  "from_node": "lte5"
+                }
+              }
+            },
+            "arrayelement2": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 2
+              }
+            },
+            "multiply6": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement2"
+                },
+                "y": 3
+              }
+            },
+            "clip1": {
+              "process_id": "clip",
+              "arguments": {
+                "max": 1,
+                "min": 0,
+                "x": {
+                  "from_node": "multiply6"
+                }
+              }
+            },
+            "gt1": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 0
+              }
+            },
+            "if6": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "if5"
+                },
+                "reject": {
+                  "from_node": "clip1"
+                },
+                "value": {
+                  "from_node": "gt1"
+                }
+              }
+            },
+            "subtract6": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 10000.0
+              }
+            },
+            "divide6": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract6"
+                },
+                "y": 12500.0
+              }
+            },
+            "multiply7": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide6"
+                },
+                "y": 0.0
+              }
+            },
+            "add6": {
+              "process_id": "add",
+              "arguments": {
+                "x": 0.0,
+                "y": {
+                  "from_node": "multiply7"
+                }
+              }
+            },
+            "subtract7": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 22500.0
+              }
+            },
+            "divide7": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract7"
+                },
+                "y": 25000.0
+              }
+            },
+            "multiply8": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide7"
+                },
+                "y": 1.0
+              }
+            },
+            "add7": {
+              "process_id": "add",
+              "arguments": {
+                "x": 0.0,
+                "y": {
+                  "from_node": "multiply8"
+                }
+              }
+            },
+            "subtract8": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 47500.0
+              }
+            },
+            "divide8": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract8"
+                },
+                "y": 25000.0
+              }
+            },
+            "multiply9": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide8"
+                },
+                "y": 0.0
+              }
+            },
+            "add8": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "multiply9"
+                }
+              }
+            },
+            "subtract9": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 72500.0
+              }
+            },
+            "divide9": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract9"
+                },
+                "y": 25000.0
+              }
+            },
+            "multiply10": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide9"
+                },
+                "y": -1.0
+              }
+            },
+            "add9": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "multiply10"
+                }
+              }
+            },
+            "subtract10": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 97500.0
+              }
+            },
+            "divide10": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract10"
+                },
+                "y": 12500.0
+              }
+            },
+            "multiply11": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide10"
+                },
+                "y": 0.0
+              }
+            },
+            "add10": {
+              "process_id": "add",
+              "arguments": {
+                "x": 0.0,
+                "y": {
+                  "from_node": "multiply11"
+                }
+              }
+            },
+            "lte6": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 110000.0
+              }
+            },
+            "if7": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add10"
+                },
+                "reject": 0.0,
+                "value": {
+                  "from_node": "lte6"
+                }
+              }
+            },
+            "lte7": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 97500.0
+              }
+            },
+            "if8": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add9"
+                },
+                "reject": {
+                  "from_node": "if7"
+                },
+                "value": {
+                  "from_node": "lte7"
+                }
+              }
+            },
+            "lte8": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 72500.0
+              }
+            },
+            "if9": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add8"
+                },
+                "reject": {
+                  "from_node": "if8"
+                },
+                "value": {
+                  "from_node": "lte8"
+                }
+              }
+            },
+            "lte9": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 47500.0
+              }
+            },
+            "if10": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add7"
+                },
+                "reject": {
+                  "from_node": "if9"
+                },
+                "value": {
+                  "from_node": "lte9"
+                }
+              }
+            },
+            "lte10": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 22500.0
+              }
+            },
+            "if11": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add6"
+                },
+                "reject": {
+                  "from_node": "if10"
+                },
+                "value": {
+                  "from_node": "lte10"
+                }
+              }
+            },
+            "arrayelement3": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 1
+              }
+            },
+            "multiply12": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement3"
+                },
+                "y": 3
+              }
+            },
+            "clip2": {
+              "process_id": "clip",
+              "arguments": {
+                "max": 1,
+                "min": 0,
+                "x": {
+                  "from_node": "multiply12"
+                }
+              }
+            },
+            "if12": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "if11"
+                },
+                "reject": {
+                  "from_node": "clip2"
+                },
+                "value": {
+                  "from_node": "gt1"
+                }
+              }
+            },
+            "subtract11": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 10000.0
+              }
+            },
+            "divide11": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract11"
+                },
+                "y": 12500.0
+              }
+            },
+            "multiply13": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide11"
+                },
+                "y": 0.5
+              }
+            },
+            "add11": {
+              "process_id": "add",
+              "arguments": {
+                "x": 0.5,
+                "y": {
+                  "from_node": "multiply13"
+                }
+              }
+            },
+            "subtract12": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 22500.0
+              }
+            },
+            "divide12": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract12"
+                },
+                "y": 25000.0
+              }
+            },
+            "multiply14": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide12"
+                },
+                "y": 0.0
+              }
+            },
+            "add12": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "multiply14"
+                }
+              }
+            },
+            "subtract13": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 47500.0
+              }
+            },
+            "divide13": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract13"
+                },
+                "y": 25000.0
+              }
+            },
+            "multiply15": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide13"
+                },
+                "y": -1.0
+              }
+            },
+            "add13": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1.0,
+                "y": {
+                  "from_node": "multiply15"
+                }
+              }
+            },
+            "subtract14": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 72500.0
+              }
+            },
+            "divide14": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract14"
+                },
+                "y": 25000.0
+              }
+            },
+            "multiply16": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 0.0
+              }
+            },
+            "add14": {
+              "process_id": "add",
+              "arguments": {
+                "x": 0.0,
+                "y": {
+                  "from_node": "multiply16"
+                }
+              }
+            },
+            "subtract15": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 97500.0
+              }
+            },
+            "divide15": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract15"
+                },
+                "y": 12500.0
+              }
+            },
+            "multiply17": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "divide15"
+                },
+                "y": 0.0
+              }
+            },
+            "add15": {
+              "process_id": "add",
+              "arguments": {
+                "x": 0.0,
+                "y": {
+                  "from_node": "multiply17"
+                }
+              }
+            },
+            "lte11": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 110000.0
+              }
+            },
+            "if13": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add15"
+                },
+                "reject": 0.0,
+                "value": {
+                  "from_node": "lte11"
+                }
+              }
+            },
+            "lte12": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 97500.0
+              }
+            },
+            "if14": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add14"
+                },
+                "reject": {
+                  "from_node": "if13"
+                },
+                "value": {
+                  "from_node": "lte12"
+                }
+              }
+            },
+            "lte13": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 72500.0
+              }
+            },
+            "if15": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add13"
+                },
+                "reject": {
+                  "from_node": "if14"
+                },
+                "value": {
+                  "from_node": "lte13"
+                }
+              }
+            },
+            "lte14": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 47500.0
+              }
+            },
+            "if16": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add12"
+                },
+                "reject": {
+                  "from_node": "if15"
+                },
+                "value": {
+                  "from_node": "lte14"
+                }
+              }
+            },
+            "lte15": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 22500.0
+              }
+            },
+            "if17": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "add11"
+                },
+                "reject": {
+                  "from_node": "if16"
+                },
+                "value": {
+                  "from_node": "lte15"
+                }
+              }
+            },
+            "arrayelement4": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              }
+            },
+            "multiply18": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement4"
+                },
+                "y": 3.5
+              }
+            },
+            "clip3": {
+              "process_id": "clip",
+              "arguments": {
+                "max": 1,
+                "min": 0,
+                "x": {
+                  "from_node": "multiply18"
+                }
+              }
+            },
+            "if18": {
+              "process_id": "if",
+              "arguments": {
+                "accept": {
+                  "from_node": "if17"
+                },
+                "reject": {
+                  "from_node": "clip3"
+                },
+                "value": {
+                  "from_node": "gt1"
+                }
+              }
+            },
+            "arraycreate1": {
+              "process_id": "array_create",
+              "arguments": {
+                "data": [
+                  {
+                    "from_node": "if6"
+                  },
+                  {
+                    "from_node": "if12"
+                  },
+                  {
+                    "from_node": "if18"
+                  }
+                ]
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension3"
+        },
+        "process": {
+          "process_graph": {
+            "linearscalerange1": {
+              "process_id": "linear_scale_range",
+              "arguments": {
+                "inputMax": 1,
+                "inputMin": 0,
+                "outputMax": 255,
+                "outputMin": 0,
+                "x": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "saveresult1": {
+      "process_id": "save_result",
+      "arguments": {
+        "data": {
+          "from_node": "apply1"
+        },
+        "format": "PNG",
+        "options": {}
+      },
+      "result": true
+    }
+  },
+  "parameters": [
+    {
+      "name": "bounding_box",
+      "description": "Spatial extent over Mt Etna and the adjoining Ionian coast",
+      "schema": {},
+      "default": {
+        "west": 14.6,
+        "south": 37.6,
+        "east": 15.3,
+        "north": 38.1
+      },
+      "optional": true
+    },
+    {
+      "name": "time",
+      "description": "Window containing the 24 Jul 2023 daytime overpass",
+      "schema": {},
+      "default": [
+        "2023-07-24",
+        "2023-07-25"
+      ],
+      "optional": true
+    }
+  ],
+  "id": "olci_under_s5",
+  "summary": "Sentinel-3 OLCI true colour overlaid with a Sentinel-5P atmospheric product using openEO.",
+  "description": "Overlays a single Sentinel-5P (TROPOMI) atmospheric product -- cloud pressure/height, a trace gas, aerosol index, or cloud fraction/optical thickness -- as a six-stop colour ramp on top of a Sentinel-3 OLCI true-colour base map. Wherever the Sentinel-5P product has no data, the OLCI true-colour pixel shows through instead, so the output is never empty. The Sentinel-5P band is resampled onto OLCI's 300 m grid with nearest-neighbour before fusion. Converted from the Sentinel Hub 'OLCI true colour under Sentinel-5P products' evalscript by Monja B. \u0160ebela."
+}

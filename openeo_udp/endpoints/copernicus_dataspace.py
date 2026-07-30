@@ -80,6 +80,26 @@ COLLECTIONS = {
         "collection_id": "SENTINEL3_OLCI_L1B",
         "bands": {f"b{i:02d}": f"B{i:02d}" for i in range(1, 22)},
     },
+    # Sentinel-5P L2 (TROPOMI atmospheric products). IMPORTANT: CDSE's
+    # SENTINEL_5P_L2 collection "only supports loading one band at a time"
+    # (per its own STAC description) -- request exactly one canonical band
+    # per `load_collection` call, never a list of several.
+    Collection.SENTINEL5P_L2: {
+        "collection_id": "SENTINEL_5P_L2",
+        "bands": {
+            "co": "CO", "hcho": "HCHO", "no2": "NO2", "o3": "O3",
+            "so2": "SO2", "ch4": "CH4",
+            "aer_ai_340_380": "AER_AI_340_380",
+            "aer_ai_354_388": "AER_AI_354_388",
+            "cloud_base_pressure": "CLOUD_BASE_PRESSURE",
+            "cloud_top_pressure": "CLOUD_TOP_PRESSURE",
+            "cloud_base_height": "CLOUD_BASE_HEIGHT",
+            "cloud_top_height": "CLOUD_TOP_HEIGHT",
+            "cloud_optical_thickness": "CLOUD_OPTICAL_THICKNESS",
+            "cloud_fraction": "CLOUD_FRACTION",
+            "datamask": "dataMask",
+        },
+    },
 }
 
 map_parameters = make_mapper(ENDPOINT_CONFIG, COLLECTIONS)
