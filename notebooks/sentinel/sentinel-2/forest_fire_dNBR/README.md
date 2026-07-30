@@ -1,3 +1,4 @@
+
 # Burned area detection and burned vegetation classification using openEO: dNBR and server-side machine learning
 
 This notebook estimates the CO2 emissions of a forest fire, running openEO processes on the Copernicus Data Space Ecosystem (CDSE) backend. The burned area is first detected from the difference in Normalized Burn Ratio (dNBR) between a pre- and post-fire image, then the vegetation within that area is classified per-pixel using a Random Forest model trained locally and applied server-side through a User-Defined Function (UDF). The resulting vegetation map is combined with species-specific factors to estimate CO2 emissions, using a formula provided by the Intergovernmental Panel on Climate Change (IPCC) [1].
@@ -64,6 +65,77 @@ Before it is shipped to the backend, the classifier is retrained locally on the 
 On the backend, the UDF reshapes each chunk of the feature cube into per-pixel feature vectors, unpickles the classifier from `context`, and predicts a vegetation class for every pixel. Applied via `reduce_dimension`, it collapses the cube's band dimension into a single predicted-class band, so the full-resolution classification runs server-side and only the resulting raster needs to be downloaded.
 
 The predicted classes are then visualized for all pixels within the fire mask, and counted to estimate how many hectares each vegetation species occupied.
+
+In this notebook the UDF loads a pre-trained classifier (```clf```) and is defined as follows:
+
+```
+model_b64  =  base64.b64encode(pickle.dumps(clf)).decode("utf-8")
+udf_code  =  textwrap.dedent("""
+	import base64
+	import pickle
+	import numpy as np
+	import xarray as xr
+	
+	def apply_datacube(cube: xr.DataArray, context: dict) -> xr.DataArray:
+		clf = pickle.loads(base64.b64decode(context["model"]))
+		label_names = context["label_names"]
+		class_to_int = {cls: float(i) for i, cls in enumerate(label_names)}
+		arr = cube.values
+		n_t, n_bands, height, width = arr.shape
+		X_pred = arr.reshape(n_t * n_bands, -1).T
+		valid = ~np.isnan(X_pred).any(axis=1)
+		preds_str = np.full(height * width, "NoData", dtype=object)
+		preds_str[valid] = clf.predict(X_pred[valid])
+		preds_float = np.array([class_to_int.get(p, -1.0) for p in preds_str])
+		return xr.DataArray(
+			preds_float.reshape(1, height, width),
+			dims=cube.dims[1:],
+			)
+""")
+
+context  = {	
+	"model": model_b64,
+	"label_names": label_names,
+	}
+
+udf  =  UDF(code=udf_code, runtime="Python", context=context)
+```
+An alternative approach is giving the train and test data as input in the context and train the machine learning classifier in the UDF as follows:
+```
+udf_code  =  textwrap.dedent("""
+	import numpy as np
+	import xarray as xr
+	from sklearn.ensemble import RandomForestClassifier
+	
+	def apply_datacube(cube: xr.DataArray, context: dict) -> xr.DataArray:
+		X_train = np.array(context["X_train"])
+		y_train = np.array(context["y_train"])
+		label_names = context["label_names"] # sorted list; index == class ID
+		class_to_int = {cls: float(i) for i, cls in enumerate(label_names)}
+		clf = RandomForestClassifier(n_estimators=100, random_state=42)
+		clf.fit(X_train, y_train)
+		arr = cube.values
+		n_bands, height, width = arr.shape
+		X_pred = arr.reshape(n_bands, -1).T # (pixels, n_bands)
+		valid = ~np.isnan(X_pred).any(axis=1)
+		preds_str = np.full(height * width, "NoData", dtype=object)
+		preds_str[valid] = clf.predict(X_pred[valid])
+		preds_float = np.array([class_to_int.get(p, -1.0) for p in preds_str])
+		return xr.DataArray(
+			preds_float.reshape(1, height, width),
+			dims=cube.dims,
+			)
+""")
+
+context  = {
+	"X_train": X_train.tolist(),
+	"y_train": y_train_str,
+	"label_names": label_names,
+	}
+	
+udf  = UDF(code=udf_code, runtime="Python", context=context)
+```
+The advantage with training the model in the UDF is that all calculations can be performed on the server-side, but the resulting disadvantage is that it needs to retrain for every batch, so it ends up repeating calculations unnecessarily. Loading a model into the UDF avoids this, but is limited by the size of the context, so only simpler models with a maximum size of ~2mb can be used. 
 
 ### 3. CO2 emissions
 
