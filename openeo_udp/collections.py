@@ -5,18 +5,18 @@ band names that ``*.params.py`` files use. Each endpoint declares an explicit
 mapping table from these canonical identifiers to its backend-native ids
 (see ``openeo_udp/endpoints/*.py``) and delegates to :func:`make_mapper`.
 
-Canonical identifiers follow lowercase STAC-style conventions:
-
-- collections: ``sentinel-2-l2a``, ``sentinel-1-grd``, ``sentinel-3-slstr``,
-  ``sentinel-3-olci-l1b``
-- bands: ``b01``..``b12``, ``b8a``, ``scl`` (Sentinel-2); ``vh``, ``vv``
-  (Sentinel-1); ``s1``..``s9``, ``f1``, ``f2`` (SLSTR); ``b01``..``b21`` (OLCI)
-
 Note that ``reflectance_scale`` is an *endpoint*-level attribute, not a
 per-collection one. It describes the Sentinel-2 collections (0-10000 integers on
 CDSE). The Sentinel-3 collections do not follow it: OLCI L1B is delivered as 0-1
 reflectance and SLSTR's thermal bands as brightness temperature in Kelvin, so
 notebooks using Sentinel-3 must not divide by it.
+
+Canonical identifiers follow lowercase STAC-style conventions:
+
+- collections: ``sentinel-2-l2a`, ``sentinel-2-l1c``, ``sentinel-1-grd``, ``sentinel-3-slstr``,
+  ``sentinel-3-olci-l1b``
+- bands: ``b01``..``b12``, ``b8a``, ``scl`` (Sentinel-2 L2A; L1C has no ``scl``); ``vh``, ``vv``
+  (Sentinel-1); ``s1``..``s9``, ``f1``, ``f2`` (SLSTR); ``b01``..``b21`` (OLCI)
 
 Anything an endpoint has no explicit mapping for raises
 :class:`UnsupportedCollectionError` or :class:`UnsupportedBandError` rather than
@@ -33,6 +33,7 @@ class Collection(str, Enum):
     """Canonical collection identifiers used in ``*.params.py`` defaults."""
 
     SENTINEL2_L2A = "sentinel-2-l2a"
+    SENTINEL2_L1C = "sentinel-2-l1c"
     SENTINEL1_GRD = "sentinel-1-grd"
     SENTINEL3_SLSTR = "sentinel-3-slstr"
     SENTINEL3_OLCI_L1B = "sentinel-3-olci-l1b"
@@ -44,6 +45,15 @@ CANONICAL_BANDS: Dict[Collection, List[str]] = {
     Collection.SENTINEL2_L2A: [
         "b01", "b02", "b03", "b04", "b05", "b06", "b07",
         "b08", "b8a", "b09", "b10", "b11", "b12", "scl",
+        # Viewing-/sun-angle metadata bands.
+        "viewzenithmean", "viewazimuthmean",
+        "sunzenithangles", "sunazimuthangles",
+    ],
+    # Top-of-atmosphere product: same optical bands as L2A but no scene
+    # classification layer, so ``scl`` is deliberately absent here.
+    Collection.SENTINEL2_L1C: [
+        "b01", "b02", "b03", "b04", "b05", "b06", "b07",
+        "b08", "b8a", "b09", "b10", "b11", "b12",
         # Viewing-/sun-angle metadata bands.
         "viewzenithmean", "viewazimuthmean",
         "sunzenithangles", "sunazimuthangles",
@@ -66,6 +76,8 @@ CANONICAL_BANDS: Dict[Collection, List[str]] = {
 _COLLECTION_ALIASES: Dict[str, Collection] = {
     "sentinel2_l2a": Collection.SENTINEL2_L2A,
     "sentinel-2-l2a": Collection.SENTINEL2_L2A,
+    "sentinel2_l1c": Collection.SENTINEL2_L1C,
+    "sentinel-2-l1c": Collection.SENTINEL2_L1C,
     "sentinel1_grd": Collection.SENTINEL1_GRD,
     "sentinel-1-grd": Collection.SENTINEL1_GRD,
     "sentinel3_slstr": Collection.SENTINEL3_SLSTR,
