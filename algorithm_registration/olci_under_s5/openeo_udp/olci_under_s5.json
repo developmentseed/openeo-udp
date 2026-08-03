@@ -1193,7 +1193,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent over Mt Etna and the adjoining Ionian coast",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 14.6,
         "south": 37.6,
@@ -1205,7 +1208,10 @@
     {
       "name": "time",
       "description": "Window containing the 24 Jul 2023 daytime overpass",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2023-07-24",
         "2023-07-25"
