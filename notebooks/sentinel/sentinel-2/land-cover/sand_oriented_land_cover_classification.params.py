@@ -122,8 +122,6 @@ def get_parameters():
                 {"west": -17.6048, "south": 14.613, "east": -17.2182, "north": 14.8681},
                 "Window containing a Sentinel-2 and Sentinel-1 pass in June 2026",
                 ["2026-06-23", "2026-06-26"],
-                # Sentinel-1: 2026-06-25
-                # Sentinel-2: 2026-06-25
                 30,
             ),
         },
@@ -135,8 +133,6 @@ def get_parameters():
                 {"west": 98.2588, "south": 4.02, "east": 98.3553, "north": 4.0861},
                 "Window containing a Sentinel-2 and Sentinel-1 pass in April 2026",
                 ["2026-04-08", "2026-04-13"],
-                # Sentinel-2: 2026-04-12
-                # Sentinel-1: 2026-04-09
                 30,
             ),
         },
