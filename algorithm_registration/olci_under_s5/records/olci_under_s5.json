@@ -13,14 +13,11 @@
     "title": "OLCI True Colour Under Sentinel-5P Products",
     "description": "Overlays a Sentinel-5P (TROPOMI) atmospheric product as a colour ramp on top of a Sentinel-3 OLCI true-colour base map, falling back to the true-colour image wherever the atmospheric product has no data. Supports cloud pressure/height/fraction/optical thickness, trace gases (CO, HCHO, NO2, O3, SO2, CH4), and UV aerosol index. Adapted from a SentinelHub Custom Script by Monja B. \u0160ebela.",
     "keywords": [
-      "Data fusion",
-      "Atmospheric composition",
-      "Air quality",
       "Sentinel-3",
-      "Sentinel-5P",
-      "TROPOMI",
-      "OLCI",
-      "True color"
+      "Natural Hazards",
+      "Wildfires",
+      "Climate",
+      "Data Analysis and Visualization"
     ],
     "language": {
       "code": "en-US",
