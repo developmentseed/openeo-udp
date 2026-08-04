@@ -1,0 +1,161 @@
+{
+  "id": "olci_under_s5",
+  "type": "Feature",
+  "conformsTo": [
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://apex.esa.int/core/openeo-udp"
+  ],
+  "geometry": null,
+  "properties": {
+    "created": "2026-07-30T00:00:00Z",
+    "updated": "2026-07-30T00:00:00Z",
+    "type": "service",
+    "title": "OLCI True Colour Under Sentinel-5P Products",
+    "description": "Overlays a Sentinel-5P (TROPOMI) atmospheric product as a colour ramp on top of a Sentinel-3 OLCI true-colour base map, falling back to the true-colour image wherever the atmospheric product has no data. Supports cloud pressure/height/fraction/optical thickness, trace gases (CO, HCHO, NO2, O3, SO2, CH4), and UV aerosol index. Adapted from a SentinelHub Custom Script by Monja B. \u0160ebela.",
+    "keywords": [
+      "Sentinel-3",
+      "Natural Hazards",
+      "Wildfires",
+      "Climate",
+      "Data Analysis and Visualization"
+    ],
+    "language": {
+      "code": "en-US",
+      "name": "English (United States)"
+    },
+    "languages": [
+      {
+        "code": "en-US",
+        "name": "English (United States)"
+      }
+    ],
+    "contacts": [
+      {
+        "name": "Development Seed",
+        "organization": "Development Seed",
+        "links": [
+          {
+            "href": "https://developmentseed.org",
+            "title": "Development Seed",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Contact via Development Seed",
+        "roles": [
+          "processor"
+        ]
+      },
+      {
+        "name": "Monja B. \u0160ebela",
+        "organization": "Sentinel Hub",
+        "links": [
+          {
+            "href": "https://custom-scripts.sentinel-hub.com/data-fusion/olci_under_s5/",
+            "title": "OLCI True Colour Under Sentinel-5P Products SentinelHub Script",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Original SentinelHub script. See link below.",
+        "roles": [
+          "author"
+        ]
+      }
+    ],
+    "themes": [
+      {
+        "concepts": [
+          {
+            "id": "ATMOSPHERE"
+          },
+          {
+            "id": "AIR QUALITY"
+          },
+          {
+            "id": "REMOTE SENSING"
+          },
+          {
+            "id": "Sentinel-3"
+          },
+          {
+            "id": "Sentinel-5P"
+          }
+        ],
+        "scheme": "https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/sciencekeywords"
+      }
+    ],
+    "formats": [
+      {
+        "name": "GeoTiff"
+      },
+      {
+        "name": "PNG"
+      }
+    ],
+    "license": "CC-BY-SA-4.0"
+  },
+  "linkTemplates": [],
+  "links": [
+    {
+      "rel": "application",
+      "type": "application/vnd.openeo+json;type=process",
+      "title": "openEO Process Definition",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/olci_under_s5/openeo_udp/olci_under_s5.json"
+    },
+    {
+      "rel": "code",
+      "type": "text/html",
+      "title": "openeo-udp repository",
+      "href": "https://github.com/developmentseed/openeo-udp"
+    },
+    {
+      "rel": "webapp",
+      "type": "text/html",
+      "title": "OpenEO Web Editor",
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=olci_under_s5&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/olci_under_s5/openeo_udp/olci_under_s5.json&server=https://openeofed.dataspace.copernicus.eu"
+    },
+    {
+      "rel": "service",
+      "type": "application/json",
+      "title": "CDSE openEO Federation",
+      "href": "https://openeofed.dataspace.copernicus.eu"
+    },
+    {
+      "rel": "notebook",
+      "type": "application/x-ipynb+json",
+      "title": "OLCI True Colour Under Sentinel-5P Products notebook",
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-3/olci_under_s5.ipynb"
+    },
+    {
+      "rel": "platform",
+      "type": "application/json",
+      "title": "TiTiler openEO",
+      "href": "../../../../platform_catalog/titiler_openeo.json"
+    },
+    {
+      "rel": "provider",
+      "type": "application/json",
+      "title": "Development Seed",
+      "href": "../../record.json"
+    },
+    {
+      "rel": "preview",
+      "type": "image/png",
+      "title": "OLCI True Colour Under Sentinel-5P Products",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/olci_under_s5/records/preview.png"
+    },
+    {
+      "rel": "thumbnail",
+      "type": "image/png",
+      "title": "Thumbnail image",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/olci_under_s5/records/thumbnail.png"
+    },
+    {
+      "rel": "cite-as",
+      "type": "text/html",
+      "title": "Script Source Repository",
+      "href": "https://github.com/sentinel-hub/custom-scripts"
+    }
+  ]
+}

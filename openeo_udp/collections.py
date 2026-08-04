@@ -14,9 +14,12 @@ notebooks using Sentinel-3 must not divide by it.
 Canonical identifiers follow lowercase STAC-style conventions:
 
 - collections: ``sentinel-2-l2a`, ``sentinel-2-l1c``, ``sentinel-1-grd``, ``sentinel-3-slstr``,
-  ``sentinel-3-olci-l1b``
+  ``sentinel-3-olci-l1b``, ``sentinel-5p-l2``
 - bands: ``b01``..``b12``, ``b8a``, ``scl`` (Sentinel-2 L2A; L1C has no ``scl``); ``vh``, ``vv``
-  (Sentinel-1); ``s1``..``s9``, ``f1``, ``f2`` (SLSTR); ``b01``..``b21`` (OLCI)
+  (Sentinel-1); ``s1``..``s9``, ``f1``, ``f2`` (SLSTR); ``b01``..``b21`` (OLCI); ``co``, ``hcho``,
+  ``no2``, ``o3``, ``so2``, ``ch4``, ``aer_ai_340_380``, ``aer_ai_354_388``,
+  ``cloud_base_pressure``, ``cloud_top_pressure``, ``cloud_base_height``, ``cloud_top_height``,
+  ``cloud_optical_thickness``, ``cloud_fraction``, ``datamask`` (Sentinel-5P L2)
 
 Anything an endpoint has no explicit mapping for raises
 :class:`UnsupportedCollectionError` or :class:`UnsupportedBandError` rather than
@@ -37,6 +40,7 @@ class Collection(str, Enum):
     SENTINEL1_GRD = "sentinel-1-grd"
     SENTINEL3_SLSTR = "sentinel-3-slstr"
     SENTINEL3_OLCI_L1B = "sentinel-3-olci-l1b"
+    SENTINEL5P_L2 = "sentinel-5p-l2"
 
 
 # Canonical band sets per collection (lowercase STAC-style). Used for
@@ -67,6 +71,19 @@ CANONICAL_BANDS: Dict[Collection, List[str]] = {
     # OLCI L1B: 21 reflective bands, delivered as 0-1 reflectance (NOT scaled
     # by ``reflectance_scale``, which applies to the Sentinel-2 collections).
     Collection.SENTINEL3_OLCI_L1B: [f"b{i:02d}" for i in range(1, 22)],
+    # Sentinel-5P L2 (TROPOMI): one atmospheric product per band, each in its
+    # own physical unit (mol/m^2 for the trace gases, Pa/m for cloud
+    # pressure/height, dimensionless for the AI/fraction/thickness products).
+    # CDSE's SENTINEL_5P_L2 collection only supports loading ONE of these
+    # bands per request -- see the endpoint mapping note.
+    Collection.SENTINEL5P_L2: [
+        "co", "hcho", "no2", "o3", "so2", "ch4",
+        "aer_ai_340_380", "aer_ai_354_388",
+        "cloud_base_pressure", "cloud_top_pressure",
+        "cloud_base_height", "cloud_top_height",
+        "cloud_optical_thickness", "cloud_fraction",
+        "datamask",
+    ],
 }
 
 
@@ -84,6 +101,8 @@ _COLLECTION_ALIASES: Dict[str, Collection] = {
     "sentinel-3-slstr": Collection.SENTINEL3_SLSTR,
     "sentinel3_olci_l1b": Collection.SENTINEL3_OLCI_L1B,
     "sentinel-3-olci-l1b": Collection.SENTINEL3_OLCI_L1B,
+    "sentinel5p_l2": Collection.SENTINEL5P_L2,
+    "sentinel-5p-l2": Collection.SENTINEL5P_L2,
 }
 
 

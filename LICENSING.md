@@ -58,3 +58,7 @@ Conversion: Development Seed (openEO-UDP project)
 - `notebooks/sentinel/sentinel-2/advanced_spectral_processing/cab_chlorophyll_content.params.py`
 - `notebooks/sentinel/sentinel-2/advanced_spectral_processing/ndvi_anomaly_detection.ipynb`
 - `notebooks/sentinel/sentinel-2/advanced_spectral_processing/ndvi_anomaly_detection.params.py`
+- `notebooks/sentinel/sentinel-3/land_surface_temperature.ipynb`
+- `notebooks/sentinel/sentinel-3/land_surface_temperature.params.py`
+- `notebooks/sentinel/sentinel-3/olci_under_s5.ipynb`
+- `notebooks/sentinel/sentinel-3/olci_under_s5.params.py`
