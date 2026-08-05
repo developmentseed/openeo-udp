@@ -1,0 +1,2029 @@
+{
+  "process_graph": {
+    "loadcollection1": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B8A",
+          "B11",
+          "B12",
+          "viewZenithMean",
+          "viewAzimuthMean",
+          "sunZenithAngles",
+          "sunAzimuthAngles"
+        ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte1": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": 30
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": {
+          "from_parameter": "time"
+        }
+      }
+    },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "first1": {
+              "process_id": "first",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "applydimension1": {
+      "process_id": "apply_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension1"
+        },
+        "dimension": "bands",
+        "process": {
+          "process_graph": {
+            "arrayelement1": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              }
+            },
+            "divide1": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement1"
+                },
+                "y": 10000.0
+              }
+            },
+            "subtract1": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide1"
+                },
+                "y": 0
+              }
+            },
+            "multiply1": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2,
+                "y": {
+                  "from_node": "subtract1"
+                }
+              }
+            },
+            "divide2": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply1"
+                },
+                "y": 0.253061520471542
+              }
+            },
+            "subtract2": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide2"
+                },
+                "y": 1
+              }
+            },
+            "multiply2": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.02340687896647,
+                "y": {
+                  "from_node": "subtract2"
+                }
+              }
+            },
+            "add1": {
+              "process_id": "add",
+              "arguments": {
+                "x": 4.96238030555279,
+                "y": {
+                  "from_node": "multiply2"
+                }
+              }
+            },
+            "arrayelement2": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 1
+              }
+            },
+            "divide3": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement2"
+                },
+                "y": 10000.0
+              }
+            },
+            "subtract3": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": 0
+              }
+            },
+            "multiply3": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2,
+                "y": {
+                  "from_node": "subtract3"
+                }
+              }
+            },
+            "divide4": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply3"
+                },
+                "y": 0.290393577911328
+              }
+            },
+            "subtract4": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide4"
+                },
+                "y": 1
+              }
+            },
+            "multiply4": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.921655164636366,
+                "y": {
+                  "from_node": "subtract4"
+                }
+              }
+            },
+            "add2": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add1"
+                },
+                "y": {
+                  "from_node": "multiply4"
+                }
+              }
+            },
+            "arrayelement3": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 2
+              }
+            },
+            "divide5": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement3"
+                },
+                "y": 10000.0
+              }
+            },
+            "subtract5": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide5"
+                },
+                "y": 0
+              }
+            },
+            "multiply5": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2,
+                "y": {
+                  "from_node": "subtract5"
+                }
+              }
+            },
+            "divide6": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply5"
+                },
+                "y": 0.305398915248555
+              }
+            },
+            "subtract6": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide6"
+                },
+                "y": 1
+              }
+            },
+            "multiply6": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.135576544080099,
+                "y": {
+                  "from_node": "subtract6"
+                }
+              }
+            },
+            "add3": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add2"
+                },
+                "y": {
+                  "from_node": "multiply6"
+                }
+              }
+            },
+            "arrayelement4": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 3
+              }
+            },
+            "divide7": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement4"
+                },
+                "y": 10000.0
+              }
+            },
+            "subtract7": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide7"
+                },
+                "y": 0.006637972542253
+              }
+            },
+            "multiply7": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2,
+                "y": {
+                  "from_node": "subtract7"
+                }
+              }
+            },
+            "divide8": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply7"
+                },
+                "y": 0.6022624232556361
+              }
+            },
+            "subtract8": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide8"
+                },
+                "y": 1
+              }
+            },
+            "multiply8": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -1.93833147239795,
+                "y": {
+                  "from_node": "subtract8"
+                }
+              }
+            },
+            "add4": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add3"
+                },
+                "y": {
+                  "from_node": "multiply8"
+                }
+              }
+            },
+            "arrayelement5": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 4
+              }
+            },
+            "divide9": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement5"
+                },
+                "y": 10000.0
+              }
+            },
+            "subtract9": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide9"
+                },
+                "y": 0.013972727018939
+              }
+            },
+            "multiply9": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2,
+                "y": {
+                  "from_node": "subtract9"
+                }
+              }
+            },
+            "divide10": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply9"
+                },
+                "y": 0.7398546573039879
+              }
+            },
+            "subtract10": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide10"
+                },
+                "y": 1
+              }
+            },
+            "multiply10": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -3.34249581612268,
+                "y": {
+                  "from_node": "subtract10"
+                }
+              }
+            },
+            "add5": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add4"
+                },
+                "y": {
+                  "from_node": "multiply10"
+                }
+              }
+            },
+            "arrayelement6": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 5
+              }
+            },
+            "divide11": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement6"
+                },
+                "y": 10000.0
+              }
+            },
+            "subtract11": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide11"
+                },
+                "y": 0.026690138082061
+              }
+            },
+            "multiply11": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2,
+                "y": {
+                  "from_node": "subtract11"
+                }
+              }
+            },
+            "divide12": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply11"
+                },
+                "y": 0.755321632587117
+              }
+            },
+            "subtract12": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide12"
+                },
+                "y": 1
+              }
+            },
+            "multiply12": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.902277648009576,
+                "y": {
+                  "from_node": "subtract12"
+                }
+              }
+            },
+            "add6": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add5"
+                },
+                "y": {
+                  "from_node": "multiply12"
+                }
+              }
+            },
+            "arrayelement7": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 6
+              }
+            },
+            "divide13": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement7"
+                },
+                "y": 10000.0
+              }
+            },
+            "subtract13": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide13"
+                },
+                "y": 0.016388074192258
+              }
+            },
+            "multiply13": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2,
+                "y": {
+                  "from_node": "subtract13"
+                }
+              }
+            },
+            "divide14": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply13"
+                },
+                "y": 0.47737332369083396
+              }
+            },
+            "subtract14": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide14"
+                },
+                "y": 1
+              }
+            },
+            "multiply14": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.205363538258614,
+                "y": {
+                  "from_node": "subtract14"
+                }
+              }
+            },
+            "add7": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add6"
+                },
+                "y": {
+                  "from_node": "multiply14"
+                }
+              }
+            },
+            "arrayelement8": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 7
+              }
+            },
+            "divide15": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement8"
+                },
+                "y": 10000.0
+              }
+            },
+            "subtract15": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide15"
+                },
+                "y": 0
+              }
+            },
+            "multiply15": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2,
+                "y": {
+                  "from_node": "subtract15"
+                }
+              }
+            },
+            "divide16": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply15"
+                },
+                "y": 0.493025984460231
+              }
+            },
+            "subtract16": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide16"
+                },
+                "y": 1
+              }
+            },
+            "multiply16": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.040607844721716,
+                "y": {
+                  "from_node": "subtract16"
+                }
+              }
+            },
+            "add8": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add7"
+                },
+                "y": {
+                  "from_node": "multiply16"
+                }
+              }
+            },
+            "arrayelement9": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 8
+              }
+            },
+            "pi1": {
+              "process_id": "pi",
+              "arguments": {}
+            },
+            "divide17": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "pi1"
+                },
+                "y": 180
+              }
+            },
+            "multiply17": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement9"
+                },
+                "y": {
+                  "from_node": "divide17"
+                }
+              }
+            },
+            "cos1": {
+              "process_id": "cos",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply17"
+                }
+              }
+            },
+            "subtract17": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "cos1"
+                },
+                "y": 0.918595400582046
+              }
+            },
+            "multiply18": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2,
+                "y": {
+                  "from_node": "subtract17"
+                }
+              }
+            },
+            "divide18": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply18"
+                },
+                "y": 0.08140459941795397
+              }
+            },
+            "subtract18": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide18"
+                },
+                "y": 1
+              }
+            },
+            "multiply19": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.083196409727092,
+                "y": {
+                  "from_node": "subtract18"
+                }
+              }
+            },
+            "add9": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add8"
+                },
+                "y": {
+                  "from_node": "multiply19"
+                }
+              }
+            },
+            "arrayelement10": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 10
+              }
+            },
+            "multiply20": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement10"
+                },
+                "y": {
+                  "from_node": "divide17"
+                }
+              }
+            },
+            "cos2": {
+              "process_id": "cos",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply20"
+                }
+              }
+            },
+            "subtract19": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "cos2"
+                },
+                "y": 0.342022871159208
+              }
+            },
+            "multiply21": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2,
+                "y": {
+                  "from_node": "subtract19"
+                }
+              }
+            },
+            "divide19": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply21"
+                },
+                "y": 0.594183558016194
+              }
+            },
+            "subtract20": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "divide19"
+                },
+                "y": 1
+              }
+            },
+            "multiply22": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.260029270773809,
+                "y": {
+                  "from_node": "subtract20"
+                }
+              }
+            },
+            "add10": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add9"
+                },
+                "y": {
+                  "from_node": "multiply22"
+                }
+              }
+            },
+            "arrayelement11": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 11
+              }
+            },
+            "arrayelement12": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 9
+              }
+            },
+            "subtract21": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement11"
+                },
+                "y": {
+                  "from_node": "arrayelement12"
+                }
+              }
+            },
+            "multiply23": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract21"
+                },
+                "y": {
+                  "from_node": "divide17"
+                }
+              }
+            },
+            "cos3": {
+              "process_id": "cos",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply23"
+                }
+              }
+            },
+            "multiply24": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.284761567218845,
+                "y": {
+                  "from_node": "cos3"
+                }
+              }
+            },
+            "add11": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add10"
+                },
+                "y": {
+                  "from_node": "multiply24"
+                }
+              }
+            },
+            "tanh1": {
+              "process_id": "tanh",
+              "arguments": {
+                "x": {
+                  "from_node": "add11"
+                }
+              }
+            },
+            "multiply25": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -1.50013548972873,
+                "y": {
+                  "from_node": "tanh1"
+                }
+              }
+            },
+            "add12": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1.09696310707722,
+                "y": {
+                  "from_node": "multiply25"
+                }
+              }
+            },
+            "multiply26": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.132555480856684,
+                "y": {
+                  "from_node": "subtract2"
+                }
+              }
+            },
+            "add13": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1.4160084439815,
+                "y": {
+                  "from_node": "multiply26"
+                }
+              }
+            },
+            "multiply27": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.13957483733354,
+                "y": {
+                  "from_node": "subtract4"
+                }
+              }
+            },
+            "add14": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add13"
+                },
+                "y": {
+                  "from_node": "multiply27"
+                }
+              }
+            },
+            "multiply28": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -1.01460601689892,
+                "y": {
+                  "from_node": "subtract6"
+                }
+              }
+            },
+            "add15": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add14"
+                },
+                "y": {
+                  "from_node": "multiply28"
+                }
+              }
+            },
+            "multiply29": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -1.33089003864927,
+                "y": {
+                  "from_node": "subtract8"
+                }
+              }
+            },
+            "add16": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add15"
+                },
+                "y": {
+                  "from_node": "multiply29"
+                }
+              }
+            },
+            "multiply30": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.031730624503341,
+                "y": {
+                  "from_node": "subtract10"
+                }
+              }
+            },
+            "add17": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add16"
+                },
+                "y": {
+                  "from_node": "multiply30"
+                }
+              }
+            },
+            "multiply31": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -1.43358354131705,
+                "y": {
+                  "from_node": "subtract12"
+                }
+              }
+            },
+            "add18": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add17"
+                },
+                "y": {
+                  "from_node": "multiply31"
+                }
+              }
+            },
+            "multiply32": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.959637898574699,
+                "y": {
+                  "from_node": "subtract14"
+                }
+              }
+            },
+            "add19": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add18"
+                },
+                "y": {
+                  "from_node": "multiply32"
+                }
+              }
+            },
+            "multiply33": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1.133115706551,
+                "y": {
+                  "from_node": "subtract16"
+                }
+              }
+            },
+            "add20": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add19"
+                },
+                "y": {
+                  "from_node": "multiply33"
+                }
+              }
+            },
+            "multiply34": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.216603876541632,
+                "y": {
+                  "from_node": "subtract18"
+                }
+              }
+            },
+            "add21": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add20"
+                },
+                "y": {
+                  "from_node": "multiply34"
+                }
+              }
+            },
+            "multiply35": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.410652303762839,
+                "y": {
+                  "from_node": "subtract20"
+                }
+              }
+            },
+            "add22": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add21"
+                },
+                "y": {
+                  "from_node": "multiply35"
+                }
+              }
+            },
+            "multiply36": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.064760155543506,
+                "y": {
+                  "from_node": "cos3"
+                }
+              }
+            },
+            "add23": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add22"
+                },
+                "y": {
+                  "from_node": "multiply36"
+                }
+              }
+            },
+            "tanh2": {
+              "process_id": "tanh",
+              "arguments": {
+                "x": {
+                  "from_node": "add23"
+                }
+              }
+            },
+            "multiply37": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.096283269121503,
+                "y": {
+                  "from_node": "tanh2"
+                }
+              }
+            },
+            "add24": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add12"
+                },
+                "y": {
+                  "from_node": "multiply37"
+                }
+              }
+            },
+            "multiply38": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.086015977724868,
+                "y": {
+                  "from_node": "subtract2"
+                }
+              }
+            },
+            "add25": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1.07589704721331,
+                "y": {
+                  "from_node": "multiply38"
+                }
+              }
+            },
+            "multiply39": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.616648776881434,
+                "y": {
+                  "from_node": "subtract4"
+                }
+              }
+            },
+            "add26": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add25"
+                },
+                "y": {
+                  "from_node": "multiply39"
+                }
+              }
+            },
+            "multiply40": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.678003876446556,
+                "y": {
+                  "from_node": "subtract6"
+                }
+              }
+            },
+            "add27": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add26"
+                },
+                "y": {
+                  "from_node": "multiply40"
+                }
+              }
+            },
+            "multiply41": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.141102398644968,
+                "y": {
+                  "from_node": "subtract8"
+                }
+              }
+            },
+            "add28": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add27"
+                },
+                "y": {
+                  "from_node": "multiply41"
+                }
+              }
+            },
+            "multiply42": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.096682206883546,
+                "y": {
+                  "from_node": "subtract10"
+                }
+              }
+            },
+            "add29": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add28"
+                },
+                "y": {
+                  "from_node": "multiply42"
+                }
+              }
+            },
+            "multiply43": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -1.1288326388622,
+                "y": {
+                  "from_node": "subtract12"
+                }
+              }
+            },
+            "add30": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add29"
+                },
+                "y": {
+                  "from_node": "multiply43"
+                }
+              }
+            },
+            "multiply44": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.302189102741375,
+                "y": {
+                  "from_node": "subtract14"
+                }
+              }
+            },
+            "add31": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add30"
+                },
+                "y": {
+                  "from_node": "multiply44"
+                }
+              }
+            },
+            "multiply45": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.434494937299725,
+                "y": {
+                  "from_node": "subtract16"
+                }
+              }
+            },
+            "add32": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add31"
+                },
+                "y": {
+                  "from_node": "multiply45"
+                }
+              }
+            },
+            "multiply46": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.021903699490589,
+                "y": {
+                  "from_node": "subtract18"
+                }
+              }
+            },
+            "add33": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add32"
+                },
+                "y": {
+                  "from_node": "multiply46"
+                }
+              }
+            },
+            "multiply47": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.228492476802263,
+                "y": {
+                  "from_node": "subtract20"
+                }
+              }
+            },
+            "add34": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add33"
+                },
+                "y": {
+                  "from_node": "multiply47"
+                }
+              }
+            },
+            "multiply48": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.039460537589826,
+                "y": {
+                  "from_node": "cos3"
+                }
+              }
+            },
+            "add35": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add34"
+                },
+                "y": {
+                  "from_node": "multiply48"
+                }
+              }
+            },
+            "tanh3": {
+              "process_id": "tanh",
+              "arguments": {
+                "x": {
+                  "from_node": "add35"
+                }
+              }
+            },
+            "multiply49": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.194935930577094,
+                "y": {
+                  "from_node": "tanh3"
+                }
+              }
+            },
+            "add36": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add24"
+                },
+                "y": {
+                  "from_node": "multiply49"
+                }
+              }
+            },
+            "multiply50": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.109366593670404,
+                "y": {
+                  "from_node": "subtract2"
+                }
+              }
+            },
+            "add37": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1.53398826465542,
+                "y": {
+                  "from_node": "multiply50"
+                }
+              }
+            },
+            "multiply51": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.071046262972729,
+                "y": {
+                  "from_node": "subtract4"
+                }
+              }
+            },
+            "add38": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add37"
+                },
+                "y": {
+                  "from_node": "multiply51"
+                }
+              }
+            },
+            "multiply52": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.06458241147832,
+                "y": {
+                  "from_node": "subtract6"
+                }
+              }
+            },
+            "add39": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add38"
+                },
+                "y": {
+                  "from_node": "multiply52"
+                }
+              }
+            },
+            "multiply53": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2.90632523682316,
+                "y": {
+                  "from_node": "subtract8"
+                }
+              }
+            },
+            "add40": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add39"
+                },
+                "y": {
+                  "from_node": "multiply53"
+                }
+              }
+            },
+            "multiply54": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.673873108979163,
+                "y": {
+                  "from_node": "subtract10"
+                }
+              }
+            },
+            "add41": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add40"
+                },
+                "y": {
+                  "from_node": "multiply54"
+                }
+              }
+            },
+            "multiply55": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -3.83805186828084,
+                "y": {
+                  "from_node": "subtract12"
+                }
+              }
+            },
+            "add42": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add41"
+                },
+                "y": {
+                  "from_node": "multiply55"
+                }
+              }
+            },
+            "multiply56": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1.69597934453153,
+                "y": {
+                  "from_node": "subtract14"
+                }
+              }
+            },
+            "add43": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add42"
+                },
+                "y": {
+                  "from_node": "multiply56"
+                }
+              }
+            },
+            "multiply57": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.046950296081713,
+                "y": {
+                  "from_node": "subtract16"
+                }
+              }
+            },
+            "add44": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add43"
+                },
+                "y": {
+                  "from_node": "multiply57"
+                }
+              }
+            },
+            "multiply58": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.049709652688365,
+                "y": {
+                  "from_node": "subtract18"
+                }
+              }
+            },
+            "add45": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add44"
+                },
+                "y": {
+                  "from_node": "multiply58"
+                }
+              }
+            },
+            "multiply59": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.021829545430994,
+                "y": {
+                  "from_node": "subtract20"
+                }
+              }
+            },
+            "add46": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add45"
+                },
+                "y": {
+                  "from_node": "multiply59"
+                }
+              }
+            },
+            "multiply60": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.057483827104091,
+                "y": {
+                  "from_node": "cos3"
+                }
+              }
+            },
+            "add47": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add46"
+                },
+                "y": {
+                  "from_node": "multiply60"
+                }
+              }
+            },
+            "tanh4": {
+              "process_id": "tanh",
+              "arguments": {
+                "x": {
+                  "from_node": "add47"
+                }
+              }
+            },
+            "multiply61": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.352305895755591,
+                "y": {
+                  "from_node": "tanh4"
+                }
+              }
+            },
+            "add48": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add36"
+                },
+                "y": {
+                  "from_node": "multiply61"
+                }
+              }
+            },
+            "multiply62": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.089939416159969,
+                "y": {
+                  "from_node": "subtract2"
+                }
+              }
+            },
+            "add49": {
+              "process_id": "add",
+              "arguments": {
+                "x": 3.02411593075723,
+                "y": {
+                  "from_node": "multiply62"
+                }
+              }
+            },
+            "multiply63": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.175395483106147,
+                "y": {
+                  "from_node": "subtract4"
+                }
+              }
+            },
+            "add50": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add49"
+                },
+                "y": {
+                  "from_node": "multiply63"
+                }
+              }
+            },
+            "multiply64": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.08184732917262,
+                "y": {
+                  "from_node": "subtract6"
+                }
+              }
+            },
+            "add51": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add50"
+                },
+                "y": {
+                  "from_node": "multiply64"
+                }
+              }
+            },
+            "multiply65": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 2.21989536748779,
+                "y": {
+                  "from_node": "subtract8"
+                }
+              }
+            },
+            "add52": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add51"
+                },
+                "y": {
+                  "from_node": "multiply65"
+                }
+              }
+            },
+            "multiply66": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 1.71387397513685,
+                "y": {
+                  "from_node": "subtract10"
+                }
+              }
+            },
+            "add53": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add52"
+                },
+                "y": {
+                  "from_node": "multiply66"
+                }
+              }
+            },
+            "multiply67": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.713069186099534,
+                "y": {
+                  "from_node": "subtract12"
+                }
+              }
+            },
+            "add54": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add53"
+                },
+                "y": {
+                  "from_node": "multiply67"
+                }
+              }
+            },
+            "multiply68": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.138970813499201,
+                "y": {
+                  "from_node": "subtract14"
+                }
+              }
+            },
+            "add55": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add54"
+                },
+                "y": {
+                  "from_node": "multiply68"
+                }
+              }
+            },
+            "multiply69": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.060771761518025,
+                "y": {
+                  "from_node": "subtract16"
+                }
+              }
+            },
+            "add56": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add55"
+                },
+                "y": {
+                  "from_node": "multiply69"
+                }
+              }
+            },
+            "multiply70": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.124263341255473,
+                "y": {
+                  "from_node": "subtract18"
+                }
+              }
+            },
+            "add57": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add56"
+                },
+                "y": {
+                  "from_node": "multiply70"
+                }
+              }
+            },
+            "multiply71": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.210086140404351,
+                "y": {
+                  "from_node": "subtract20"
+                }
+              }
+            },
+            "add58": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add57"
+                },
+                "y": {
+                  "from_node": "multiply71"
+                }
+              }
+            },
+            "multiply72": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": -0.183878138700341,
+                "y": {
+                  "from_node": "cos3"
+                }
+              }
+            },
+            "add59": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add58"
+                },
+                "y": {
+                  "from_node": "multiply72"
+                }
+              }
+            },
+            "tanh5": {
+              "process_id": "tanh",
+              "arguments": {
+                "x": {
+                  "from_node": "add59"
+                }
+              }
+            },
+            "multiply73": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.075107415847473,
+                "y": {
+                  "from_node": "tanh5"
+                }
+              }
+            },
+            "add60": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add48"
+                },
+                "y": {
+                  "from_node": "multiply73"
+                }
+              }
+            },
+            "add61": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "add60"
+                },
+                "y": 1
+              }
+            },
+            "multiply74": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": 0.5,
+                "y": {
+                  "from_node": "add61"
+                }
+              }
+            },
+            "multiply75": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply74"
+                },
+                "y": 14.4671902722768
+              }
+            },
+            "add62": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply75"
+                },
+                "y": 0.000319182538301
+              }
+            },
+            "divide20": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "add62"
+                },
+                "y": 3
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "saveresult1": {
+      "process_id": "save_result",
+      "arguments": {
+        "data": {
+          "from_node": "applydimension1"
+        },
+        "format": "GTiff",
+        "options": {}
+      },
+      "result": true
+    }
+  },
+  "parameters": [
+    {
+      "name": "time",
+      "description": "Temporal range for data acquisition",
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
+      "default": [
+        "2025-05-10",
+        "2025-05-12"
+      ],
+      "optional": true
+    },
+    {
+      "name": "bounding_box",
+      "description": "Spatial extent for Cropland Plain, Croatia",
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
+      "default": {
+        "west": 14.09,
+        "south": 45.174,
+        "east": 14.27,
+        "north": 45.25
+      },
+      "optional": true
+    },
+    {
+      "name": "cloud_cover",
+      "description": "Maximum cloud cover percentage",
+      "schema": {
+        "type": "number"
+      },
+      "default": 30,
+      "optional": true
+    }
+  ],
+  "id": "leaf_area_index",
+  "summary": "Calculates the Leaf Area Index (LAI) from Sentinel-2 imagery using a neural network algorithm ported from SNAP.",
+  "description": "Calculates the Leaf Area Index (LAI) from Sentinel-2 L2A imagery using a neural network algorithm ported from SNAP. LAI is a dimensionless index representing the one-sided green leaf area per unit of land area (m2/m2). The neural network takes 8 spectral bands and 4 angular inputs (view and sun geometry), applies the SNAP BVNet weights, and denormalizes the output to a physical LAI range before scaling it down by 3 for display. Suitable for monitoring crop growth, forest biomass, and vegetation density across croplands, forests, and plantations."
+}

@@ -415,6 +415,140 @@ class TestParameterMapping:
         assert cdse["collection"].default == "SENTINEL1_GRD"
         assert cdse["bands"].default == ["VH", "VV"]
 
+    def test_sentinel3_mapping(self, temp_params_file):
+        """Sentinel-3 SLSTR and OLCI canonical ids map to native names on CDSE."""
+        param_manager = ParameterManager(temp_params_file)
+
+        slstr = param_manager.apply_endpoint_mapping(
+            {
+                "collection": Parameter(
+                    "collection", description="c", default="sentinel-3-slstr"
+                ),
+                "bands": Parameter("bands", description="b", default=["s8", "s9"]),
+            },
+            "copernicus_dataspace",
+        )
+        assert slstr["collection"].default == "SENTINEL3_SLSTR"
+        assert slstr["bands"].default == ["S8", "S9"]
+
+        olci = param_manager.apply_endpoint_mapping(
+            {
+                "collection": Parameter(
+                    "collection", description="c", default="sentinel-3-olci-l1b"
+                ),
+                "bands": Parameter(
+                    "bands", description="b", default=["b06", "b08", "b17"]
+                ),
+            },
+            "copernicus_dataspace",
+        )
+        assert olci["collection"].default == "SENTINEL3_OLCI_L1B"
+        assert olci["bands"].default == ["B06", "B08", "B17"]
+
+    def test_sentinel3_slstr_rejects_olci_bands(self, temp_params_file):
+        """SLSTR and OLCI have disjoint band namespaces and must not cross-map."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-3-slstr"
+            ),
+            "bands": Parameter("bands", description="b", default=["b08"]),
+        }
+        with pytest.raises(UnsupportedBandError):
+            param_manager.apply_endpoint_mapping(params, "copernicus_dataspace")
+
+    def test_sentinel2_l1c_mapping(self, temp_params_file):
+        """Sentinel-2 L1C canonical ids map to native collection + bands."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-2-l1c"
+            ),
+            "bands": Parameter(
+                "bands", description="b", default=["b02", "b04", "b08", "b11"]
+            ),
+        }
+
+        cdse = param_manager.apply_endpoint_mapping(params, "copernicus_dataspace")
+        assert cdse["collection"].default == "SENTINEL2_L1C"
+        assert cdse["bands"].default == ["B02", "B04", "B08", "B11"]
+
+        # L1C on the DS backend has no resolution suffix, unlike its L2A.
+        ds = param_manager.apply_endpoint_mapping(params, "ds_development")
+        assert ds["collection"].default == "sentinel-2-l1c"
+        assert ds["bands"].default == ["B02", "B04", "B08", "B11"]
+
+    def test_sentinel2_l1c_has_no_scl(self, temp_params_file):
+        """L1C carries no scene classification layer, so `scl` must not map."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-2-l1c"
+            ),
+            "bands": Parameter("bands", description="b", default=["scl"]),
+        }
+        with pytest.raises(UnsupportedBandError):
+            param_manager.apply_endpoint_mapping(params, "copernicus_dataspace")
+
+    def test_sentinel3_ds_development_mapping(self, temp_params_file):
+        """The DS backend serves the raw ESA products, with view/grid suffixes."""
+        param_manager = ParameterManager(temp_params_file)
+
+        slstr = param_manager.apply_endpoint_mapping(
+            {
+                "collection": Parameter(
+                    "collection", description="c", default="sentinel-3-slstr"
+                ),
+                "bands": Parameter("bands", description="b", default=["s8", "s1"]),
+            },
+            "ds_development",
+        )
+        assert slstr["collection"].default == "sentinel-3-sl-1-rbt-ntc"
+        # Thermal is nadir brightness temperature; reflective is nadir radiance.
+        assert slstr["bands"].default == ["S8_BT_in", "S1_radiance_an"]
+
+        olci = param_manager.apply_endpoint_mapping(
+            {
+                "collection": Parameter(
+                    "collection", description="c", default="sentinel-3-olci-l1b"
+                ),
+                "bands": Parameter(
+                    "bands", description="b", default=["b06", "b08", "b17"]
+                ),
+            },
+            "ds_development",
+        )
+        assert olci["collection"].default == "sentinel-3-olci-1-efr-ntc"
+        assert olci["bands"].default == [
+            "Oa06_radianceData",
+            "Oa08_radianceData",
+            "Oa17_radianceData",
+        ]
+
+    def test_sentinel3_unmapped_endpoint_raises(self, temp_params_file):
+        """Endpoints with no verified Sentinel-3 table raise rather than guessing."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-3-slstr"
+            ),
+            "bands": Parameter("bands", description="b", default=["s8"]),
+        }
+        with pytest.raises(UnsupportedCollectionError):
+            param_manager.apply_endpoint_mapping(params, "eopf_explorer")
+
+    def test_sentinel2_l1c_unmapped_endpoint_raises(self, temp_params_file):
+        """Endpoints with no verified L1C table raise rather than guessing."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="sentinel-2-l1c"
+            ),
+            "bands": Parameter("bands", description="b", default=["b04"]),
+        }
+        with pytest.raises(UnsupportedCollectionError):
+            param_manager.apply_endpoint_mapping(params, "eopf_explorer")
+
     def test_unsupported_collection_raises(self, temp_params_file):
         """An unknown canonical collection raises rather than passing through."""
         param_manager = ParameterManager(temp_params_file)
@@ -449,6 +583,9 @@ class TestParameterMapping:
 
         assert bands["b04"] == "B04_10m"
         assert bands["b8a"] == "B8A_20m"
+
+
+class TestParameterResolution:
     """Test cases for resolve_parameters / resolve (graph parameter materialization)."""
 
     def test_resolve_parameters_substitutes_user_refs(self, temp_params_file):
@@ -559,7 +696,10 @@ class TestParameterMapping:
         mock_cube.flat_graph.assert_called_once()
         mock_cube.connection.datacube_from_flat_graph.assert_called_once()
         passed_graph = mock_cube.connection.datacube_from_flat_graph.call_args[0][0]
-        assert passed_graph["n1"]["arguments"]["spatial_extent"] == current["bounding_box"].default
+        assert (
+            passed_graph["n1"]["arguments"]["spatial_extent"]
+            == current["bounding_box"].default
+        )
         assert result is returned_cube
 
 
@@ -591,9 +731,7 @@ class TestIntegration:
 
         # Test quick connect
         connection, current_params = param_manager.quick_connect(
-            param_set="venice_lagoon",
-            endpoint="eopf_explorer",
-            silent=True
+            param_set="venice_lagoon", endpoint="eopf_explorer", silent=True
         )
 
         assert connection == mock_connection

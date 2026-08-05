@@ -140,3 +140,4 @@ $RECYCLE.BIN/
 *.zarr
 notebooks/**/*.json
 .coverage
+notebooks/sentinel/sentinel-3/land_surface_temperature_sicily_italy_2023.gif

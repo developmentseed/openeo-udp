@@ -8,7 +8,7 @@ Can be used as a module (e.g. from the last cell of a notebook):
     register(
         notebook_path=Path("notebooks/.../lai.ipynb"),
         udp_path=Path("lai.json"),
-        preview_path=Path("preview.png"),
+        preview_fig=fig,  # matplotlib Figure, captured in the same run
     )
 
 Or as a CLI:
@@ -20,8 +20,12 @@ import argparse
 import shutil
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING, Optional
 
 from algorithm_registration.populate_record import run as generate_record
+
+if TYPE_CHECKING:
+    import matplotlib.figure
 
 # TODO: Ensure that algorithm_registration comes with the repository
 def _find_repo_root(start: Path) -> Path:
@@ -37,17 +41,25 @@ def register(
     notebook_path: Path,
     udp_path: Path | None = None,
     preview_path: Path | None = None,
+    preview_fig: Optional["matplotlib.figure.Figure"] = None,
 ) -> Path:
     """Register UDP artifact and preview image into algorithm_registration/ and generate the OGC API record.
 
     Args:
         notebook_path: Path to the algorithm notebook (used to derive alg_id and metadata).
         udp_path: Path to the UDP process graph JSON. Optional — CI will fail if not provided.
-        preview_path: Path to the preview image (PNG). Optional — CI will fail if not provided.
+        preview_path: Path to an existing preview image (PNG) on disk. Mutually
+            exclusive with preview_fig.
+        preview_fig: A matplotlib Figure object to save directly as the preview.
+            Preferred over preview_path — avoids relying on a file left on disk,
+            which can go stale or belong to a different notebook run.
 
     Returns:
         Path to the algorithm directory in algorithm_registration/.
     """
+    if preview_path is not None and preview_fig is not None:
+        raise ValueError("Pass either preview_path or preview_fig, not both.")
+
     notebook_path = Path(notebook_path).resolve()
     alg_id = notebook_path.stem
     repo_root = _find_repo_root(notebook_path)
@@ -65,9 +77,12 @@ def register(
         shutil.copy2(udp_path, dest)
         print(f"UDP registered: {dest}")
 
-    if preview_path is not None:
+    dest = records_dir / "preview.png"
+    if preview_fig is not None:
+        preview_fig.savefig(dest, bbox_inches="tight", dpi=150)
+        print(f"Preview registered from figure: {dest}")
+    elif preview_path is not None:
         preview_path = Path(preview_path).resolve()
-        dest = records_dir / "preview.png"
         shutil.copy2(preview_path, dest)
         print(f"Preview registered: {dest}")
 

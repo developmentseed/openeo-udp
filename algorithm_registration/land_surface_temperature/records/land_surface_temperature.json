@@ -1,0 +1,39 @@
+{
+  "id": "land_surface_temperature",
+  "title": "Land Surface Temperature (Sentinel-3)",
+  "preview_title": "Land Surface Temperature (Sentinel-3)",
+  "description": "Land surface temperature from Sentinel-3, correcting SLSTR thermal brightness temperature for emissivity estimated from OLCI NDVI. Returns temperature in degrees Celsius on the 300 m OLCI grid.",
+  "keywords": [
+    "Land surface temperature",
+    "LST",
+    "Thermal",
+    "Emissivity",
+    "NDVI",
+    "Urban heat",
+    "Sentinel-3",
+    "SLSTR",
+    "OLCI"
+  ],
+  "themes": [
+    "LAND SURFACE TEMPERATURE",
+    "CLIMATE",
+    "URBAN AREAS",
+    "REMOTE SENSING",
+    "Sentinel-3"
+  ],
+  "created": "2026-07-29T00:00:00Z",
+  "updated": "2026-07-29T00:00:00Z",
+  "license": "CC-BY-SA-4.0",
+  "openeo_backend_title": "CDSE openEO Federation",
+  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
+  "notebook_github_location": "notebooks/sentinel/sentinel-3/land_surface_temperature.ipynb",
+  "collection_id": "SENTINEL3_SLSTR",
+  "attribution": {
+    "original_script": "https://custom-scripts.sentinel-hub.com/sentinel-3/land_surface_temperature/",
+    "authors": [
+      "Mohor Gartner"
+    ],
+    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
+    "citation": "Avdan, U., Jovanovska, G. (2016). Algorithm for Automated Mapping of Land Surface Temperature Using LANDSAT 8 Satellite Data. Journal of Sensors, 2016, 1480307."
+  }
+}

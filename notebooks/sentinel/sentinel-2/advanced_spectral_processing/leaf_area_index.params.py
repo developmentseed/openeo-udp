@@ -53,11 +53,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Cropland Plain, Croatia",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 14.09, "south": 45.174, "east": 14.27, "north": 45.25},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-05-10", "2025-05-12"],
             ),
             "bands": Parameter(
@@ -73,6 +75,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=30,
             ),
             "reflectance_scale": Parameter(
@@ -86,11 +89,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Natural Parks in Provence-Alpes, France",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 3.17, "south": 43.85, "east": 4.72, "north": 44.54},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-08-01", "2025-08-03"],
             ),
             "bands": Parameter(
@@ -106,6 +111,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=30,
             ),
             "reflectance_scale": Parameter(
@@ -119,11 +125,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for a Natural Reserve in Rome, Italy",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 12.09, "south": 41.78, "east": 12.39, "north": 41.92},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-10-06", "2025-10-08"],
             ),
             "bands": Parameter(
@@ -139,6 +147,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=30,
             ),
             "reflectance_scale": Parameter(

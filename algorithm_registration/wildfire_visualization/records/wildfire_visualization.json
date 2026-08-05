@@ -105,13 +105,13 @@
       "rel": "webapp",
       "type": "text/html",
       "title": "OpenEO Web Editor",
-      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=wildfire_visualization&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/wildfire_visualization/openeo_udp/wildfire_visualization.json&server=https://api.explorer.eopf.copernicus.eu/openeo"
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=wildfire_visualization&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/wildfire_visualization/openeo_udp/wildfire_visualization.json&server=https://openeo.dataspace.copernicus.eu/"
     },
     {
       "rel": "service",
       "type": "application/json",
-      "title": "EOPF Explorer",
-      "href": "https://api.explorer.eopf.copernicus.eu/openeo"
+      "title": "Copernicus Data Space - Production API",
+      "href": "https://openeo.dataspace.copernicus.eu/"
     },
     {
       "rel": "notebook",
