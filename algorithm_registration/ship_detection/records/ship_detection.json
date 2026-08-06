@@ -13,10 +13,7 @@
     "title": "Ship Detection (S1/S2 Fusion)",
     "description": "Sentinel-1 / Sentinel-2 data fusion that detects ships at sea by combining a Sentinel-2 NDWI water mask with anomalously bright Sentinel-1 VV/VH backscatter returns over water. Adapted from a SentinelHub Custom Script by Monja B. Sebela.",
     "keywords": [
-      "Ship detection",
-      "Maritime surveillance",
-      "Data fusion",
-      "SAR",
+      "Radar",
       "Sentinel-1",
       "Sentinel-2"
     ],
