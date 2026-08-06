@@ -93,7 +93,6 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover for the S2 image (raised for Yangtze plum-rain/monsoon season)",
-                schema={"type": "number"},
                 default=30,
             ),
             "s1_collection": Parameter(
@@ -136,7 +135,6 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover for the S2 image (tropical, so a looser threshold)",
-                schema={"type": "number"},
                 default=50,
             ),
             "s1_collection": Parameter(
@@ -185,7 +183,6 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover for the S2 image (tropical, so a looser threshold)",
-                schema={"type": "number"},
                 default=20,
             ),
             "s1_collection": Parameter(

@@ -505,15 +505,6 @@
         "2026-03-30"
       ],
       "optional": true
-    },
-    {
-      "name": "cloud_cover",
-      "description": "Maximum scene-level cloud cover for the S2 image (raised for Yangtze plum-rain/monsoon season)",
-      "schema": {
-        "type": "number"
-      },
-      "default": 30,
-      "optional": true
     }
   ],
   "id": "ship_detection",
