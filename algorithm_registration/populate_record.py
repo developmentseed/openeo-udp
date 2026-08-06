@@ -17,6 +17,51 @@ from pathlib import Path
 
 from PIL import Image
 
+APEX_APPROVED_KEYWORDS = {
+    "Agriculture",
+    "Land Use/Land Cover Classification",
+    "Land Use/Land Cover Change",
+    "Deforestation",
+    "Vegetation",
+    "Normalized Difference Vegetation Index (NDVI)",
+    "Leaf Area Index (LAI)",
+    "Fraction of Absorbed Photosynthetic Active Radiation (fAPAR)",
+    "Fraction of Vegetation Coverage (fCOVER)",
+    "Normalized Difference Water Index (NDWI)",
+    "Brightness",
+    "Energy Production/Use",
+    "Wind Energy Production/Use",
+    "Solar Energy Production/Use",
+    "Natural Hazards",
+    "Wildfires",
+    "Sentinel-1",
+    "Sentinel-2",
+    "Sentinel-3",
+    "Landsat-8",
+    "Digital Elevation/Terrain Model (DEM)",
+    "ECMWF ERA5",
+    "Data Analysis and Visualization",
+    "Statistical Applications",
+    "Forests",
+    "Statistics",
+    "Change Detection Services",
+    "Urban Heat Island",
+    "Land Surface Temperature",
+    "Climate",
+    "Soils",
+    "Radar",
+}
+
+
+def validate_keywords(keywords: list) -> None:
+    """Ensure all keywords are drawn from the approved APEX_APPROVED_KEYWORDS set."""
+    invalid = sorted(set(keywords) - APEX_APPROVED_KEYWORDS)
+    if invalid:
+        raise ValueError(
+            f"Invalid keyword(s) in metadata: {invalid}. "
+            f"Allowed keywords are: {sorted(APEX_APPROVED_KEYWORDS)}"
+        )
+
 
 def extract_metadata_from_notebook(notebook_path: Path) -> dict:
     """Find the cell containing 'metadata = {' and execute it to get the dict."""
@@ -55,6 +100,7 @@ def fill_template(template_str: str, metadata: dict) -> dict:
     """Replace all {{PLACEHOLDER}} markers in the template string with metadata values."""
 
     # --- Structured (list/object) replacements first ---
+    validate_keywords(metadata["keywords"])
     template_str = template_str.replace(
         '"{{KEYWORDS}}"',
         json.dumps(metadata["keywords"])
@@ -110,7 +156,7 @@ def fill_template(template_str: str, metadata: dict) -> dict:
     return json.loads(template_str)
 
 
-def generate_thumbnail(records_dir: Path) -> None:
+def generate_thumbnail(records_dir: Path, repo_root: Path) -> None:
     """Generate thumbnail.png from an existing preview.png in records_dir."""
     preview_path = records_dir / "preview.png"
 
@@ -124,17 +170,18 @@ def generate_thumbnail(records_dir: Path) -> None:
         thumb = img.resize((img.width // 2, img.height // 2), Image.LANCZOS)
         thumb_path = records_dir / "thumbnail.png"
         thumb.save(thumb_path)
-    print(f"Thumbnail written: {thumb_path}")
+    print(f"Thumbnail written: {thumb_path.relative_to(repo_root)}")
 
 
 def run(notebook_path: Path) -> Path:
     """Extract metadata from notebook and write the record JSON. Returns the output path."""
     notebook_path = Path(notebook_path).resolve()
     script_dir = Path(__file__).parent
+    repo_root = script_dir.parent
     template_path = script_dir / "records_template.json"
 
-    print(f"Notebook : {notebook_path}")
-    print(f"Template : {template_path}")
+    print(f"Notebook : {notebook_path.relative_to(repo_root)}")
+    print(f"Template : {template_path.relative_to(repo_root)}")
 
     metadata = extract_metadata_from_notebook(notebook_path)
     print(f"Metadata extracted — id: '{metadata['id']}'")
@@ -149,9 +196,9 @@ def run(notebook_path: Path) -> Path:
     with open(output_path, "w") as f:
         json.dump(record, f, indent=2)
 
-    print(f"Record written: {output_path}")
+    print(f"Record written: {output_path.relative_to(repo_root)}")
 
-    generate_thumbnail(output_path.parent)
+    generate_thumbnail(output_path.parent, repo_root)
 
     return output_path
 
