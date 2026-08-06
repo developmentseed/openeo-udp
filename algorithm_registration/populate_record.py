@@ -180,11 +180,7 @@ def run(notebook_path: Path) -> Path:
     repo_root = script_dir.parent
     template_path = script_dir / "records_template.json"
 
-    print(f"Notebook : {notebook_path.relative_to(repo_root)}")
-    print(f"Template : {template_path.relative_to(repo_root)}")
-
     metadata = extract_metadata_from_notebook(notebook_path)
-    print(f"Metadata extracted — id: '{metadata['id']}'")
 
     with open(template_path) as f:
         template_str = f.read()
