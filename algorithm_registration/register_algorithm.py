@@ -69,28 +69,28 @@ def register(
 
     records_dir.mkdir(parents=True, exist_ok=True)
     udp_dir.mkdir(parents=True, exist_ok=True)
-    print(f"Algorithm directory: {alg_dir}")
+    print(f"Algorithm directory: {alg_dir.relative_to(repo_root)}")
 
     if udp_path is not None:
         udp_path = Path(udp_path).resolve()
         dest = udp_dir / f"{alg_id}.json"
         shutil.copy2(udp_path, dest)
-        print(f"UDP registered: {dest}")
+        print(f"UDP registered: {dest.relative_to(repo_root)}")
 
     dest = records_dir / "preview.png"
     if preview_fig is not None:
         preview_fig.savefig(dest, bbox_inches="tight", dpi=150)
-        print(f"Preview registered from figure: {dest}")
+        print(f"Preview registered from figure: {dest.relative_to(repo_root)}")
     elif preview_path is not None:
         preview_path = Path(preview_path).resolve()
         shutil.copy2(preview_path, dest)
-        print(f"Preview registered: {dest}")
+        print(f"Preview registered: {dest.relative_to(repo_root)}")
 
     generate_record(notebook_path)
 
     print("Commit all the records before pushing to openeo-udp repository")
 
-    return alg_dir
+    return alg_dir.relative_to(repo_root)
 
 
 def main():
