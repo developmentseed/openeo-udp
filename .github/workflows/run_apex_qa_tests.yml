@@ -38,7 +38,5 @@ jobs:
       - name: Run QA tests
         working-directory: apex_algorithms
         run: |
-          conda create --name apex_algorithms_qa python pytest -y
-          conda run --name apex_algorithms_qa pip install qa/tools
-          conda run --name apex_algorithms_qa pytest qa/unittests --deselect "tests/test_records.py::test_service_record_validation"
-          
+          uv pip install qa/tools
+          uv run pytest qa/unittests --deselect "tests/test_records.py::test_service_record_validation"
