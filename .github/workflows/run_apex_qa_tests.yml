@@ -1,0 +1,44 @@
+name: Runs APEx QA Tests for Existing Algorithms
+
+on:
+  pull_request:
+    paths:
+      - 'algorithm_registration/**'
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout openeo-udp
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install dependencies
+        run: uv sync
+
+      # Pipeline below happens in developmentseed/apex_algorithms repo
+      - name: Clone apex_algorithms repo
+        uses: actions/checkout@v4
+        with:
+          repository: developmentseed/apex_algorithms
+          path: apex_algorithms
+          token: ${{ secrets.APEX_PAT }}
+
+      - name: Configure apex_algorithms git
+        working-directory: apex_algorithms
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add target https://x-access-token:${{ secrets.APEX_PAT }}@github.com/developmentseed/apex_algorithms.git
+
+      - name: Run QA tests
+        working-directory: apex_algorithms
+        run: |
+          conda create --name apex_algorithms_qa python pytest -y
+          conda run --name apex_algorithms_qa pip install qa/tools
+          conda run --name apex_algorithms_qa pytest qa/unittests --deselect "tests/test_records.py::test_service_record_validation"
+          
