@@ -35,8 +35,15 @@ jobs:
       - name: Copy algorithm registrations into apex_algorithms
         run: |
           mkdir -p apex_algorithms/algorithm_catalog/developmentseed
-          cp -r algorithm_registration/agriculture_growth_stage apex_algorithms/algorithm_catalog/developmentseed/
-          cp -r algorithm_registration/flood_detection apex_algorithms/algorithm_catalog/developmentseed/
+          for d in algorithm_registration/*/; do
+            name=$(basename "$d")
+            target="apex_algorithms/algorithm_catalog/developmentseed/$name"
+            if [ -e "$target" ]; then
+              echo "Skipping $name (already exists)"
+            else
+              cp -r "$d" "$target"
+            fi
+          done
 
       - name: Run QA tests
         working-directory: apex_algorithms
