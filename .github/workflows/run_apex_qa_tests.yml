@@ -17,9 +17,6 @@ jobs:
       - name: Set up uv
         uses: astral-sh/setup-uv@v4
 
-      - name: Install dependencies
-        run: uv sync
-
       # Pipeline below happens in developmentseed/apex_algorithms repo
       - name: Clone apex_algorithms repo
         uses: actions/checkout@v4
@@ -38,5 +35,7 @@ jobs:
       - name: Run QA tests
         working-directory: apex_algorithms
         run: |
-          uv pip install qa/tools
-          uv run pytest qa/unittests --deselect "tests/test_records.py::test_service_record_validation"
+          uv venv .venv
+          source .venv/bin/activate
+          uv pip install pytest qa/tools
+          pytest qa/unittests --deselect "tests/test_records.py::test_service_record_validation"
