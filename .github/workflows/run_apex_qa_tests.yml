@@ -32,6 +32,12 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote add target https://x-access-token:${{ secrets.APEX_PAT }}@github.com/developmentseed/apex_algorithms.git
 
+      - name: Copy algorithm registrations into apex_algorithms
+        run: |
+          mkdir -p apex_algorithms/algorithm_catalog/developmentseed
+          cp -r algorithm_registration/agriculture_growth_stage apex_algorithms/algorithm_catalog/developmentseed/
+          cp -r algorithm_registration/flood_detection apex_algorithms/algorithm_catalog/developmentseed/
+
       - name: Run QA tests
         working-directory: apex_algorithms
         run: |
@@ -40,4 +46,17 @@ jobs:
           uv pip install .[tests]
           uv pip install qa/tools
           uv pip install -r qa/unittests/requirements.txt
-          pytest qa/unittests --deselect "tests/test_records.py::test_service_record_validation[flood_detection]"
+
+          cd qa/unittests
+
+          # List the algorithms that exist in devseed dir
+          IDS=""
+          echo "Algorithms found:"
+          for d in ../../algorithm_catalog/developmentseed/*/; do
+            name=$(basename "$d")
+            echo "  - $name"
+            IDS="${IDS:+$IDS or }$name"
+          done
+
+          # Run selected tests
+          pytest tests/test_records.py tests/test_openeo_udp.py -k "$IDS" --deselect "tests/test_records.py::test_service_record_validation"
