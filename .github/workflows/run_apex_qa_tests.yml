@@ -37,5 +37,7 @@ jobs:
         run: |
           uv venv .venv
           source .venv/bin/activate
-          uv pip install pytest qa/tools
-          pytest qa/unittests --deselect "tests/test_records.py::test_service_record_validation"
+          uv pip install .[tests]
+          uv pip install qa/tools
+          uv pip install -r qa/unittests/requirements.txt
+          pytest qa/unittests --deselect "tests/test_records.py::test_service_record_validation[flood_detection]"
