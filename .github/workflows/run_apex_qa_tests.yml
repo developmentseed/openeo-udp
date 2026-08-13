@@ -1,0 +1,69 @@
+name: Runs APEx QA Tests for Existing Algorithms
+
+on:
+  pull_request:
+    paths:
+      - 'algorithm_registration/**'
+
+jobs:
+  apex_udp_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout openeo-udp
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
+
+      # Pipeline below happens in developmentseed/apex_algorithms repo
+      - name: Clone apex_algorithms repo
+        uses: actions/checkout@v4
+        with:
+          repository: developmentseed/apex_algorithms
+          path: apex_algorithms
+          token: ${{ secrets.APEX_PAT }}
+
+      - name: Configure apex_algorithms git
+        working-directory: apex_algorithms
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add target https://x-access-token:${{ secrets.APEX_PAT }}@github.com/developmentseed/apex_algorithms.git
+
+      - name: Copy algorithm registrations into apex_algorithms
+        run: |
+          mkdir -p apex_algorithms/algorithm_catalog/developmentseed
+          for d in algorithm_registration/*/; do
+            name=$(basename "$d")
+            target="apex_algorithms/algorithm_catalog/developmentseed/$name"
+            if [ -e "$target" ]; then
+              echo "Skipping $name (already exists)"
+            else
+              cp -r "$d" "$target"
+            fi
+          done
+
+      - name: Run QA tests
+        working-directory: apex_algorithms
+        run: |
+          uv venv .venv
+          source .venv/bin/activate
+          uv pip install .[tests]
+          uv pip install qa/tools
+          uv pip install -r qa/unittests/requirements.txt
+
+          cd qa/unittests
+
+          # List the algorithms that exist in devseed dir
+          IDS=""
+          echo "Algorithms found:"
+          for d in ../../algorithm_catalog/developmentseed/*/; do
+            name=$(basename "$d")
+            echo "  - $name"
+            IDS="${IDS:+$IDS or }$name"
+          done
+
+          # Run selected tests
+          pytest tests/test_records.py tests/test_openeo_udp.py -k "$IDS" --deselect "tests/test_records.py::test_service_record_validation"
