@@ -54,11 +54,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Cropland Plain, Croatia",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 14.09, "south": 45.174, "east": 14.27, "north": 45.25},
             ),
             "time": Parameter(
                 "time",
                 description="Target month (current year) for the NDVI anomaly",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-06-01", "2024-07-01"],
             ),
             "bands": Parameter(
@@ -74,16 +76,19 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=60,
             ),
             "nb_past_years": Parameter(
                 "nb_past_years",
                 description="Number of past years to average as the NDVI baseline",
+                schema={"type": "integer"},
                 default=3,
             ),
             "anomaly_clamp": Parameter(
                 "anomaly_clamp",
                 description="Symmetric clamp applied to the NDVI anomaly (pixelEvalMaxValue in the original script)",
+                schema={"type": "number"},
                 default=0.7,
             ),
             "ndvi_min": Parameter(
@@ -97,11 +102,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the Po Valley agricultural plain, Italy",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 10.80, "south": 44.95, "east": 11.05, "north": 45.10},
             ),
             "time": Parameter(
                 "time",
                 description="Target month (current year) for the NDVI anomaly",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2022-07-01", "2022-08-01"],
             ),
             "bands": Parameter(
@@ -117,16 +124,19 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=60,
             ),
             "nb_past_years": Parameter(
                 "nb_past_years",
                 description="Number of past years to average as the NDVI baseline",
+                schema={"type": "integer"},
                 default=3,
             ),
             "anomaly_clamp": Parameter(
                 "anomaly_clamp",
                 description="Symmetric clamp applied to the NDVI anomaly (pixelEvalMaxValue in the original script)",
+                schema={"type": "number"},
                 default=0.7,
             ),
             "ndvi_min": Parameter(
@@ -144,11 +154,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the agricultural region south of Leipzig, Germany",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 12.20, "south": 51.10, "east": 12.50, "north": 51.28},
             ),
             "time": Parameter(
                 "time",
                 description="Target month (current year) for the NDVI anomaly",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2018-08-01", "2018-09-01"],
             ),
             "bands": Parameter(
@@ -164,16 +176,19 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=60,
             ),
             "nb_past_years": Parameter(
                 "nb_past_years",
                 description="Number of past years to average as the NDVI baseline",
+                schema={"type": "integer"},
                 default=3,
             ),
             "anomaly_clamp": Parameter(
                 "anomaly_clamp",
                 description="Symmetric clamp applied to the NDVI anomaly (pixelEvalMaxValue in the original script)",
+                schema={"type": "number"},
                 default=0.7,
             ),
             "ndvi_min": Parameter(
@@ -187,11 +202,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the agricultural region south of Leipzig, Germany",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 12.20, "south": 51.10, "east": 12.50, "north": 51.28},
             ),
             "time": Parameter(
                 "time",
                 description="Target month (current year) for the NDVI anomaly",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2018-10-01", "2018-11-01"],
             ),
             "bands": Parameter(
@@ -207,16 +224,19 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=70,
             ),
             "nb_past_years": Parameter(
                 "nb_past_years",
                 description="Number of past years to average as the NDVI baseline",
+                schema={"type": "integer"},
                 default=3,
             ),
             "anomaly_clamp": Parameter(
                 "anomaly_clamp",
                 description="Symmetric clamp applied to the NDVI anomaly (pixelEvalMaxValue in the original script)",
+                schema={"type": "number"},
                 default=0.7,
             ),
             "ndvi_min": Parameter(

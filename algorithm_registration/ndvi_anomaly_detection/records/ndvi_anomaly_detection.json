@@ -1,35 +1,158 @@
 {
   "id": "ndvi_anomaly_detection",
-  "title": "NDVI Anomaly Detection",
-  "preview_title": "NDVI Anomaly Detection",
-  "description": "Computes the per-pixel NDVI anomaly from Sentinel-2 L2A imagery by comparing the current month's mean NDVI against the same-month average over the previous N years. Negative values indicate vegetation loss (e.g. drought or crop loss), positive values indicate vegetation gain.",
-  "keywords": [
-    "Agriculture",
-    "Vegetation",
-    "NDVI",
-    "Anomaly",
-    "Drought",
-    "Sentinel-2"
+  "type": "Feature",
+  "conformsTo": [
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://apex.esa.int/core/openeo-udp"
   ],
-  "themes": [
-    "VEGETATION",
-    "AGRICULTURE",
-    "REMOTE SENSING",
-    "Sentinel-2 MSI"
-  ],
-  "created": "2026-06-19T00:00:00Z",
-  "updated": "2026-06-19T00:00:00Z",
-  "license": "CC-BY-SA-4.0",
-  "openeo_backend_title": "CDSE openEO Federation",
-  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
-  "notebook_github_location": "notebooks/sentinel/sentinel-2/advanced_spectral_processing/ndvi_anomaly_detection.ipynb",
-  "collection_id": "SENTINEL2_L2A",
-  "attribution": {
-    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/ndvi_anomaly_detection/",
-    "authors": [
-      "Jean-Baptiste Pleynet"
+  "geometry": null,
+  "properties": {
+    "created": "2026-06-19T00:00:00Z",
+    "updated": "2026-08-14T00:00:00Z",
+    "type": "service",
+    "title": "NDVI Anomaly Detection",
+    "description": "Computes the per-pixel NDVI anomaly from Sentinel-2 L2A imagery by comparing the current month's mean NDVI against the same-month average over the previous N years. Negative values indicate vegetation loss (e.g. drought or crop loss), positive values indicate vegetation gain. Adapted from a SentinelHub Custom Script by Jean-Baptiste Pleynet.",
+    "keywords": [
+      "Agriculture",
+      "Vegetation",
+      "Normalized Difference Vegetation Index (NDVI)",
+      "Natural Hazards",
+      "Sentinel-2"
     ],
-    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
-    "citation": null
-  }
+    "language": {
+      "code": "en-US",
+      "name": "English (United States)"
+    },
+    "languages": [
+      {
+        "code": "en-US",
+        "name": "English (United States)"
+      }
+    ],
+    "contacts": [
+      {
+        "name": "Development Seed",
+        "organization": "Development Seed",
+        "links": [
+          {
+            "href": "https://developmentseed.org",
+            "title": "Development Seed",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Contact via Development Seed",
+        "roles": [
+          "processor"
+        ]
+      },
+      {
+        "name": "Jean-Baptiste Pleynet",
+        "organization": "Sentinel Hub",
+        "links": [
+          {
+            "href": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/ndvi_anomaly_detection/",
+            "title": "NDVI Anomaly Detection SentinelHub Script",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Original SentinelHub script. See link below.",
+        "roles": [
+          "author"
+        ]
+      }
+    ],
+    "themes": [
+      {
+        "concepts": [
+          {
+            "id": "VEGETATION"
+          },
+          {
+            "id": "AGRICULTURE"
+          },
+          {
+            "id": "REMOTE SENSING"
+          },
+          {
+            "id": "Sentinel-2 MSI"
+          }
+        ],
+        "scheme": "https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/sciencekeywords"
+      }
+    ],
+    "formats": [
+      {
+        "name": "GeoTiff"
+      },
+      {
+        "name": "PNG"
+      }
+    ],
+    "license": "CC-BY-SA-4.0"
+  },
+  "linkTemplates": [],
+  "links": [
+    {
+      "rel": "application",
+      "type": "application/vnd.openeo+json;type=process",
+      "title": "openEO Process Definition",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ndvi_anomaly_detection/openeo_udp/ndvi_anomaly_detection.json"
+    },
+    {
+      "rel": "code",
+      "type": "text/html",
+      "title": "openeo-udp repository",
+      "href": "https://github.com/developmentseed/openeo-udp"
+    },
+    {
+      "rel": "webapp",
+      "type": "text/html",
+      "title": "OpenEO Web Editor",
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=ndvi_anomaly_detection&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ndvi_anomaly_detection/openeo_udp/ndvi_anomaly_detection.json&server=https://openeo.ds.io/"
+    },
+    {
+      "rel": "service",
+      "type": "application/json",
+      "title": "Development Seed OpenEO Backend",
+      "href": "https://openeo.ds.io/"
+    },
+    {
+      "rel": "notebook",
+      "type": "application/x-ipynb+json",
+      "title": "NDVI Anomaly Detection notebook",
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/advanced_spectral_processing/ndvi_anomaly_detection.ipynb"
+    },
+    {
+      "rel": "platform",
+      "type": "application/json",
+      "title": "TiTiler openEO",
+      "href": "../../../../platform_catalog/titiler_openeo.json"
+    },
+    {
+      "rel": "provider",
+      "type": "application/json",
+      "title": "Development Seed",
+      "href": "../../record.json"
+    },
+    {
+      "rel": "preview",
+      "type": "image/png",
+      "title": "NDVI Anomaly Detection",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ndvi_anomaly_detection/records/preview.png"
+    },
+    {
+      "rel": "thumbnail",
+      "type": "image/png",
+      "title": "Thumbnail image",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ndvi_anomaly_detection/records/thumbnail.png"
+    },
+    {
+      "rel": "cite-as",
+      "type": "text/html",
+      "title": "Script Source Repository",
+      "href": "https://github.com/sentinel-hub/custom-scripts"
+    }
+  ]
 }

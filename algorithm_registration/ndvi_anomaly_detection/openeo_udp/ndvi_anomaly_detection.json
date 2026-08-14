@@ -4,11 +4,11 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B04_10m",
-          "B08_10m",
-          "SCL_20m"
+          "B04",
+          "B08",
+          "SCL"
         ],
-        "id": "sentinel-2-l2a",
+        "id": "SENTINEL2_L2A",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
@@ -78,7 +78,7 @@
         "data": {
           "from_node": "maskpolygon1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "reducer": {
           "process_graph": {
             "arrayelement1": {
@@ -201,7 +201,7 @@
         "data": {
           "from_node": "mask1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "reducer": {
           "process_graph": {
             "arrayelement2": {
@@ -219,7 +219,7 @@
                 "x": {
                   "from_node": "arrayelement2"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "arrayelement3": {
@@ -237,7 +237,7 @@
                 "x": {
                   "from_node": "arrayelement3"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "normalizeddifference1": {
@@ -262,7 +262,7 @@
         "data": {
           "from_node": "mask1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "reducer": {
           "process_graph": {
             "arrayelement4": {
@@ -280,7 +280,7 @@
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "arrayelement5": {
@@ -298,7 +298,7 @@
                 "x": {
                   "from_node": "arrayelement5"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "normalizeddifference2": {
@@ -494,7 +494,10 @@
     {
       "name": "time",
       "description": "Target month (current year) for the NDVI anomaly",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2024-06-01",
         "2024-07-01"
@@ -504,7 +507,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent for Cropland Plain, Croatia",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 14.09,
         "south": 45.174,
@@ -516,26 +522,32 @@
     {
       "name": "cloud_cover",
       "description": "Maximum cloud cover percentage",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 60,
       "optional": true
     },
     {
       "name": "nb_past_years",
       "description": "Number of past years to average as the NDVI baseline",
-      "schema": {},
+      "schema": {
+        "type": "integer"
+      },
       "default": 3,
       "optional": true
     },
     {
       "name": "anomaly_clamp",
       "description": "Symmetric clamp applied to the NDVI anomaly (pixelEvalMaxValue in the original script)",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 0.7,
       "optional": true
     }
   ],
   "id": "ndvi_anomaly_detection",
   "summary": "NDVI anomaly detection from multi-year Sentinel-2 imagery using openEO.",
-  "description": "Computes the per-pixel NDVI anomaly from Sentinel-2 L2A imagery by comparing the current month's mean NDVI against the same-month average over the previous N years. Negative values indicate vegetation loss (e.g. drought or crop loss), positive values indicate vegetation gain. Converted from the Sentinel Hub NDVI Anomaly Detection evalscript."
+  "description": "Computes the per-pixel NDVI anomaly from Sentinel-2 L2A imagery by comparing the current month's mean NDVI against the same-month average over the previous N years. Negative values indicate vegetation loss (e.g. drought or crop loss), positive values indicate vegetation gain."
 }
