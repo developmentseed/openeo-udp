@@ -1,33 +1,155 @@
 {
   "id": "bais2_burned_area",
-  "title": "Burned Area Index for Sentinel-2 (BAIS2)",
-  "preview_title": "BAIS2 Burned Area",
-  "description": "Maps burned areas and active fires from Sentinel-2 L2A red-edge, NIR and SWIR reflectance using the BAIS2 index (Filipponi, 2018).",
-  "keywords": [
-    "Burned area",
-    "Wildfire",
-    "Fire severity",
-    "BAIS2",
-    "Sentinel-2"
+  "type": "Feature",
+  "conformsTo": [
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://apex.esa.int/core/openeo-udp"
   ],
-  "themes": [
-    "IMAGERY",
-    "REMOTE SENSING",
-    "Sentinel-2 MSI"
-  ],
-  "created": "2026-06-25T00:00:00Z",
-  "updated": "2026-06-25T00:00:00Z",
-  "license": "CC-BY-SA-4.0",
-  "openeo_backend_title": "Development Seed OpenEO Backend",
-  "openeo_backend_url": "https://openeo.ds.io/",
-  "notebook_github_location": "notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/bais2_burned_area.ipynb",
-  "collection_id": "sentinel-2-l2a",
-  "attribution": {
-    "original_script": "https://custom-scripts.sentinel-hub.com/sentinel-2/bais2/",
-    "authors": [
-      "Harel Dan"
+  "geometry": null,
+  "properties": {
+    "created": "2026-06-25T00:00:00Z",
+    "updated": "2026-06-25T00:00:00Z",
+    "type": "service",
+    "title": "Burned Area Index for Sentinel-2 (BAIS2)",
+    "description": "Maps burned areas and active fires from Sentinel-2 L2A red-edge, NIR and SWIR reflectance using the BAIS2 index (Filipponi, 2018). Adapted from a SentinelHub Custom Script by Harel Dan.",
+    "keywords": [
+      "Natural Hazards",
+      "Wildfires",
+      "Vegetation",
+      "Data Analysis and Visualization",
+      "Sentinel-2"
     ],
-    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
-    "citation": "Filipponi, F. (2018). BAIS2 - Burned Area Index for Sentinel-2. Proceedings 2(7), 364."
-  }
+    "language": {
+      "code": "en-US",
+      "name": "English (United States)"
+    },
+    "languages": [
+      {
+        "code": "en-US",
+        "name": "English (United States)"
+      }
+    ],
+    "contacts": [
+      {
+        "name": "Development Seed",
+        "organization": "Development Seed",
+        "links": [
+          {
+            "href": "https://developmentseed.org",
+            "title": "Development Seed",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Contact via Development Seed",
+        "roles": [
+          "processor"
+        ]
+      },
+      {
+        "name": "Harel Dan",
+        "organization": "Sentinel Hub",
+        "links": [
+          {
+            "href": "https://custom-scripts.sentinel-hub.com/sentinel-2/bais2/",
+            "title": "Burned Area Index for Sentinel-2 (BAIS2) SentinelHub Script",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Original SentinelHub script. See link below.",
+        "roles": [
+          "author"
+        ]
+      }
+    ],
+    "themes": [
+      {
+        "concepts": [
+          {
+            "id": "IMAGERY"
+          },
+          {
+            "id": "REMOTE SENSING"
+          },
+          {
+            "id": "Sentinel-2 MSI"
+          }
+        ],
+        "scheme": "https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/sciencekeywords"
+      }
+    ],
+    "formats": [
+      {
+        "name": "GeoTiff"
+      },
+      {
+        "name": "PNG"
+      }
+    ],
+    "license": "CC-BY-SA-4.0"
+  },
+  "linkTemplates": [],
+  "links": [
+    {
+      "rel": "application",
+      "type": "application/vnd.openeo+json;type=process",
+      "title": "openEO Process Definition",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/bais2_burned_area/openeo_udp/bais2_burned_area.json"
+    },
+    {
+      "rel": "code",
+      "type": "text/html",
+      "title": "openeo-udp repository",
+      "href": "https://github.com/developmentseed/openeo-udp"
+    },
+    {
+      "rel": "webapp",
+      "type": "text/html",
+      "title": "OpenEO Web Editor",
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=bais2_burned_area&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/bais2_burned_area/openeo_udp/bais2_burned_area.json&server=https://openeo.ds.io/"
+    },
+    {
+      "rel": "service",
+      "type": "application/json",
+      "title": "Development Seed OpenEO Backend",
+      "href": "https://openeo.ds.io/"
+    },
+    {
+      "rel": "notebook",
+      "type": "application/x-ipynb+json",
+      "title": "Burned Area Index for Sentinel-2 (BAIS2) notebook",
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/bais2_burned_area.ipynb"
+    },
+    {
+      "rel": "platform",
+      "type": "application/json",
+      "title": "TiTiler openEO",
+      "href": "../../../../platform_catalog/titiler_openeo.json"
+    },
+    {
+      "rel": "provider",
+      "type": "application/json",
+      "title": "Development Seed",
+      "href": "../../record.json"
+    },
+    {
+      "rel": "preview",
+      "type": "image/png",
+      "title": "BAIS2 Burned Area",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/bais2_burned_area/records/preview.png"
+    },
+    {
+      "rel": "thumbnail",
+      "type": "image/png",
+      "title": "Thumbnail image",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/bais2_burned_area/records/thumbnail.png"
+    },
+    {
+      "rel": "cite-as",
+      "type": "text/html",
+      "title": "Script Source Repository",
+      "href": "https://github.com/sentinel-hub/custom-scripts"
+    }
+  ]
 }
