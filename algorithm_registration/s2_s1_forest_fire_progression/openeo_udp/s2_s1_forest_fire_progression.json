@@ -4,13 +4,13 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B03_10m",
-          "B04_10m",
-          "B08_10m",
-          "B11_20m",
-          "B12_20m"
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12"
         ],
-        "id": "sentinel-2-l2a",
+        "id": "SENTINEL2_L2A",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
@@ -61,9 +61,9 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "vh"
+          "VH"
         ],
-        "id": "sentinel-1-grd",
+        "id": "SENTINEL1_GRD",
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
@@ -100,7 +100,7 @@
         "data": {
           "from_node": "reducedimension2"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "reducer": {
           "process_graph": {
             "arrayelement1": {
@@ -124,7 +124,7 @@
           "from_node": "reducedimension3"
         },
         "label": "vh_t1",
-        "name": "spectral",
+        "name": "bands",
         "type": "bands"
       }
     },
@@ -132,10 +132,10 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "vv",
-          "vh"
+          "VV",
+          "VH"
         ],
-        "id": "sentinel-1-grd",
+        "id": "SENTINEL1_GRD",
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
@@ -172,7 +172,7 @@
         "data": {
           "from_node": "reducedimension4"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "reducer": {
           "process_graph": {
             "arrayelement2": {
@@ -196,7 +196,7 @@
           "from_node": "reducedimension5"
         },
         "label": "vh_t2",
-        "name": "spectral",
+        "name": "bands",
         "type": "bands"
       }
     },
@@ -217,7 +217,7 @@
         "data": {
           "from_node": "reducedimension4"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "reducer": {
           "process_graph": {
             "arrayelement3": {
@@ -241,7 +241,7 @@
           "from_node": "reducedimension6"
         },
         "label": "vv_t2",
-        "name": "spectral",
+        "name": "bands",
         "type": "bands"
       }
     },
@@ -285,7 +285,7 @@
         "data": {
           "from_node": "mergecubes3"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "process": {
           "process_graph": {
             "arrayelement4": {
@@ -303,7 +303,7 @@
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply1": {
@@ -428,7 +428,7 @@
                 "x": {
                   "from_node": "arrayelement8"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "arrayelement9": {
@@ -446,7 +446,7 @@
                 "x": {
                   "from_node": "arrayelement9"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract2": {
@@ -506,7 +506,7 @@
                 "x": {
                   "from_node": "arrayelement10"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract3": {
@@ -577,7 +577,7 @@
                 "x": {
                   "from_node": "arrayelement11"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract4": {
@@ -785,7 +785,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent over the Corbi\u00e8res burn scar (Lagrasse/Ribaute origin SE to Durban-Corbi\u00e8res), Aude, France",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 2.58,
         "south": 42.94,
@@ -797,7 +800,10 @@
     {
       "name": "time_t1",
       "description": "Pre-fire baseline window (before the 5 Aug 2025 start)",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2025-07-29",
         "2025-08-04"
@@ -807,7 +813,10 @@
     {
       "name": "time_t2",
       "description": "Post-fire window (8-15 Aug 2025, once fully burned)",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2025-08-08",
         "2025-08-15"
@@ -817,12 +826,14 @@
     {
       "name": "cloud_cover",
       "description": "Maximum scene-level cloud cover for the S2 (t1) image",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 40,
       "optional": true
     }
   ],
   "id": "s2_s1_forest_fire_progression",
   "summary": "Multitemporal Sentinel-2/Sentinel-1 forest fire progression mapping using openEO.",
-  "description": "Fuses Sentinel-2 optical indices at t1 with the Sentinel-1 VH backscatter change between t1 and t2 to map forest fire progression under cloud cover, classifying each pixel as newly burned, vegetated background, already-burned bare, or recovering. Converted from the Sentinel Hub S2/S1 Forest Fire Progression evalscript by Max Kampen."
+  "description": "Multitemporal Sentinel-2 / Sentinel-1 data fusion that maps forest fire progression under cloud cover by combining optical burned-area indices at t1 with the SAR VH backscatter change between t1 and t2."
 }
