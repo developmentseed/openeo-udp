@@ -1,36 +1,158 @@
 {
   "id": "agriculture_growth_stage",
-  "title": "Agricultural Growth Stage",
-  "preview_title": "Agricultural Growth Stage",
-  "description": "Multi-temporal NDVI composite that assigns the mean NDVI of each of three calendar months to the red, green and blue channels, so colour encodes when in the season vegetation peaked and separates crops by growth stage.",
-  "keywords": [
-    "NDVI",
-    "Phenology",
-    "Growth stage",
-    "Agriculture",
-    "Multi-temporal",
-    "Sentinel-2"
+  "type": "Feature",
+  "conformsTo": [
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://apex.esa.int/core/openeo-udp"
   ],
-  "themes": [
-    "VEGETATION",
-    "AGRICULTURE",
-    "REMOTE SENSING",
-    "Sentinel-2 MSI"
-  ],
-  "created": "2026-06-25T00:00:00Z",
-  "updated": "2026-06-25T00:00:00Z",
-  "license": "CC-BY-SA-4.0",
-  "openeo_backend_title": "CDSE openEO Federation",
-  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
-  "notebook_github_location": "notebooks/sentinel/sentinel-2/advanced_spectral_processing/agriculture_growth_stage.ipynb",
-  "collection_id": "SENTINEL2_L2A",
-  "attribution": {
-    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/agriculture_growth_stage/",
-    "authors": [
-      "@HarelDan",
-      "Andr\u00e1s Zlinszky"
+  "geometry": null,
+  "properties": {
+    "created": "2026-06-25T00:00:00Z",
+    "updated": "2026-08-14T00:00:00Z",
+    "type": "service",
+    "title": "Agricultural Growth Stage",
+    "description": "Multi-temporal NDVI composite that assigns the mean NDVI of each of three calendar months to the red, green and blue channels, so colour encodes when in the season vegetation peaked and separates crops by growth stage. Adapted from a SentinelHub Custom Script by @HarelDan, Andr\u00e1s Zlinszky.",
+    "keywords": [
+      "Agriculture",
+      "Vegetation",
+      "Normalized Difference Vegetation Index (NDVI)",
+      "Data Analysis and Visualization",
+      "Sentinel-2"
     ],
-    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
-    "citation": null
-  }
+    "language": {
+      "code": "en-US",
+      "name": "English (United States)"
+    },
+    "languages": [
+      {
+        "code": "en-US",
+        "name": "English (United States)"
+      }
+    ],
+    "contacts": [
+      {
+        "name": "Development Seed",
+        "organization": "Development Seed",
+        "links": [
+          {
+            "href": "https://developmentseed.org",
+            "title": "Development Seed",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Contact via Development Seed",
+        "roles": [
+          "processor"
+        ]
+      },
+      {
+        "name": "@HarelDan, Andr\u00e1s Zlinszky",
+        "organization": "Sentinel Hub",
+        "links": [
+          {
+            "href": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/agriculture_growth_stage/",
+            "title": "Agricultural Growth Stage SentinelHub Script",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Original SentinelHub script. See link below.",
+        "roles": [
+          "author"
+        ]
+      }
+    ],
+    "themes": [
+      {
+        "concepts": [
+          {
+            "id": "VEGETATION"
+          },
+          {
+            "id": "AGRICULTURE"
+          },
+          {
+            "id": "REMOTE SENSING"
+          },
+          {
+            "id": "Sentinel-2 MSI"
+          }
+        ],
+        "scheme": "https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/sciencekeywords"
+      }
+    ],
+    "formats": [
+      {
+        "name": "GeoTiff"
+      },
+      {
+        "name": "PNG"
+      }
+    ],
+    "license": "CC-BY-SA-4.0"
+  },
+  "linkTemplates": [],
+  "links": [
+    {
+      "rel": "application",
+      "type": "application/vnd.openeo+json;type=process",
+      "title": "openEO Process Definition",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/agriculture_growth_stage/openeo_udp/agriculture_growth_stage.json"
+    },
+    {
+      "rel": "code",
+      "type": "text/html",
+      "title": "openeo-udp repository",
+      "href": "https://github.com/developmentseed/openeo-udp"
+    },
+    {
+      "rel": "webapp",
+      "type": "text/html",
+      "title": "OpenEO Web Editor",
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=agriculture_growth_stage&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/agriculture_growth_stage/openeo_udp/agriculture_growth_stage.json&server=https://openeo.ds.io/"
+    },
+    {
+      "rel": "service",
+      "type": "application/json",
+      "title": "Development Seed OpenEO Backend",
+      "href": "https://openeo.ds.io/"
+    },
+    {
+      "rel": "notebook",
+      "type": "application/x-ipynb+json",
+      "title": "Agricultural Growth Stage notebook",
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/advanced_spectral_processing/agriculture_growth_stage.ipynb"
+    },
+    {
+      "rel": "platform",
+      "type": "application/json",
+      "title": "TiTiler openEO",
+      "href": "../../../../platform_catalog/titiler_openeo.json"
+    },
+    {
+      "rel": "provider",
+      "type": "application/json",
+      "title": "Development Seed",
+      "href": "../../record.json"
+    },
+    {
+      "rel": "preview",
+      "type": "image/png",
+      "title": "Agricultural Growth Stage",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/agriculture_growth_stage/records/preview.png"
+    },
+    {
+      "rel": "thumbnail",
+      "type": "image/png",
+      "title": "Thumbnail image",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/agriculture_growth_stage/records/thumbnail.png"
+    },
+    {
+      "rel": "cite-as",
+      "type": "text/html",
+      "title": "Script Source Repository",
+      "href": "https://github.com/sentinel-hub/custom-scripts"
+    }
+  ]
 }

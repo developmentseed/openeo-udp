@@ -4,11 +4,11 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B04_10m",
-          "B08_10m",
-          "SCL_20m"
+          "B04",
+          "B08",
+          "SCL"
         ],
-        "id": "sentinel-2-l2a",
+        "id": "SENTINEL2_L2A",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
@@ -39,7 +39,7 @@
         "data": {
           "from_node": "loadcollection1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "reducer": {
           "process_graph": {
             "arrayelement1": {
@@ -162,7 +162,7 @@
         "data": {
           "from_node": "mask1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "reducer": {
           "process_graph": {
             "arrayelement2": {
@@ -310,7 +310,7 @@
             }
           }
         },
-        "target_dimension": "spectral"
+        "target_dimension": "bands"
       }
     },
     "saveresult1": {
@@ -329,7 +329,10 @@
     {
       "name": "time",
       "description": "Three-month growing-season window (oldest->R, middle->G, newest->B)",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2024-04-01",
         "2024-07-01"
@@ -339,7 +342,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent for the Po Valley agricultural plain, Italy",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 10.8,
         "south": 44.95,
@@ -347,16 +353,9 @@
         "north": 45.1
       },
       "optional": true
-    },
-    {
-      "name": "cloud_cover",
-      "description": "Maximum scene-level cloud cover percentage",
-      "schema": {},
-      "default": 70,
-      "optional": true
     }
   ],
   "id": "agriculture_growth_stage",
   "summary": "Multi-temporal NDVI growth-stage RGB composite from Sentinel-2 imagery using openEO.",
-  "description": "Builds an RGB composite from a three-month window of Sentinel-2 L2A imagery by computing a mean NDVI for each calendar month (after SCL cloud masking) and assigning the oldest, middle and most recent monthly means to the red, green and blue channels. Colour therefore encodes crop phenology / growth stage. Converted from the Sentinel Hub Agricultural Growth Stage evalscript by @HarelDan (quarterly adaptation by Andr\u00e1s Zlinszky)."
+  "description": "Multi-temporal NDVI composite that assigns the mean NDVI of each of three calendar months to the red, green and blue channels, so colour encodes when in the season vegetation peaked and separates crops by growth stage."
 }
