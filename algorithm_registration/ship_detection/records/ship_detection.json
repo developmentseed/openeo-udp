@@ -1,0 +1,159 @@
+{
+  "id": "ship_detection",
+  "type": "Feature",
+  "conformsTo": [
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://apex.esa.int/core/openeo-udp"
+  ],
+  "geometry": null,
+  "properties": {
+    "created": "2026-07-30T00:00:00Z",
+    "updated": "2026-07-30T00:00:00Z",
+    "type": "service",
+    "title": "Ship Detection (S1/S2 Fusion)",
+    "description": "Sentinel-1 / Sentinel-2 data fusion that detects ships at sea by combining a Sentinel-2 NDWI water mask with anomalously bright Sentinel-1 VV/VH backscatter returns over water. Adapted from a SentinelHub Custom Script by Monja B. Sebela.",
+    "keywords": [
+      "Radar",
+      "Sentinel-1",
+      "Sentinel-2"
+    ],
+    "language": {
+      "code": "en-US",
+      "name": "English (United States)"
+    },
+    "languages": [
+      {
+        "code": "en-US",
+        "name": "English (United States)"
+      }
+    ],
+    "contacts": [
+      {
+        "name": "Development Seed",
+        "organization": "Development Seed",
+        "links": [
+          {
+            "href": "https://developmentseed.org",
+            "title": "Development Seed",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Contact via Development Seed",
+        "roles": [
+          "processor"
+        ]
+      },
+      {
+        "name": "Monja B. Sebela",
+        "organization": "Sentinel Hub",
+        "links": [
+          {
+            "href": "https://custom-scripts.sentinel-hub.com/custom-scripts/data-fusion/ship_detection_s1_s2/",
+            "title": "Ship Detection (S1/S2 Fusion) SentinelHub Script",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Original SentinelHub script. See link below.",
+        "roles": [
+          "author"
+        ]
+      }
+    ],
+    "themes": [
+      {
+        "concepts": [
+          {
+            "id": "MARINE MONITORING"
+          },
+          {
+            "id": "MARITIME SURVEILLANCE"
+          },
+          {
+            "id": "REMOTE SENSING"
+          },
+          {
+            "id": "Sentinel-1 SAR"
+          },
+          {
+            "id": "Sentinel-2 MSI"
+          }
+        ],
+        "scheme": "https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/sciencekeywords"
+      }
+    ],
+    "formats": [
+      {
+        "name": "GeoTiff"
+      },
+      {
+        "name": "PNG"
+      }
+    ],
+    "license": "CC-BY-SA-4.0"
+  },
+  "linkTemplates": [],
+  "links": [
+    {
+      "rel": "application",
+      "type": "application/vnd.openeo+json;type=process",
+      "title": "openEO Process Definition",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ship_detection/openeo_udp/ship_detection.json"
+    },
+    {
+      "rel": "code",
+      "type": "text/html",
+      "title": "openeo-udp repository",
+      "href": "https://github.com/developmentseed/openeo-udp"
+    },
+    {
+      "rel": "webapp",
+      "type": "text/html",
+      "title": "OpenEO Web Editor",
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=ship_detection&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ship_detection/openeo_udp/ship_detection.json&server=https://openeo.dataspace.copernicus.eu/"
+    },
+    {
+      "rel": "service",
+      "type": "application/json",
+      "title": "Copernicus Data Space - Production API",
+      "href": "https://openeo.dataspace.copernicus.eu/"
+    },
+    {
+      "rel": "notebook",
+      "type": "application/x-ipynb+json",
+      "title": "Ship Detection (S1/S2 Fusion) notebook",
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/marine_and_water_bodies/ship_detection.ipynb"
+    },
+    {
+      "rel": "platform",
+      "type": "application/json",
+      "title": "TiTiler openEO",
+      "href": "../../../../platform_catalog/titiler_openeo.json"
+    },
+    {
+      "rel": "provider",
+      "type": "application/json",
+      "title": "Development Seed",
+      "href": "../../record.json"
+    },
+    {
+      "rel": "preview",
+      "type": "image/png",
+      "title": "Ship Detection (S1/S2 Fusion)",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ship_detection/records/preview.png"
+    },
+    {
+      "rel": "thumbnail",
+      "type": "image/png",
+      "title": "Thumbnail image",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ship_detection/records/thumbnail.png"
+    },
+    {
+      "rel": "cite-as",
+      "type": "text/html",
+      "title": "Script Source Repository",
+      "href": "https://github.com/sentinel-hub/custom-scripts"
+    }
+  ]
+}
