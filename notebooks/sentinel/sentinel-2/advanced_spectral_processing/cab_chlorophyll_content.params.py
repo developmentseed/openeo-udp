@@ -125,12 +125,12 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for a Natural Reserve in Rome, Italy",
-                default={"west": 12.09, "south": 41.78, "east": 12.39, "north": 41.92},
+                default={"west": 12.1485, "south": 41.786, "east": 12.2922, "north": 41.883},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
-                default=["2025-10-06", "2025-10-08"],
+                default=["2026-08-02", "2026-08-08"],
             ),
             "bands": Parameter(
                 "bands",
