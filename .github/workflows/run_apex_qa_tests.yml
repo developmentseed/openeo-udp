@@ -35,8 +35,15 @@ jobs:
       - name: Copy algorithm registrations into apex_algorithms
         run: |
           mkdir -p apex_algorithms/algorithm_catalog/developmentseed
+          # ndvi_anomaly_detection and lava_visualization are excluded because they rely on
+          # the ds_development openeo backend to execute, which doesn't return 200
+          EXCLUDED="lava_visualization"
           for d in algorithm_registration/*/; do
             name=$(basename "$d")
+            if [[ " $EXCLUDED " == *" $name "* ]]; then
+              echo "Skipping $name (excluded)"
+              continue
+            fi
             target="apex_algorithms/algorithm_catalog/developmentseed/$name"
             if [ -e "$target" ]; then
               echo "Skipping $name (already exists)"

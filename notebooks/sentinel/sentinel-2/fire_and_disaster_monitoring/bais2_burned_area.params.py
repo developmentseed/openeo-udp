@@ -43,11 +43,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Las Palmas de Gran Canaria, Spain",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": -15.91, "south": 27.73, "east": -15.29, "north": 28.22},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-08-19", "2019-08-30"],
             ),
             "bands": Parameter(
@@ -63,6 +65,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
                 default=30,
             ),
         },
@@ -71,11 +74,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for a wildfire-prone area in Central California, USA",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": -120.5, "south": 36.0, "east": -119.5, "north": 37.0},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2020-09-01", "2020-09-15"],
             ),
             "bands": Parameter(
@@ -91,6 +96,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
                 default=20,
             ),
         },
@@ -99,11 +105,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for a bushfire-prone area in South-East Australia",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 149.0, "south": -37.0, "east": 150.0, "north": -36.0},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-12-01", "2019-12-15"],
             ),
             "bands": Parameter(
@@ -119,6 +127,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover percentage",
+                schema={"type": "number"},
                 default=25,
             ),
         },

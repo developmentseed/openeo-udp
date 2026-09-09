@@ -57,11 +57,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the Po Valley agricultural plain, Italy",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 10.80, "south": 44.95, "east": 11.05, "north": 45.10},
             ),
             "time": Parameter(
                 "time",
                 description="Three-month growing-season window (oldest->R, middle->G, newest->B)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-04-01", "2024-07-01"],
             ),
             "bands": Parameter(
@@ -92,11 +94,13 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the Beauce cereal plain, France",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 1.60, "south": 48.10, "east": 1.85, "north": 48.28},
             ),
             "time": Parameter(
                 "time",
                 description="Three-month growing-season window (oldest->R, middle->G, newest->B)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-03-01", "2024-06-01"],
             ),
             "bands": Parameter(
@@ -127,6 +131,7 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the San Joaquin Valley cropland, California, USA",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={
                     "west": -120.55,
                     "south": 36.80,
@@ -137,6 +142,7 @@ def get_parameters():
             "time": Parameter(
                 "time",
                 description="Three-month growing-season window (oldest->R, middle->G, newest->B)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-03-01", "2024-06-01"],
             ),
             "bands": Parameter(

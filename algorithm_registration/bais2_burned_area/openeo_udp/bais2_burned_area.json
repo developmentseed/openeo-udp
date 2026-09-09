@@ -4,13 +4,13 @@
       "process_id": "load_collection",
       "arguments": {
         "bands": [
-          "B04_10m",
-          "B06_20m",
-          "B07_20m",
-          "B8A_20m",
-          "B12_20m"
+          "B04",
+          "B06",
+          "B07",
+          "B8A",
+          "B12"
         ],
-        "id": "sentinel-2-l2a",
+        "id": "SENTINEL2_L2A",
         "properties": {
           "eo:cloud_cover": {
             "process_graph": {
@@ -63,7 +63,7 @@
         "data": {
           "from_node": "reducedimension1"
         },
-        "dimension": "spectral",
+        "dimension": "bands",
         "process": {
           "process_graph": {
             "arrayelement1": {
@@ -81,7 +81,7 @@
                 "x": {
                   "from_node": "arrayelement1"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "arrayelement2": {
@@ -99,7 +99,7 @@
                 "x": {
                   "from_node": "arrayelement2"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply1": {
@@ -128,7 +128,7 @@
                 "x": {
                   "from_node": "arrayelement3"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "multiply2": {
@@ -157,7 +157,7 @@
                 "x": {
                   "from_node": "arrayelement4"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "divide5": {
@@ -204,7 +204,7 @@
                 "x": {
                   "from_node": "arrayelement5"
                 },
-                "y": 1.0
+                "y": 10000.0
               }
             },
             "subtract2": {
@@ -1035,7 +1035,7 @@
         "data": {
           "from_node": "apply1"
         },
-        "format": "PNG",
+        "format": "GTiff",
         "options": {}
       },
       "result": true
@@ -1045,7 +1045,10 @@
     {
       "name": "time",
       "description": "Temporal range for data acquisition",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2019-08-19",
         "2019-08-30"
@@ -1055,7 +1058,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent for Las Palmas de Gran Canaria, Spain",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": -15.91,
         "south": 27.73,
@@ -1063,16 +1069,9 @@
         "north": 28.22
       },
       "optional": true
-    },
-    {
-      "name": "cloud_cover",
-      "description": "Maximum scene-level cloud cover percentage",
-      "schema": {},
-      "default": 30,
-      "optional": true
     }
   ],
   "id": "bais2_burned_area",
   "summary": "Burned Area Index for Sentinel-2 (BAIS2) from Sentinel-2 imagery using openEO.",
-  "description": "Maps burned areas and active fires from Sentinel-2 L2A red-edge, NIR and SWIR reflectance using the BAIS2 index (Filipponi, 2018), rendered with a diverging burn-severity colormap. Converted from the Sentinel Hub BAIS2 evalscript."
+  "description": "Maps burned areas and active fires from Sentinel-2 L2A red-edge, NIR and SWIR reflectance using the BAIS2 index (Filipponi, 2018)."
 }

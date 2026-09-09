@@ -1,5 +1,5 @@
 {
-  "id": "ndvi_anomaly_detection",
+  "id": "cab_chlorophyll_content",
   "type": "Feature",
   "conformsTo": [
     "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
@@ -7,16 +7,14 @@
   ],
   "geometry": null,
   "properties": {
-    "created": "2026-06-19T00:00:00Z",
-    "updated": "2026-08-14T00:00:00Z",
+    "created": "2026-06-18T00:00:00Z",
+    "updated": "2026-06-18T00:00:00Z",
     "type": "service",
-    "title": "NDVI Anomaly Detection",
-    "description": "Computes the per-pixel NDVI anomaly from Sentinel-2 L2A imagery by comparing the current month's mean NDVI against the same-month average over the previous N years. Negative values indicate vegetation loss (e.g. drought or crop loss), positive values indicate vegetation gain. Adapted from a SentinelHub Custom Script by Jean-Baptiste Pleynet.",
+    "title": "Leaf Chlorophyll Content (Cab)",
+    "description": "Calculates the leaf chlorophyll content (Cab, chlorophyll a+b) from Sentinel-2 L2A imagery using the SNAP biophysical neural network ported from SNAP. Cab is expressed in micrograms per square centimetre (\u00b5g/cm\u00b2) and is a key indicator of photosynthetic capacity, nitrogen status and vegetation stress. The neural network takes 8 spectral bands and 4 angular inputs (view and sun geometry) and applies the SNAP BVNet weights, denormalizing to physical units before dividing by 300 to map the 0-300 \u00b5g/cm\u00b2 display range to 0-1. Suitable for crop nitrogen and fertilization management, vegetation stress and disease detection, and phenology monitoring across croplands, forests, and natural ecosystems. Adapted from a SentinelHub Custom Script by Authors not listed.",
     "keywords": [
       "Agriculture",
       "Vegetation",
-      "Normalized Difference Vegetation Index (NDVI)",
-      "Natural Hazards",
       "Sentinel-2"
     ],
     "language": {
@@ -47,12 +45,12 @@
         ]
       },
       {
-        "name": "Jean-Baptiste Pleynet",
+        "name": "Authors not listed",
         "organization": "Sentinel Hub",
         "links": [
           {
-            "href": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/ndvi_anomaly_detection/",
-            "title": "NDVI Anomaly Detection SentinelHub Script",
+            "href": "https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/cab/",
+            "title": "Leaf Chlorophyll Content (Cab) SentinelHub Script",
             "rel": "about",
             "type": "text/html"
           }
@@ -68,9 +66,6 @@
         "concepts": [
           {
             "id": "VEGETATION"
-          },
-          {
-            "id": "AGRICULTURE"
           },
           {
             "id": "REMOTE SENSING"
@@ -98,7 +93,7 @@
       "rel": "application",
       "type": "application/vnd.openeo+json;type=process",
       "title": "openEO Process Definition",
-      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ndvi_anomaly_detection/openeo_udp/ndvi_anomaly_detection.json"
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/cab_chlorophyll_content/openeo_udp/cab_chlorophyll_content.json"
     },
     {
       "rel": "code",
@@ -110,19 +105,19 @@
       "rel": "webapp",
       "type": "text/html",
       "title": "OpenEO Web Editor",
-      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=ndvi_anomaly_detection&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ndvi_anomaly_detection/openeo_udp/ndvi_anomaly_detection.json&server=https://openeo.ds.io/"
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=cab_chlorophyll_content&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/cab_chlorophyll_content/openeo_udp/cab_chlorophyll_content.json&server=https://openeo.dataspace.copernicus.eu/"
     },
     {
       "rel": "service",
       "type": "application/json",
-      "title": "Development Seed OpenEO Backend",
-      "href": "https://openeo.ds.io/"
+      "title": "Copernicus Data Space - Production API",
+      "href": "https://openeo.dataspace.copernicus.eu/"
     },
     {
       "rel": "notebook",
       "type": "application/x-ipynb+json",
-      "title": "NDVI Anomaly Detection notebook",
-      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/advanced_spectral_processing/ndvi_anomaly_detection.ipynb"
+      "title": "Leaf Chlorophyll Content (Cab) notebook",
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/advanced_spectral_processing/cab_chlorophyll_content.ipynb"
     },
     {
       "rel": "platform",
@@ -139,14 +134,14 @@
     {
       "rel": "preview",
       "type": "image/png",
-      "title": "NDVI Anomaly Detection",
-      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ndvi_anomaly_detection/records/preview.png"
+      "title": "Leaf Chlorophyll Content Calculation",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/cab_chlorophyll_content/records/preview.png"
     },
     {
       "rel": "thumbnail",
       "type": "image/png",
       "title": "Thumbnail image",
-      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ndvi_anomaly_detection/records/thumbnail.png"
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/cab_chlorophyll_content/records/thumbnail.png"
     },
     {
       "rel": "cite-as",

@@ -69,12 +69,21 @@ def get_parameters():
         """Assemble one parameter set; only the AOI/TOI actually vary."""
         return {
             "bounding_box": Parameter(
-                "bounding_box", description=bbox_description, default=bbox
+                "bounding_box",
+                description=bbox_description,
+                schema={"type": "object", "subtype": "bounding-box"},
+                default=bbox,
             ),
-            "time": Parameter("time", description=time_description, default=time),
+            "time": Parameter(
+                "time",
+                description=time_description,
+                schema={"type": "array", "subtype": "temporal-interval"},
+                default=time,
+            ),
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover for the Sentinel-2 images",
+                schema={"type": "number"},
                 default=cloud_cover,
             ),
             "collection": Parameter(

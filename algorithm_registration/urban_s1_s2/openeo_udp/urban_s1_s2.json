@@ -922,7 +922,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent over central Cairo and Giza, spanning the Nile and the desert margin",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 31.15,
         "south": 29.98,
@@ -934,7 +937,10 @@
     {
       "name": "time",
       "description": "Window containing the 12 Jun 2023 Sentinel-2 and Sentinel-1 passes (same day)",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2023-06-12",
         "2023-06-13"
@@ -944,12 +950,14 @@
     {
       "name": "cloud_cover",
       "description": "Maximum scene-level cloud cover for the Sentinel-2 images",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 40,
       "optional": true
     }
   ],
   "id": "urban_s1_s2",
   "summary": "Urban detection by Sentinel-1/Sentinel-2 data fusion using openEO.",
-  "description": "Detects built-up areas by combining Sentinel-1 GRD backscatter with Sentinel-2 vegetation and moisture masks. Each pixel falls through a four-way priority cascade: dense vegetation (NDVI > 0.5) and water (NDMI > 0) are rendered as Sentinel-2 true colour, remaining pixels bright in VH or VV (> 0.2) are rendered as Sentinel-1 false colour and read as built-up, and everything else falls back to a darkened true colour. Testing the optical masks first is what stops the radar threshold from misreading vegetation and water as buildings. Converted from the Sentinel Hub Urban Detection evalscript by Monja B. \u0160ebela."
+  "description": "Multi-sensor data fusion that maps built-up areas by thresholding Sentinel-1 backscatter after masking out vegetation and water with Sentinel-2 NDVI and NDMI, rendering each pixel from whichever sensor best describes it."
 }

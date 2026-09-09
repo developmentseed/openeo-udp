@@ -60,6 +60,7 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent over the Bolivian Chiquitania fire region",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={
                     "west": -60.15,
                     "south": -18.50,
@@ -70,11 +71,13 @@ def get_parameters():
             "time_t1": Parameter(
                 "time_t1",
                 description="Window bracketing the first acquisition (7 Sep 2019)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-09-06", "2019-09-08"],
             ),
             "time_t2": Parameter(
                 "time_t2",
                 description="Window bracketing the second acquisition (12 Sep 2019)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-09-11", "2019-09-13"],
             ),
             "bands": Parameter(
@@ -90,6 +93,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover for the S2 (t1) image",
+                schema={"type": "number"},
                 default=50,
             ),
             "s1_collection": Parameter(
@@ -114,6 +118,7 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent over the Paraguayan Chaco fire region",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={
                     "west": -60.30,
                     "south": -19.60,
@@ -124,11 +129,13 @@ def get_parameters():
             "time_t1": Parameter(
                 "time_t1",
                 description="Window bracketing the first acquisition (7 Sep 2019)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-09-06", "2019-09-08"],
             ),
             "time_t2": Parameter(
                 "time_t2",
                 description="Window bracketing the second acquisition (12 Sep 2019)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-09-11", "2019-09-13"],
             ),
             "bands": Parameter(
@@ -144,6 +151,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover for the S2 (t1) image",
+                schema={"type": "number"},
                 default=50,
             ),
             "s1_collection": Parameter(
@@ -175,6 +183,7 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent over the Corbières burn scar (Lagrasse/Ribaute origin SE to Durban-Corbières), Aude, France",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={
                     "west": 2.58,
                     "south": 42.94,
@@ -185,11 +194,13 @@ def get_parameters():
             "time_t1": Parameter(
                 "time_t1",
                 description="Pre-fire baseline window (before the 5 Aug 2025 start)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-07-29", "2025-08-04"],
             ),
             "time_t2": Parameter(
                 "time_t2",
                 description="Post-fire window (8-15 Aug 2025, once fully burned)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-08-08", "2025-08-15"],
             ),
             "bands": Parameter(
@@ -205,6 +216,7 @@ def get_parameters():
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover for the S2 (t1) image",
+                schema={"type": "number"},
                 default=40,
             ),
             "s1_collection": Parameter(

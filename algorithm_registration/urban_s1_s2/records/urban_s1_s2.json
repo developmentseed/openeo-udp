@@ -1,39 +1,165 @@
 {
   "id": "urban_s1_s2",
-  "title": "Urban Detection (S1/S2 Fusion)",
-  "preview_title": "Urban Detection (S1/S2 Fusion)",
-  "description": "Multi-sensor data fusion that maps built-up areas by thresholding Sentinel-1 backscatter after masking out vegetation and water with Sentinel-2 NDVI and NDMI, rendering each pixel from whichever sensor best describes it.",
-  "keywords": [
-    "Urban",
-    "Built-up",
-    "Settlement mapping",
-    "Data fusion",
-    "SAR",
-    "NDVI",
-    "NDMI",
-    "Sentinel-1",
-    "Sentinel-2"
+  "type": "Feature",
+  "conformsTo": [
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://apex.esa.int/core/openeo-udp"
   ],
-  "themes": [
-    "URBAN AREAS",
-    "LAND COVER",
-    "HUMAN SETTLEMENTS",
-    "REMOTE SENSING",
-    "Sentinel-1 SAR",
-    "Sentinel-2 MSI"
-  ],
-  "created": "2026-07-29T00:00:00Z",
-  "updated": "2026-07-29T00:00:00Z",
-  "license": "CC-BY-SA-4.0",
-  "openeo_backend_title": "CDSE openEO Federation",
-  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
-  "notebook_github_location": "notebooks/sentinel/sentinel-2/land-cover/urban_s1_s2.ipynb",
-  "collection_id": "SENTINEL2_L1C",
-  "attribution": {
-    "original_script": "https://custom-scripts.sentinel-hub.com/custom-scripts/data-fusion/urban_s1_s2/",
-    "authors": [
-      "Monja B. \u0160ebela"
+  "geometry": null,
+  "properties": {
+    "created": "2026-07-29T00:00:00Z",
+    "updated": "2026-08-14T00:00:00Z",
+    "type": "service",
+    "title": "Urban Detection (S1/S2 Fusion)",
+    "description": "Multi-sensor data fusion that maps built-up areas by thresholding Sentinel-1 backscatter after masking out vegetation and water with Sentinel-2 NDVI and NDMI, rendering each pixel from whichever sensor best describes it. Adapted from a SentinelHub Custom Script by Monja B. \u0160ebela.",
+    "keywords": [
+      "Land Use/Land Cover Classification",
+      "Vegetation",
+      "Normalized Difference Vegetation Index (NDVI)",
+      "Radar",
+      "Sentinel-1",
+      "Sentinel-2"
     ],
-    "source_repository": "https://github.com/sentinel-hub/custom-scripts"
-  }
+    "language": {
+      "code": "en-US",
+      "name": "English (United States)"
+    },
+    "languages": [
+      {
+        "code": "en-US",
+        "name": "English (United States)"
+      }
+    ],
+    "contacts": [
+      {
+        "name": "Development Seed",
+        "organization": "Development Seed",
+        "links": [
+          {
+            "href": "https://developmentseed.org",
+            "title": "Development Seed",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Contact via Development Seed",
+        "roles": [
+          "processor"
+        ]
+      },
+      {
+        "name": "Monja B. \u0160ebela",
+        "organization": "Sentinel Hub",
+        "links": [
+          {
+            "href": "https://custom-scripts.sentinel-hub.com/custom-scripts/data-fusion/urban_s1_s2/",
+            "title": "Urban Detection (S1/S2 Fusion) SentinelHub Script",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Original SentinelHub script. See link below.",
+        "roles": [
+          "author"
+        ]
+      }
+    ],
+    "themes": [
+      {
+        "concepts": [
+          {
+            "id": "URBAN AREAS"
+          },
+          {
+            "id": "LAND COVER"
+          },
+          {
+            "id": "HUMAN SETTLEMENTS"
+          },
+          {
+            "id": "REMOTE SENSING"
+          },
+          {
+            "id": "Sentinel-1 SAR"
+          },
+          {
+            "id": "Sentinel-2 MSI"
+          }
+        ],
+        "scheme": "https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/sciencekeywords"
+      }
+    ],
+    "formats": [
+      {
+        "name": "GeoTiff"
+      },
+      {
+        "name": "PNG"
+      }
+    ],
+    "license": "CC-BY-SA-4.0"
+  },
+  "linkTemplates": [],
+  "links": [
+    {
+      "rel": "application",
+      "type": "application/vnd.openeo+json;type=process",
+      "title": "openEO Process Definition",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/urban_s1_s2/openeo_udp/urban_s1_s2.json"
+    },
+    {
+      "rel": "code",
+      "type": "text/html",
+      "title": "openeo-udp repository",
+      "href": "https://github.com/developmentseed/openeo-udp"
+    },
+    {
+      "rel": "webapp",
+      "type": "text/html",
+      "title": "OpenEO Web Editor",
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=urban_s1_s2&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/urban_s1_s2/openeo_udp/urban_s1_s2.json&server=https://openeo.dataspace.copernicus.eu/"
+    },
+    {
+      "rel": "service",
+      "type": "application/json",
+      "title": "Copernicus Data Space - Production API",
+      "href": "https://openeo.dataspace.copernicus.eu/"
+    },
+    {
+      "rel": "notebook",
+      "type": "application/x-ipynb+json",
+      "title": "Urban Detection (S1/S2 Fusion) notebook",
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/land-cover/urban_s1_s2.ipynb"
+    },
+    {
+      "rel": "platform",
+      "type": "application/json",
+      "title": "TiTiler openEO",
+      "href": "../../../../platform_catalog/titiler_openeo.json"
+    },
+    {
+      "rel": "provider",
+      "type": "application/json",
+      "title": "Development Seed",
+      "href": "../../record.json"
+    },
+    {
+      "rel": "preview",
+      "type": "image/png",
+      "title": "Urban Detection (S1/S2 Fusion)",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/urban_s1_s2/records/preview.png"
+    },
+    {
+      "rel": "thumbnail",
+      "type": "image/png",
+      "title": "Thumbnail image",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/urban_s1_s2/records/thumbnail.png"
+    },
+    {
+      "rel": "cite-as",
+      "type": "text/html",
+      "title": "Script Source Repository",
+      "href": "https://github.com/sentinel-hub/custom-scripts"
+    }
+  ]
 }
