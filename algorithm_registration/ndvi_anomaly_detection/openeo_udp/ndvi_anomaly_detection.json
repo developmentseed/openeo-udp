@@ -1,5 +1,43 @@
 {
   "process_graph": {
+    "arrayelement1": {
+      "process_id": "array_element",
+      "arguments": {
+        "data": {
+          "from_parameter": "time"
+        },
+        "index": 0
+      }
+    },
+    "dateshift1": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement1"
+        },
+        "unit": "year",
+        "value": -1
+      }
+    },
+    "arrayelement2": {
+      "process_id": "array_element",
+      "arguments": {
+        "data": {
+          "from_parameter": "time"
+        },
+        "index": 1
+      }
+    },
+    "dateshift2": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement2"
+        },
+        "unit": "year",
+        "value": -1
+      }
+    },
     "loadcollection1": {
       "process_id": "load_collection",
       "arguments": {
@@ -26,49 +64,251 @@
           }
         },
         "spatial_extent": {
-          "west": 14.09,
-          "south": 45.174,
-          "east": 14.27,
-          "north": 45.25
+          "from_parameter": "bounding_box"
         },
         "temporal_extent": [
-          "2021-06-01",
-          "2024-07-01"
+          {
+            "from_node": "dateshift1"
+          },
+          {
+            "from_node": "dateshift2"
+          }
         ]
       }
     },
-    "maskpolygon1": {
-      "process_id": "mask_polygon",
+    "dateshift3": {
+      "process_id": "date_shift",
       "arguments": {
-        "data": {
+        "date": {
+          "from_node": "arrayelement1"
+        },
+        "unit": "year",
+        "value": -2
+      }
+    },
+    "dateshift4": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement2"
+        },
+        "unit": "year",
+        "value": -2
+      }
+    },
+    "loadcollection2": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B04",
+          "B08",
+          "SCL"
+        ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte2": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": 60
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": [
+          {
+            "from_node": "dateshift3"
+          },
+          {
+            "from_node": "dateshift4"
+          }
+        ]
+      }
+    },
+    "mergecubes1": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
           "from_node": "loadcollection1"
         },
-        "mask": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [
-                14.27,
-                45.174
-              ],
-              [
-                14.27,
-                45.25
-              ],
-              [
-                14.09,
-                45.25
-              ],
-              [
-                14.09,
-                45.174
-              ],
-              [
-                14.27,
-                45.174
-              ]
-            ]
-          ]
+        "cube2": {
+          "from_node": "loadcollection2"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "max1": {
+              "process_id": "max",
+              "arguments": {
+                "data": [
+                  {
+                    "from_parameter": "x"
+                  },
+                  {
+                    "from_parameter": "y"
+                  }
+                ]
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "dateshift5": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement1"
+        },
+        "unit": "year",
+        "value": -3
+      }
+    },
+    "dateshift6": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement2"
+        },
+        "unit": "year",
+        "value": -3
+      }
+    },
+    "loadcollection3": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B04",
+          "B08",
+          "SCL"
+        ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte3": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": 60
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": [
+          {
+            "from_node": "dateshift5"
+          },
+          {
+            "from_node": "dateshift6"
+          }
+        ]
+      }
+    },
+    "mergecubes2": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes1"
+        },
+        "cube2": {
+          "from_node": "loadcollection3"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "max2": {
+              "process_id": "max",
+              "arguments": {
+                "data": [
+                  {
+                    "from_parameter": "x"
+                  },
+                  {
+                    "from_parameter": "y"
+                  }
+                ]
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "loadcollection4": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B04",
+          "B08",
+          "SCL"
+        ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte4": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": 60
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": {
+          "from_parameter": "time"
+        }
+      }
+    },
+    "mergecubes3": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes2"
+        },
+        "cube2": {
+          "from_node": "loadcollection4"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "max3": {
+              "process_id": "max",
+              "arguments": {
+                "data": [
+                  {
+                    "from_parameter": "x"
+                  },
+                  {
+                    "from_parameter": "y"
+                  }
+                ]
+              },
+              "result": true
+            }
+          }
         }
       }
     },
@@ -76,12 +316,12 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "maskpolygon1"
+          "from_node": "mergecubes3"
         },
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement1": {
+            "arrayelement3": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -94,7 +334,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement3"
                 },
                 "y": 3
               }
@@ -103,7 +343,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement3"
                 },
                 "y": 8
               }
@@ -123,7 +363,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement3"
                 },
                 "y": 9
               }
@@ -143,7 +383,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement3"
                 },
                 "y": 10
               }
@@ -163,7 +403,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement3"
                 },
                 "y": 11
               }
@@ -188,7 +428,7 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "maskpolygon1"
+          "from_node": "mergecubes3"
         },
         "mask": {
           "from_node": "reducedimension1"
@@ -204,7 +444,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement2": {
+            "arrayelement4": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -217,12 +457,12 @@
               "process_id": "divide",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement2"
+                  "from_node": "arrayelement4"
                 },
                 "y": 10000.0
               }
             },
-            "arrayelement3": {
+            "arrayelement5": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -235,7 +475,7 @@
               "process_id": "divide",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement3"
+                  "from_node": "arrayelement5"
                 },
                 "y": 10000.0
               }
@@ -265,7 +505,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement4": {
+            "arrayelement6": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -278,12 +518,12 @@
               "process_id": "divide",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement4"
+                  "from_node": "arrayelement6"
                 },
                 "y": 10000.0
               }
             },
-            "arrayelement5": {
+            "arrayelement7": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -296,7 +536,7 @@
               "process_id": "divide",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement5"
+                  "from_node": "arrayelement7"
                 },
                 "y": 10000.0
               }
@@ -343,10 +583,9 @@
         "data": {
           "from_node": "mask2"
         },
-        "extent": [
-          "2024-06-01",
-          "2024-07-01"
-        ]
+        "extent": {
+          "from_parameter": "time"
+        }
       }
     },
     "reducedimension4": {
@@ -371,26 +610,29 @@
         }
       }
     },
-    "aggregatetemporal1": {
-      "process_id": "aggregate_temporal",
+    "filtertemporal2": {
+      "process_id": "filter_temporal",
       "arguments": {
         "data": {
           "from_node": "mask2"
         },
-        "intervals": [
-          [
-            "2023-06-01",
-            "2023-07-01"
-          ],
-          [
-            "2022-06-01",
-            "2022-07-01"
-          ],
-          [
-            "2021-06-01",
-            "2021-07-01"
-          ]
-        ],
+        "extent": [
+          {
+            "from_node": "dateshift1"
+          },
+          {
+            "from_node": "dateshift2"
+          }
+        ]
+      }
+    },
+    "reducedimension5": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "filtertemporal2"
+        },
+        "dimension": "t",
         "reducer": {
           "process_graph": {
             "mean2": {
@@ -406,11 +648,27 @@
         }
       }
     },
-    "reducedimension5": {
+    "filtertemporal3": {
+      "process_id": "filter_temporal",
+      "arguments": {
+        "data": {
+          "from_node": "mask2"
+        },
+        "extent": [
+          {
+            "from_node": "dateshift3"
+          },
+          {
+            "from_node": "dateshift4"
+          }
+        ]
+      }
+    },
+    "reducedimension6": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "aggregatetemporal1"
+          "from_node": "filtertemporal3"
         },
         "dimension": "t",
         "reducer": {
@@ -428,14 +686,128 @@
         }
       }
     },
-    "mergecubes1": {
+    "mergecubes4": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "reducedimension5"
+        },
+        "cube2": {
+          "from_node": "reducedimension6"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "add1": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "y"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "filtertemporal4": {
+      "process_id": "filter_temporal",
+      "arguments": {
+        "data": {
+          "from_node": "mask2"
+        },
+        "extent": [
+          {
+            "from_node": "dateshift5"
+          },
+          {
+            "from_node": "dateshift6"
+          }
+        ]
+      }
+    },
+    "reducedimension7": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "filtertemporal4"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "mean4": {
+              "process_id": "mean",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mergecubes5": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes4"
+        },
+        "cube2": {
+          "from_node": "reducedimension7"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "add2": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "y"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "mergecubes5"
+        },
+        "process": {
+          "process_graph": {
+            "divide5": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 3
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mergecubes6": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
           "from_node": "reducedimension4"
         },
         "cube2": {
-          "from_node": "reducedimension5"
+          "from_node": "apply1"
         },
         "overlap_resolver": {
           "process_graph": {
@@ -455,11 +827,11 @@
         }
       }
     },
-    "apply1": {
+    "apply2": {
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "mergecubes1"
+          "from_node": "mergecubes6"
         },
         "process": {
           "process_graph": {
@@ -482,7 +854,7 @@
       "process_id": "save_result",
       "arguments": {
         "data": {
-          "from_node": "apply1"
+          "from_node": "apply2"
         },
         "format": "GTiff",
         "options": {}
@@ -517,33 +889,6 @@
         "east": 14.27,
         "north": 45.25
       },
-      "optional": true
-    },
-    {
-      "name": "cloud_cover",
-      "description": "Maximum cloud cover percentage",
-      "schema": {
-        "type": "number"
-      },
-      "default": 60,
-      "optional": true
-    },
-    {
-      "name": "nb_past_years",
-      "description": "Number of past years to average as the NDVI baseline",
-      "schema": {
-        "type": "integer"
-      },
-      "default": 3,
-      "optional": true
-    },
-    {
-      "name": "anomaly_clamp",
-      "description": "Symmetric clamp applied to the NDVI anomaly (pixelEvalMaxValue in the original script)",
-      "schema": {
-        "type": "number"
-      },
-      "default": 0.7,
       "optional": true
     }
   ],
