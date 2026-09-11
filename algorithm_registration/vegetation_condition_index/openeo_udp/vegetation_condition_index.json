@@ -1,0 +1,552 @@
+{
+  "process_graph": {
+    "arrayelement1": {
+      "process_id": "array_element",
+      "arguments": {
+        "data": {
+          "from_parameter": "time"
+        },
+        "index": 0
+      }
+    },
+    "dateshift1": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement1"
+        },
+        "unit": "year",
+        "value": -1
+      }
+    },
+    "arrayelement2": {
+      "process_id": "array_element",
+      "arguments": {
+        "data": {
+          "from_parameter": "time"
+        },
+        "index": 1
+      }
+    },
+    "dateshift2": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement2"
+        },
+        "unit": "year",
+        "value": -1
+      }
+    },
+    "loadcollection1": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B08"
+        ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte1": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": 30
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": [
+          {
+            "from_node": "dateshift1"
+          },
+          {
+            "from_node": "dateshift2"
+          }
+        ]
+      }
+    },
+    "dateshift3": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement1"
+        },
+        "unit": "year",
+        "value": -2
+      }
+    },
+    "dateshift4": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement2"
+        },
+        "unit": "year",
+        "value": -2
+      }
+    },
+    "loadcollection2": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B08"
+        ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte2": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": 30
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": [
+          {
+            "from_node": "dateshift3"
+          },
+          {
+            "from_node": "dateshift4"
+          }
+        ]
+      }
+    },
+    "mergecubes1": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "loadcollection1"
+        },
+        "cube2": {
+          "from_node": "loadcollection2"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "max1": {
+              "process_id": "max",
+              "arguments": {
+                "data": [
+                  {
+                    "from_parameter": "x"
+                  },
+                  {
+                    "from_parameter": "y"
+                  }
+                ]
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "loadcollection3": {
+      "process_id": "load_collection",
+      "arguments": {
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B08"
+        ],
+        "id": "SENTINEL2_L2A",
+        "properties": {
+          "eo:cloud_cover": {
+            "process_graph": {
+              "lte3": {
+                "process_id": "lte",
+                "arguments": {
+                  "x": {
+                    "from_parameter": "value"
+                  },
+                  "y": 30
+                },
+                "result": true
+              }
+            }
+          }
+        },
+        "spatial_extent": {
+          "from_parameter": "bounding_box"
+        },
+        "temporal_extent": {
+          "from_parameter": "time"
+        }
+      }
+    },
+    "mergecubes2": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes1"
+        },
+        "cube2": {
+          "from_node": "loadcollection3"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "max2": {
+              "process_id": "max",
+              "arguments": {
+                "data": [
+                  {
+                    "from_parameter": "x"
+                  },
+                  {
+                    "from_parameter": "y"
+                  }
+                ]
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "mergecubes2"
+        },
+        "process": {
+          "process_graph": {
+            "divide1": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 10000.0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "resamplespatial1": {
+      "process_id": "resample_spatial",
+      "arguments": {
+        "align": "upper-left",
+        "data": {
+          "from_node": "apply1"
+        },
+        "method": "near",
+        "projection": null,
+        "resolution": 20
+      }
+    },
+    "applydimension1": {
+      "process_id": "apply_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "resamplespatial1"
+        },
+        "dimension": "bands",
+        "process": {
+          "process_graph": {
+            "arrayelement3": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 1
+              }
+            },
+            "subtract1": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement3"
+                },
+                "y": 0.175
+              }
+            },
+            "divide2": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract1"
+                },
+                "y": 0.21500000000000002
+              }
+            },
+            "gt1": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide2"
+                },
+                "y": 1.5
+              }
+            },
+            "gt2": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide2"
+                },
+                "y": 0.3
+              }
+            },
+            "arrayelement4": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 2
+              }
+            },
+            "subtract2": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement3"
+                },
+                "y": {
+                  "from_node": "arrayelement4"
+                }
+              }
+            },
+            "add1": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement3"
+                },
+                "y": {
+                  "from_node": "arrayelement4"
+                }
+              }
+            },
+            "divide3": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract2"
+                },
+                "y": {
+                  "from_node": "add1"
+                }
+              }
+            },
+            "gt3": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide3"
+                },
+                "y": 0.3
+              }
+            },
+            "and1": {
+              "process_id": "and",
+              "arguments": {
+                "x": {
+                  "from_node": "gt2"
+                },
+                "y": {
+                  "from_node": "gt3"
+                }
+              }
+            },
+            "or1": {
+              "process_id": "or",
+              "arguments": {
+                "x": {
+                  "from_node": "gt1"
+                },
+                "y": {
+                  "from_node": "and1"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mask1": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "resamplespatial1"
+        },
+        "mask": {
+          "from_node": "applydimension1"
+        }
+      }
+    },
+    "ndvi1": {
+      "process_id": "ndvi",
+      "arguments": {
+        "data": {
+          "from_node": "mask1"
+        },
+        "nir": "B08",
+        "red": "B04"
+      }
+    },
+    "reducedimension1": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "ndvi1"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "last1": {
+              "process_id": "last",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "ignore_nodata": true
+              }
+            },
+            "min1": {
+              "process_id": "min",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "ignore_nodata": true
+              }
+            },
+            "subtract3": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "last1"
+                },
+                "y": {
+                  "from_node": "min1"
+                }
+              }
+            },
+            "max3": {
+              "process_id": "max",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "ignore_nodata": true
+              }
+            },
+            "subtract4": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "max3"
+                },
+                "y": {
+                  "from_node": "min1"
+                }
+              }
+            },
+            "divide4": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract3"
+                },
+                "y": {
+                  "from_node": "subtract4"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply2": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension1"
+        },
+        "process": {
+          "process_graph": {
+            "linearscalerange1": {
+              "process_id": "linear_scale_range",
+              "arguments": {
+                "inputMax": 1,
+                "inputMin": 0,
+                "outputMax": 255,
+                "outputMin": 0,
+                "x": {
+                  "from_parameter": "x"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      },
+      "result": true
+    }
+  },
+  "parameters": [
+    {
+      "name": "bounding_box",
+      "description": "Spatial extent for vegetated cropland near Dodge City, Kansas, United States",
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
+      "default": {
+        "west": -100.41,
+        "south": 37.91,
+        "east": -100.01,
+        "north": 38.06
+      },
+      "optional": true
+    },
+    {
+      "name": "time",
+      "description": "Observed calendar window (5 days around 2020-05-30) for the current year",
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
+      "default": [
+        "2020-05-25",
+        "2020-06-04"
+      ],
+      "optional": true
+    }
+  ],
+  "id": "vegetation_condition_index",
+  "summary": "Vegetation Condition Index (VCI) from a multi-year Sentinel-2 NDVI stack using openEO.",
+  "description": "Detects vegetation stress from a multi-year stack of Sentinel-2 NDVI observations. For each year in a configurable range, scenes within a \u00b1N-day calendar window around an anchor date are cloud-masked (threshold-based or SCL dilation) and merged; VCI expresses the most recent (observed) NDVI relative to the historical minimum and maximum NDVI within the same calendar window across prior years, highlighting vegetation stress such as drought or crop failure. Converted from the Sentinel Hub Vegetation Condition Index evalscript."
+}
