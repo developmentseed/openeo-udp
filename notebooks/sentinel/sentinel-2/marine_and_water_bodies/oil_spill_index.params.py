@@ -20,7 +20,10 @@ def get_parameters():
         Each parameter set includes:
         - location_name: Human-readable location identifier
         - bounding_box: Spatial extent as Parameter object (runtime)
-        - time: Temporal range as Parameter object (runtime)
+        - time_before: Pre-spill acquisition date as Parameter object (runtime)
+        - time_oil_spill: Oil-spill acquisition date as Parameter object (runtime)
+        - time_dissolute: Post-spill (dissolute) acquisition date as Parameter object (runtime)
+        - time_after: Later post-spill window as Parameter object (runtime)
         - bands: Required Sentinel-2 bands as Parameter object
         - collection: Data collection identifier as Parameter object
         - cloud_cover: Maximum scene-level cloud cover percentage
@@ -39,11 +42,29 @@ def get_parameters():
                 schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 57.70, "south": -20.45, "east": 57.77, "north": -20.41},
             ),
-            "time": Parameter(
-                "time",
-                description="Temporal range spanning before, during, and after the oil spill event",
+            "time_before": Parameter(
+                "time_before",
+                description="Pre-spill acquisition window; the first available scene within this range is used",
                 schema={"type": "array", "subtype": "temporal-interval"},
-                default=["2020-07-17", "2020-09-06"],
+                default=["2020-07-17", "2020-07-18"],
+            ),
+            "time_oil_spill": Parameter(
+                "time_oil_spill",
+                description="Oil-spill acquisition window; the first available scene within this range is used",
+                schema={"type": "array", "subtype": "temporal-interval"},
+                default=["2020-08-01", "2020-08-02"],
+            ),
+            "time_dissolute": Parameter(
+                "time_dissolute",
+                description="Dissolute (post-spill) acquisition window; the first available scene within this range is used",
+                schema={"type": "array", "subtype": "temporal-interval"},
+                default=["2020-08-06", "2020-08-20"],
+            ),
+            "time_after": Parameter(
+                "time_after",
+                description="Later post-spill window; the last available scene within this range is used",
+                schema={"type": "array", "subtype": "temporal-interval"},
+                default=["2020-08-30", "2020-09-06"],
             ),
             "bands": Parameter(
                 "bands",
