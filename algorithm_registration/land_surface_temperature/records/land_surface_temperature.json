@@ -1,39 +1,167 @@
 {
   "id": "land_surface_temperature",
-  "title": "Land Surface Temperature (Sentinel-3)",
-  "preview_title": "Land Surface Temperature (Sentinel-3)",
-  "description": "Land surface temperature from Sentinel-3, correcting SLSTR thermal brightness temperature for emissivity estimated from OLCI NDVI. Returns temperature in degrees Celsius on the 300 m OLCI grid.",
-  "keywords": [
-    "Land surface temperature",
-    "LST",
-    "Thermal",
-    "Emissivity",
-    "NDVI",
-    "Urban heat",
-    "Sentinel-3",
-    "SLSTR",
-    "OLCI"
+  "type": "Feature",
+  "conformsTo": [
+    "https://www.opengis.net/spec/ogcapi-records-1/1.0/req/record-core",
+    "https://apex.esa.int/core/openeo-udp"
   ],
-  "themes": [
-    "LAND SURFACE TEMPERATURE",
-    "CLIMATE",
-    "URBAN AREAS",
-    "REMOTE SENSING",
-    "Sentinel-3"
-  ],
-  "created": "2026-07-29T00:00:00Z",
-  "updated": "2026-07-29T00:00:00Z",
-  "license": "CC-BY-SA-4.0",
-  "openeo_backend_title": "CDSE openEO Federation",
-  "openeo_backend_url": "https://openeofed.dataspace.copernicus.eu",
-  "notebook_github_location": "notebooks/sentinel/sentinel-3/land_surface_temperature.ipynb",
-  "collection_id": "SENTINEL3_SLSTR",
-  "attribution": {
-    "original_script": "https://custom-scripts.sentinel-hub.com/sentinel-3/land_surface_temperature/",
-    "authors": [
-      "Mohor Gartner"
+  "geometry": null,
+  "properties": {
+    "created": "2026-07-29T00:00:00Z",
+    "updated": "2026-07-29T00:00:00Z",
+    "type": "service",
+    "title": "Land Surface Temperature (Sentinel-3)",
+    "description": "Land surface temperature from Sentinel-3, correcting SLSTR thermal brightness temperature for emissivity estimated from OLCI NDVI. Returns temperature in degrees Celsius on the 300 m OLCI grid. Adapted from a SentinelHub Custom Script by Mohor Gartner.",
+    "keywords": [
+      "Land Surface Temperature",
+      "Urban Heat Island",
+      "Normalized Difference Vegetation Index (NDVI)",
+      "Climate",
+      "Sentinel-3"
     ],
-    "source_repository": "https://github.com/sentinel-hub/custom-scripts",
-    "citation": "Avdan, U., Jovanovska, G. (2016). Algorithm for Automated Mapping of Land Surface Temperature Using LANDSAT 8 Satellite Data. Journal of Sensors, 2016, 1480307."
-  }
+    "language": {
+      "code": "en-US",
+      "name": "English (United States)"
+    },
+    "languages": [
+      {
+        "code": "en-US",
+        "name": "English (United States)"
+      }
+    ],
+    "contacts": [
+      {
+        "name": "Development Seed",
+        "organization": "Development Seed",
+        "links": [
+          {
+            "href": "https://developmentseed.org",
+            "title": "Development Seed",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Contact via Development Seed",
+        "roles": [
+          "processor"
+        ]
+      },
+      {
+        "name": "Mohor Gartner",
+        "organization": "Sentinel Hub",
+        "links": [
+          {
+            "href": "https://custom-scripts.sentinel-hub.com/sentinel-3/land_surface_temperature/",
+            "title": "Land Surface Temperature (Sentinel-3) SentinelHub Script",
+            "rel": "about",
+            "type": "text/html"
+          }
+        ],
+        "contactInstructions": "Original SentinelHub script. See link below.",
+        "roles": [
+          "author"
+        ]
+      }
+    ],
+    "themes": [
+      {
+        "concepts": [
+          {
+            "id": "LAND SURFACE TEMPERATURE"
+          },
+          {
+            "id": "CLIMATE"
+          },
+          {
+            "id": "URBAN AREAS"
+          },
+          {
+            "id": "REMOTE SENSING"
+          },
+          {
+            "id": "Sentinel-3"
+          },
+          {
+            "id": "SLSTR"
+          },
+          {
+            "id": "OLCI"
+          }
+        ],
+        "scheme": "https://gcmd.earthdata.nasa.gov/kms/concepts/concept_scheme/sciencekeywords"
+      }
+    ],
+    "formats": [
+      {
+        "name": "GeoTiff"
+      },
+      {
+        "name": "PNG"
+      }
+    ],
+    "license": "CC-BY-SA-4.0"
+  },
+  "linkTemplates": [],
+  "links": [
+    {
+      "rel": "application",
+      "type": "application/vnd.openeo+json;type=process",
+      "title": "openEO Process Definition",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/land_surface_temperature/openeo_udp/land_surface_temperature.json"
+    },
+    {
+      "rel": "code",
+      "type": "text/html",
+      "title": "openeo-udp repository",
+      "href": "https://github.com/developmentseed/openeo-udp"
+    },
+    {
+      "rel": "webapp",
+      "type": "text/html",
+      "title": "OpenEO Web Editor",
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=land_surface_temperature&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/land_surface_temperature/openeo_udp/land_surface_temperature.json&server=https://openeofed.dataspace.copernicus.eu"
+    },
+    {
+      "rel": "service",
+      "type": "application/json",
+      "title": "CDSE openEO Federation",
+      "href": "https://openeofed.dataspace.copernicus.eu"
+    },
+    {
+      "rel": "notebook",
+      "type": "application/x-ipynb+json",
+      "title": "Land Surface Temperature (Sentinel-3) notebook",
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-3/land_surface_temperature.ipynb"
+    },
+    {
+      "rel": "platform",
+      "type": "application/json",
+      "title": "TiTiler openEO",
+      "href": "../../../../platform_catalog/titiler_openeo.json"
+    },
+    {
+      "rel": "provider",
+      "type": "application/json",
+      "title": "Development Seed",
+      "href": "../../record.json"
+    },
+    {
+      "rel": "preview",
+      "type": "image/png",
+      "title": "Land Surface Temperature (Sentinel-3)",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/land_surface_temperature/records/preview.png"
+    },
+    {
+      "rel": "thumbnail",
+      "type": "image/png",
+      "title": "Thumbnail image",
+      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/land_surface_temperature/records/thumbnail.png"
+    },
+    {
+      "rel": "cite-as",
+      "type": "text/html",
+      "title": "Script Source Repository",
+      "href": "https://github.com/sentinel-hub/custom-scripts"
+    }
+  ]
 }
