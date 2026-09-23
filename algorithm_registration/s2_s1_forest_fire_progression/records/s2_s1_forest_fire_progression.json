@@ -101,7 +101,7 @@
       "rel": "application",
       "type": "application/vnd.openeo+json;type=process",
       "title": "openEO Process Definition",
-      "href": "https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/s2_s1_forest_fire_progression/openeo_udp/s2_s1_forest_fire_progression.json"
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/algorithm_registration/s2_s1_forest_fire_progression/openeo_udp/s2_s1_forest_fire_progression.json"
     },
     {
       "rel": "code",
@@ -113,7 +113,7 @@
       "rel": "webapp",
       "type": "text/html",
       "title": "OpenEO Web Editor",
-      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=s2_s1_forest_fire_progression&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/s2_s1_forest_fire_progression/openeo_udp/s2_s1_forest_fire_progression.json&server=https://openeo.dataspace.copernicus.eu/"
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=s2_s1_forest_fire_progression&wizard%7EprocessUrl=https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/algorithm_registration/s2_s1_forest_fire_progression/openeo_udp/s2_s1_forest_fire_progression.json&server=https://openeo.dataspace.copernicus.eu/"
     },
     {
       "rel": "service",
