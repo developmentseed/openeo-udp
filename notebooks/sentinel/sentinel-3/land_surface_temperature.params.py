@@ -77,9 +77,17 @@ def get_parameters():
         """Assemble one parameter set; only the AOI and the dates vary."""
         return {
             "bounding_box": Parameter(
-                "bounding_box", description=bbox_description, default=bbox
+                "bounding_box",
+                description=bbox_description,
+                schema={"type": "object", "subtype": "bounding-box"},
+                default=bbox,
             ),
-            "time": Parameter("time", description=time_description, default=time),
+            "time": Parameter(
+                "time",
+                description=time_description,
+                schema={"type": "array", "subtype": "temporal-interval"},
+                default=time,
+            ),
             "animation_time": Parameter(
                 "animation_time",
                 description=(
