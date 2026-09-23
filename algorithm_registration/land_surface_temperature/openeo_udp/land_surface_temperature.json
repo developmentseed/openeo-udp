@@ -517,7 +517,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent covering the whole island of Sicily",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 12.35,
         "south": 36.6,
@@ -529,7 +532,10 @@
     {
       "name": "time",
       "description": "Window containing the 24 Jul 2023 daytime overpass (heatwave peak)",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2023-07-24",
         "2023-07-25"

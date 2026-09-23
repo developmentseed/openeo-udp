@@ -110,13 +110,13 @@
       "rel": "webapp",
       "type": "text/html",
       "title": "OpenEO Web Editor",
-      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=ndvi_anomaly_detection&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ndvi_anomaly_detection/openeo_udp/ndvi_anomaly_detection.json&server=https://openeo.ds.io/"
+      "href": "https://editor.openeo.org/?wizard=UDP&wizard%7Eprocess=ndvi_anomaly_detection&wizard%7EprocessUrl=https://raw.githubusercontent.com/ESA-APEx/apex_algorithms/refs/heads/main/algorithm_catalog/developmentseed/ndvi_anomaly_detection/openeo_udp/ndvi_anomaly_detection.json&server=https://openeo.dataspace.copernicus.eu/"
     },
     {
       "rel": "service",
       "type": "application/json",
-      "title": "Development Seed OpenEO Backend",
-      "href": "https://openeo.ds.io/"
+      "title": "Copernicus Data Space - Production API",
+      "href": "https://openeo.dataspace.copernicus.eu/"
     },
     {
       "rel": "notebook",
