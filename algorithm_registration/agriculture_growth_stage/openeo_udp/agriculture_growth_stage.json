@@ -1,5 +1,24 @@
 {
   "process_graph": {
+    "arrayelement1": {
+      "process_id": "array_element",
+      "arguments": {
+        "data": {
+          "from_parameter": "time"
+        },
+        "index": 1
+      }
+    },
+    "dateshift1": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement1"
+        },
+        "unit": "month",
+        "value": -3
+      }
+    },
     "loadcollection1": {
       "process_id": "load_collection",
       "arguments": {
@@ -28,9 +47,14 @@
         "spatial_extent": {
           "from_parameter": "bounding_box"
         },
-        "temporal_extent": {
-          "from_parameter": "time"
-        }
+        "temporal_extent": [
+          {
+            "from_node": "dateshift1"
+          },
+          {
+            "from_node": "arrayelement1"
+          }
+        ]
       }
     },
     "reducedimension1": {
@@ -42,7 +66,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement1": {
+            "arrayelement2": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -55,7 +79,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement2"
                 },
                 "y": 3
               }
@@ -64,7 +88,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement2"
                 },
                 "y": 8
               }
@@ -84,7 +108,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement2"
                 },
                 "y": 9
               }
@@ -104,7 +128,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement2"
                 },
                 "y": 10
               }
@@ -124,7 +148,7 @@
               "process_id": "eq",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement1"
+                  "from_node": "arrayelement2"
                 },
                 "y": 11
               }
@@ -165,7 +189,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement2": {
+            "arrayelement3": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -178,12 +202,12 @@
               "process_id": "divide",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement2"
+                  "from_node": "arrayelement3"
                 },
                 "y": 10000.0
               }
             },
-            "arrayelement3": {
+            "arrayelement4": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -196,7 +220,7 @@
               "process_id": "divide",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement3"
+                  "from_node": "arrayelement4"
                 },
                 "y": 10000.0
               }
@@ -217,31 +241,119 @@
         }
       }
     },
+    "dateshift2": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement1"
+        },
+        "unit": "month",
+        "value": -3
+      }
+    },
+    "dateshift3": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement1"
+        },
+        "unit": "month",
+        "value": -2
+      }
+    },
+    "arraycreate1": {
+      "process_id": "array_create",
+      "arguments": {
+        "data": [
+          {
+            "from_node": "dateshift2"
+          },
+          {
+            "from_node": "dateshift3"
+          }
+        ]
+      }
+    },
+    "dateshift4": {
+      "process_id": "date_shift",
+      "arguments": {
+        "date": {
+          "from_node": "arrayelement1"
+        },
+        "unit": "month",
+        "value": -1
+      }
+    },
+    "arraycreate2": {
+      "process_id": "array_create",
+      "arguments": {
+        "data": [
+          {
+            "from_node": "dateshift3"
+          },
+          {
+            "from_node": "dateshift4"
+          }
+        ]
+      }
+    },
+    "arraycreate3": {
+      "process_id": "array_create",
+      "arguments": {
+        "data": [
+          {
+            "from_node": "dateshift4"
+          },
+          {
+            "from_node": "arrayelement1"
+          }
+        ]
+      }
+    },
+    "arraycreate4": {
+      "process_id": "array_create",
+      "arguments": {
+        "data": [
+          {
+            "from_node": "arraycreate1"
+          },
+          {
+            "from_node": "arraycreate2"
+          },
+          {
+            "from_node": "arraycreate3"
+          }
+        ]
+      }
+    },
+    "arraycreate5": {
+      "process_id": "array_create",
+      "arguments": {
+        "data": [
+          {
+            "from_node": "dateshift2"
+          },
+          {
+            "from_node": "dateshift3"
+          },
+          {
+            "from_node": "dateshift4"
+          }
+        ]
+      }
+    },
     "aggregatetemporal1": {
       "process_id": "aggregate_temporal",
       "arguments": {
         "data": {
           "from_node": "reducedimension2"
         },
-        "intervals": [
-          [
-            "2024-04-01",
-            "2024-05-01"
-          ],
-          [
-            "2024-05-01",
-            "2024-06-01"
-          ],
-          [
-            "2024-06-01",
-            "2024-07-01"
-          ]
-        ],
-        "labels": [
-          "2024-04-01",
-          "2024-05-01",
-          "2024-06-01"
-        ],
+        "intervals": {
+          "from_node": "arraycreate4"
+        },
+        "labels": {
+          "from_node": "arraycreate5"
+        },
         "reducer": {
           "process_graph": {
             "mean1": {
@@ -257,67 +369,176 @@
         }
       }
     },
-    "applydimension1": {
-      "process_id": "apply_dimension",
+    "apply1": {
+      "process_id": "apply",
       "arguments": {
         "data": {
           "from_node": "aggregatetemporal1"
         },
-        "dimension": "t",
         "process": {
           "process_graph": {
-            "arrayapply1": {
-              "process_id": "array_apply",
+            "subtract1": {
+              "process_id": "subtract",
               "arguments": {
-                "data": {
-                  "from_parameter": "data"
+                "x": {
+                  "from_parameter": "x"
                 },
-                "process": {
-                  "process_graph": {
-                    "subtract1": {
-                      "process_id": "subtract",
-                      "arguments": {
-                        "x": {
-                          "from_parameter": "x"
-                        },
-                        "y": 0.1
-                      }
-                    },
-                    "divide3": {
-                      "process_id": "divide",
-                      "arguments": {
-                        "x": {
-                          "from_node": "subtract1"
-                        },
-                        "y": 0.6
-                      }
-                    },
-                    "clip1": {
-                      "process_id": "clip",
-                      "arguments": {
-                        "max": 1.0,
-                        "min": 0.0,
-                        "x": {
-                          "from_node": "divide3"
-                        }
-                      },
-                      "result": true
-                    }
-                  }
+                "y": 0.1
+              }
+            },
+            "divide3": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract1"
+                },
+                "y": 0.6
+              }
+            },
+            "clip1": {
+              "process_id": "clip",
+              "arguments": {
+                "max": 1.0,
+                "min": 0.0,
+                "x": {
+                  "from_node": "divide3"
                 }
               },
               "result": true
             }
           }
+        }
+      }
+    },
+    "reducedimension3": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "apply1"
         },
-        "target_dimension": "bands"
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "arrayelement5": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension1": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension3"
+        },
+        "label": "R",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "reducedimension4": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "apply1"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "arrayelement6": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 1
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension2": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension4"
+        },
+        "label": "G",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "mergecubes1": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "adddimension1"
+        },
+        "cube2": {
+          "from_node": "adddimension2"
+        }
+      }
+    },
+    "reducedimension5": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "apply1"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "arrayelement7": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 2
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension3": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension5"
+        },
+        "label": "B",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "mergecubes2": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes1"
+        },
+        "cube2": {
+          "from_node": "adddimension3"
+        }
       }
     },
     "saveresult1": {
       "process_id": "save_result",
       "arguments": {
         "data": {
-          "from_node": "applydimension1"
+          "from_node": "mergecubes2"
         },
         "format": "GTiff",
         "options": {}
@@ -328,29 +549,29 @@
   "parameters": [
     {
       "name": "time",
-      "description": "Three-month growing-season window (oldest->R, middle->G, newest->B)",
+      "description": "Growing-season window; only its end date is used. Data is loaded for, and capped to, the three months before the end date (oldest->R, middle->G, newest->B); any earlier part of the window is ignored",
       "schema": {
         "type": "array",
         "subtype": "temporal-interval"
       },
       "default": [
-        "2024-04-01",
-        "2024-07-01"
+        "2017-06-01",
+        "2017-08-31"
       ],
       "optional": true
     },
     {
       "name": "bounding_box",
-      "description": "Spatial extent for the Po Valley agricultural plain, Italy",
+      "description": "Spatial extent for Venice and its mainland cropland, Italy",
       "schema": {
         "type": "object",
         "subtype": "bounding-box"
       },
       "default": {
-        "west": 10.8,
-        "south": 44.95,
-        "east": 11.05,
-        "north": 45.1
+        "west": 12.3215,
+        "south": 45.5008,
+        "east": 12.4913,
+        "north": 45.5726
       },
       "optional": true
     }

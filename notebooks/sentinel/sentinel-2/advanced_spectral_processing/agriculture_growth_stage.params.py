@@ -27,7 +27,7 @@ def get_parameters():
         Each parameter set includes:
         - location_name: Human-readable location identifier
         - bounding_box: Spatial extent as Parameter object (runtime)
-        - time: Three-month growing-season window as Parameter object (runtime)
+        - time: Growing-season window as Parameter object (runtime); data load is capped to the three months before its end date
         - bands: Required Sentinel-2 bands as Parameter object
         - collection: Data collection identifier as Parameter object
         - cloud_cover: Maximum scene-level cloud cover percentage
@@ -62,7 +62,7 @@ def get_parameters():
             ),
             "time": Parameter(
                 "time",
-                description="Three-month growing-season window (oldest->R, middle->G, newest->B)",
+                description="Growing-season window; only its end date is used. Data is loaded for, and capped to, the three months before the end date (oldest->R, middle->G, newest->B); any earlier part of the window is ignored",
                 schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-04-01", "2024-07-01"],
             ),
@@ -99,7 +99,7 @@ def get_parameters():
             ),
             "time": Parameter(
                 "time",
-                description="Three-month growing-season window (oldest->R, middle->G, newest->B)",
+                description="Growing-season window; only its end date is used. Data is loaded for, and capped to, the three months before the end date (oldest->R, middle->G, newest->B); any earlier part of the window is ignored",
                 schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-03-01", "2024-06-01"],
             ),
@@ -141,7 +141,7 @@ def get_parameters():
             ),
             "time": Parameter(
                 "time",
-                description="Three-month growing-season window (oldest->R, middle->G, newest->B)",
+                description="Growing-season window; only its end date is used. Data is loaded for, and capped to, the three months before the end date (oldest->R, middle->G, newest->B); any earlier part of the window is ignored",
                 schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-03-01", "2024-06-01"],
             ),
@@ -159,6 +159,48 @@ def get_parameters():
                 "cloud_cover",
                 description="Maximum scene-level cloud cover percentage",
                 default=60,
+            ),
+            "reflectance_scale": Parameter(
+                "reflectance_scale",
+                description="Scale factor to convert band values to 0-1 reflectance (10000.0 for integer-scaled L2A, 1.0 for endpoints that already return reflectance)",
+                default=10000.0,
+            ),
+        },
+        # Venice: mainland cropland north of the Venetian Lagoon, over the
+        # summer growing season.
+        "venice_italy": {
+            "location_name": "Venice_italy",
+            "bounding_box": Parameter(
+                "bounding_box",
+                description="Spatial extent for Venice and its mainland cropland, Italy",
+                schema={"type": "object", "subtype": "bounding-box"},
+                default={
+                    "west": 12.3215,
+                    "south": 45.5008,
+                    "east": 12.4913,
+                    "north": 45.5726,
+                },
+            ),
+            "time": Parameter(
+                "time",
+                description="Growing-season window; only its end date is used. Data is loaded for, and capped to, the three months before the end date (oldest->R, middle->G, newest->B); any earlier part of the window is ignored",
+                schema={"type": "array", "subtype": "temporal-interval"},
+                default=["2017-06-01", "2017-08-31"],
+            ),
+            "bands": Parameter(
+                "bands",
+                description="Sentinel-2 bands required for the growth stage composite",
+                default=growth_stage_bands,
+            ),
+            "collection": Parameter(
+                "collection",
+                description="Data collection identifier",
+                default="SENTINEL2_L2A",
+            ),
+            "cloud_cover": Parameter(
+                "cloud_cover",
+                description="Maximum scene-level cloud cover percentage",
+                default=70,
             ),
             "reflectance_scale": Parameter(
                 "reflectance_scale",
