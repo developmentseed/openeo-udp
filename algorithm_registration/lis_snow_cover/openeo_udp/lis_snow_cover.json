@@ -124,19 +124,46 @@
                 "y": {
                   "from_node": "add1"
                 }
-              }
-            },
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply1": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension1"
+        },
+        "process": {
+          "process_graph": {
             "gt1": {
               "process_id": "gt",
               "arguments": {
                 "x": {
-                  "from_node": "divide3"
+                  "from_parameter": "x"
                 },
                 "y": {
                   "from_parameter": "ndsi_pass1"
                 }
-              }
-            },
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "reducedimension2": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "resamplespatial1"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
             "arrayelement3": {
               "process_id": "array_element",
               "arguments": {
@@ -153,35 +180,77 @@
                   "from_node": "arrayelement3"
                 },
                 "y": 10000.0
-              }
-            },
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply2": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension2"
+        },
+        "process": {
+          "process_graph": {
             "gt2": {
               "process_id": "gt",
               "arguments": {
                 "x": {
-                  "from_node": "divide4"
+                  "from_parameter": "x"
                 },
                 "y": {
                   "from_parameter": "red_pass1"
                 }
-              }
-            },
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mergecubes1": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "apply1"
+        },
+        "cube2": {
+          "from_node": "apply2"
+        },
+        "overlap_resolver": {
+          "process_graph": {
             "and1": {
               "process_id": "and",
               "arguments": {
                 "x": {
-                  "from_node": "gt1"
+                  "from_parameter": "x"
                 },
                 "y": {
-                  "from_node": "gt2"
+                  "from_parameter": "y"
                 }
-              }
-            },
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply3": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "mergecubes1"
+        },
+        "process": {
+          "process_graph": {
             "multiply1": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
-                  "from_node": "and1"
+                  "from_parameter": "x"
                 },
                 "y": 1.0
               },
@@ -191,7 +260,7 @@
         }
       }
     },
-    "reducedimension2": {
+    "reducedimension3": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -337,14 +406,14 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "reducedimension1"
+          "from_node": "apply3"
         },
         "mask": {
-          "from_node": "reducedimension2"
+          "from_node": "reducedimension3"
         }
       }
     },
-    "reducedimension3": {
+    "reducedimension4": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -370,191 +439,128 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension3"
+          "from_node": "reducedimension4"
         },
         "label": "pass1",
         "name": "bands",
         "type": "bands"
       }
     },
-    "reducedimension4": {
-      "process_id": "reduce_dimension",
+    "apply4": {
+      "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "resamplespatial1"
+          "from_node": "reducedimension1"
         },
-        "dimension": "bands",
-        "reducer": {
+        "process": {
           "process_graph": {
-            "arrayelement5": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 0
-              }
-            },
-            "divide5": {
-              "process_id": "divide",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement5"
-                },
-                "y": 10000.0
-              }
-            },
-            "arrayelement6": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 2
-              }
-            },
-            "divide6": {
-              "process_id": "divide",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement6"
-                },
-                "y": 10000.0
-              }
-            },
-            "subtract2": {
-              "process_id": "subtract",
-              "arguments": {
-                "x": {
-                  "from_node": "divide5"
-                },
-                "y": {
-                  "from_node": "divide6"
-                }
-              }
-            },
-            "add2": {
-              "process_id": "add",
-              "arguments": {
-                "x": {
-                  "from_node": "divide5"
-                },
-                "y": {
-                  "from_node": "divide6"
-                }
-              }
-            },
-            "divide7": {
-              "process_id": "divide",
-              "arguments": {
-                "x": {
-                  "from_node": "subtract2"
-                },
-                "y": {
-                  "from_node": "add2"
-                }
-              }
-            },
             "gt3": {
               "process_id": "gt",
               "arguments": {
                 "x": {
-                  "from_node": "divide7"
-                },
-                "y": {
-                  "from_parameter": "ndsi_pass1"
-                }
-              }
-            },
-            "arrayelement7": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 1
-              }
-            },
-            "divide8": {
-              "process_id": "divide",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement7"
-                },
-                "y": 10000.0
-              }
-            },
-            "gt4": {
-              "process_id": "gt",
-              "arguments": {
-                "x": {
-                  "from_node": "divide8"
-                },
-                "y": {
-                  "from_parameter": "red_pass1"
-                }
-              }
-            },
-            "and2": {
-              "process_id": "and",
-              "arguments": {
-                "x": {
-                  "from_node": "gt3"
-                },
-                "y": {
-                  "from_node": "gt4"
-                }
-              }
-            },
-            "gt5": {
-              "process_id": "gt",
-              "arguments": {
-                "x": {
-                  "from_node": "divide7"
+                  "from_parameter": "x"
                 },
                 "y": {
                   "from_parameter": "ndsi_pass2"
                 }
-              }
-            },
-            "gt6": {
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply5": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension2"
+        },
+        "process": {
+          "process_graph": {
+            "gt4": {
               "process_id": "gt",
               "arguments": {
                 "x": {
-                  "from_node": "divide8"
+                  "from_parameter": "x"
                 },
                 "y": {
                   "from_parameter": "red_pass2"
                 }
-              }
-            },
-            "and3": {
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mergecubes2": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "apply4"
+        },
+        "cube2": {
+          "from_node": "apply5"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "and2": {
               "process_id": "and",
               "arguments": {
                 "x": {
-                  "from_node": "gt5"
+                  "from_parameter": "x"
                 },
                 "y": {
-                  "from_node": "gt6"
+                  "from_parameter": "y"
                 }
-              }
-            },
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mergecubes3": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes1"
+        },
+        "cube2": {
+          "from_node": "mergecubes2"
+        },
+        "overlap_resolver": {
+          "process_graph": {
             "or6": {
               "process_id": "or",
               "arguments": {
                 "x": {
-                  "from_node": "and2"
+                  "from_parameter": "x"
                 },
                 "y": {
-                  "from_node": "and3"
+                  "from_parameter": "y"
                 }
-              }
-            },
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply6": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "mergecubes3"
+        },
+        "process": {
+          "process_graph": {
             "multiply2": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
-                  "from_node": "or6"
+                  "from_parameter": "x"
                 },
                 "y": 1.0
               },
@@ -568,10 +574,10 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "reducedimension4"
+          "from_node": "apply6"
         },
         "mask": {
-          "from_node": "reducedimension2"
+          "from_node": "reducedimension3"
         }
       }
     },
@@ -608,7 +614,7 @@
         "type": "bands"
       }
     },
-    "mergecubes1": {
+    "mergecubes4": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
@@ -666,11 +672,11 @@
         }
       }
     },
-    "mergecubes2": {
+    "mergecubes5": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "mergecubes1"
+          "from_node": "mergecubes4"
         },
         "cube2": {
           "from_node": "resamplecubespatial1"
@@ -681,12 +687,12 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mergecubes2"
+          "from_node": "mergecubes5"
         },
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement8": {
+            "arrayelement5": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -695,7 +701,7 @@
                 "index": 1
               }
             },
-            "arrayelement9": {
+            "arrayelement6": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -704,7 +710,7 @@
                 "index": 0
               }
             },
-            "arrayelement10": {
+            "arrayelement7": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -713,11 +719,11 @@
                 "index": 2
               }
             },
-            "gt7": {
+            "gt5": {
               "process_id": "gt",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement10"
+                  "from_node": "arrayelement7"
                 },
                 "y": {
                   "from_parameter": "snowline_elevation"
@@ -728,13 +734,13 @@
               "process_id": "if",
               "arguments": {
                 "accept": {
-                  "from_node": "arrayelement8"
+                  "from_node": "arrayelement5"
                 },
                 "reject": {
-                  "from_node": "arrayelement9"
+                  "from_node": "arrayelement6"
                 },
                 "value": {
-                  "from_node": "gt7"
+                  "from_node": "gt5"
                 }
               },
               "result": true
@@ -790,7 +796,7 @@
         "type": "bands"
       }
     },
-    "mergecubes3": {
+    "mergecubes6": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
