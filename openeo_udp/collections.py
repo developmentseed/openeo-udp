@@ -14,9 +14,10 @@ notebooks using Sentinel-3 must not divide by it.
 Canonical identifiers follow lowercase STAC-style conventions:
 
 - collections: ``sentinel-2-l2a`, ``sentinel-2-l1c``, ``sentinel-1-grd``, ``sentinel-3-slstr``,
-  ``sentinel-3-olci-l1b``, ``sentinel-5p-l2``
+  ``sentinel-3-olci-l1b``, ``cop-dem-glo-30``, ``sentinel-5p-l2``
 - bands: ``b01``..``b12``, ``b8a``, ``scl`` (Sentinel-2 L2A; L1C has no ``scl``); ``vh``, ``vv``
-  (Sentinel-1); ``s1``..``s9``, ``f1``, ``f2`` (SLSTR); ``b01``..``b21`` (OLCI); ``co``, ``hcho``,
+  (Sentinel-1); ``s1``..``s9``, ``f1``, ``f2`` (SLSTR); ``b01``..``b21`` (OLCI);
+  ``dem`` (Copernicus DEM GLO-30 elevation, metres); ``co``, ``hcho``,
   ``no2``, ``o3``, ``so2``, ``ch4``, ``aer_ai_340_380``, ``aer_ai_354_388``,
   ``cloud_base_pressure``, ``cloud_top_pressure``, ``cloud_base_height``, ``cloud_top_height``,
   ``cloud_optical_thickness``, ``cloud_fraction``, ``datamask`` (Sentinel-5P L2)
@@ -40,6 +41,7 @@ class Collection(str, Enum):
     SENTINEL1_GRD = "sentinel-1-grd"
     SENTINEL3_SLSTR = "sentinel-3-slstr"
     SENTINEL3_OLCI_L1B = "sentinel-3-olci-l1b"
+    COPERNICUS_DEM = "cop-dem-glo-30"
     SENTINEL5P_L2 = "sentinel-5p-l2"
 
 
@@ -84,6 +86,9 @@ CANONICAL_BANDS: Dict[Collection, List[str]] = {
         "cloud_optical_thickness", "cloud_fraction",
         "datamask",
     ],
+    # Copernicus DEM GLO-30: a single elevation band in metres. Backends serve
+    # it with a nominal time dimension, which notebooks reduce away.
+    Collection.COPERNICUS_DEM: ["dem"],
 }
 
 
@@ -103,6 +108,7 @@ _COLLECTION_ALIASES: Dict[str, Collection] = {
     "sentinel-3-olci-l1b": Collection.SENTINEL3_OLCI_L1B,
     "sentinel5p_l2": Collection.SENTINEL5P_L2,
     "sentinel-5p-l2": Collection.SENTINEL5P_L2,
+    "cop-dem-glo-30": Collection.COPERNICUS_DEM,
 }
 
 

@@ -100,6 +100,11 @@ COLLECTIONS = {
             "datamask": "dataMask",
         },
     },
+    # Copernicus DEM GLO-30, elevation in metres.
+    Collection.COPERNICUS_DEM: {
+        "collection_id": "COPERNICUS_30",
+        "bands": {"dem": "DEM"},
+    },
 }
 
 map_parameters = make_mapper(ENDPOINT_CONFIG, COLLECTIONS)

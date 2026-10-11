@@ -141,3 +141,4 @@ $RECYCLE.BIN/
 notebooks/**/*.json
 .coverage
 notebooks/sentinel/sentinel-3/land_surface_temperature_sicily_italy_2023.gif
+lis_snow_cover_outputs/

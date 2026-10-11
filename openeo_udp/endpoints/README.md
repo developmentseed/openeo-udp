@@ -10,14 +10,17 @@ Each endpoint is configured in a separate Python file:
 - `copernicus_dataspace.py` - Copernicus Data Space configuration
 - `ds_development.py` - Development Seed OpenEO Backend configuration
 - `localhost_dev.py` - Local TiTiler-openEO development backend
+- `mpc.py` - TiTiler-openEO on Microsoft Planetary Computer (`https://openeo.mpc.ds.io/`, synchronous only)
 
 ## Canonical collections and bands
 
 `*.params.py` files reference **canonical** collection ids and band names
 (lowercase STAC-style), defined once in `openeo_udp/collections.py`:
 
-- collections: `sentinel-2-l2a`, `sentinel-1-grd` (see the `Collection` enum)
-- bands: `b01`..`b12`, `b8a`, `scl` (Sentinel-2); `vh`, `vv` (Sentinel-1); plus
+- collections: `sentinel-2-l2a`, `sentinel-1-grd`, `cop-dem-glo-30`, ... (see the
+  `Collection` enum)
+- bands: `b01`..`b12`, `b8a`, `scl` (Sentinel-2); `vh`, `vv` (Sentinel-1); `dem`
+  (Copernicus DEM GLO-30, mapped on `copernicus_dataspace` and `mpc` only); plus
   the viewing-/sun-angle metadata bands.
 
 Each endpoint declares an explicit `COLLECTIONS` table that maps these canonical
