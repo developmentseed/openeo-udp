@@ -435,17 +435,6 @@
         }
       }
     },
-    "adddimension1": {
-      "process_id": "add_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "reducedimension4"
-        },
-        "label": "pass1",
-        "name": "bands",
-        "type": "bands"
-      }
-    },
     "apply4": {
       "process_id": "apply",
       "arguments": {
@@ -603,25 +592,30 @@
         }
       }
     },
-    "adddimension2": {
-      "process_id": "add_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "reducedimension5"
-        },
-        "label": "pass1_or_2",
-        "name": "bands",
-        "type": "bands"
-      }
-    },
     "mergecubes4": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "adddimension1"
+          "from_node": "reducedimension5"
         },
         "cube2": {
-          "from_node": "adddimension2"
+          "from_node": "reducedimension4"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "subtract2": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "y"
+                }
+              },
+              "result": true
+            }
+          }
         }
       }
     },
@@ -660,26 +654,48 @@
         }
       }
     },
-    "resamplecubespatial1": {
-      "process_id": "resample_cube_spatial",
+    "apply7": {
+      "process_id": "apply",
       "arguments": {
         "data": {
           "from_node": "reducedimension6"
         },
-        "method": "bilinear",
-        "target": {
-          "from_node": "resamplespatial1"
+        "process": {
+          "process_graph": {
+            "gt5": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "snowline_elevation"
+                }
+              }
+            },
+            "multiply3": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "gt5"
+                },
+                "y": 1.0
+              },
+              "result": true
+            }
+          }
         }
       }
     },
-    "mergecubes5": {
-      "process_id": "merge_cubes",
+    "resamplecubespatial1": {
+      "process_id": "resample_cube_spatial",
       "arguments": {
-        "cube1": {
-          "from_node": "mergecubes4"
+        "data": {
+          "from_node": "apply7"
         },
-        "cube2": {
-          "from_node": "resamplecubespatial1"
+        "method": "near",
+        "target": {
+          "from_node": "resamplespatial1"
         }
       }
     },
@@ -687,7 +703,7 @@
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mergecubes5"
+          "from_node": "resamplecubespatial1"
         },
         "dimension": "bands",
         "reducer": {
@@ -698,49 +714,33 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 1
-              }
-            },
-            "arrayelement6": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
                 "index": 0
-              }
-            },
-            "arrayelement7": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 2
-              }
-            },
-            "gt5": {
-              "process_id": "gt",
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mergecubes5": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "mergecubes4"
+        },
+        "cube2": {
+          "from_node": "reducedimension7"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "multiply4": {
+              "process_id": "multiply",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement7"
+                  "from_parameter": "x"
                 },
                 "y": {
-                  "from_parameter": "snowline_elevation"
-                }
-              }
-            },
-            "if2": {
-              "process_id": "if",
-              "arguments": {
-                "accept": {
-                  "from_node": "arrayelement5"
-                },
-                "reject": {
-                  "from_node": "arrayelement6"
-                },
-                "value": {
-                  "from_node": "gt5"
+                  "from_parameter": "y"
                 }
               },
               "result": true
@@ -749,11 +749,38 @@
         }
       }
     },
-    "adddimension3": {
+    "mergecubes6": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "reducedimension4"
+        },
+        "cube2": {
+          "from_node": "mergecubes5"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "add2": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "y"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension1": {
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension7"
+          "from_node": "mergecubes6"
         },
         "label": "snow_cover_fraction",
         "name": "bands",
@@ -785,7 +812,7 @@
         }
       }
     },
-    "adddimension4": {
+    "adddimension2": {
       "process_id": "add_dimension",
       "arguments": {
         "data": {
@@ -796,14 +823,14 @@
         "type": "bands"
       }
     },
-    "mergecubes6": {
+    "mergecubes7": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "adddimension3"
+          "from_node": "adddimension1"
         },
         "cube2": {
-          "from_node": "adddimension4"
+          "from_node": "adddimension2"
         }
       },
       "result": true
