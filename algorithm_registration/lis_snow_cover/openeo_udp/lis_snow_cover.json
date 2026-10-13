@@ -514,6 +514,103 @@
         "replacement": 1
       }
     },
+    "reducedimension5": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "resamplespatial1"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement5": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 6
+              }
+            },
+            "multiply3": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement5"
+                },
+                "y": 1.0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension1": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension5"
+        },
+        "label": "sun_zenith",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "reducedimension6": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "resamplespatial1"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement6": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 7
+              }
+            },
+            "multiply4": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement6"
+                },
+                "y": 1.0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "adddimension2": {
+      "process_id": "add_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension6"
+        },
+        "label": "sun_azimuth",
+        "name": "bands",
+        "type": "bands"
+      }
+    },
+    "mergecubes1": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "adddimension1"
+        },
+        "cube2": {
+          "from_node": "adddimension2"
+        }
+      }
+    },
     "loadcollection2": {
       "process_id": "load_collection",
       "arguments": {
@@ -527,7 +624,7 @@
         "temporal_extent": null
       }
     },
-    "reducedimension5": {
+    "reducedimension7": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -553,7 +650,7 @@
       "process_id": "resample_cube_spatial",
       "arguments": {
         "data": {
-          "from_node": "reducedimension5"
+          "from_node": "reducedimension7"
         },
         "method": "bilinear",
         "target": {
@@ -601,7 +698,7 @@
         ]
       }
     },
-    "mergecubes1": {
+    "mergecubes2": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
@@ -612,97 +709,40 @@
         }
       }
     },
-    "mergecubes2": {
+    "mergecubes3": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "resamplespatial1"
+          "from_node": "mergecubes1"
         },
         "cube2": {
-          "from_node": "mergecubes1"
+          "from_node": "mergecubes2"
         }
       }
     },
-    "reducedimension6": {
+    "reducedimension8": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "mergecubes2"
+          "from_node": "mergecubes3"
         },
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement5": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 8
-              }
-            },
-            "sin1": {
-              "process_id": "sin",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement5"
-                }
-              }
-            },
-            "arrayelement6": {
-              "process_id": "array_element",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                },
-                "index": 9
-              }
-            },
             "arrayelement7": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 7
+                "index": 2
               }
             },
-            "multiply3": {
-              "process_id": "multiply",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement7"
-                },
-                "y": 0.017453292519943295
-              }
-            },
-            "add2": {
-              "process_id": "add",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement6"
-                },
-                "y": {
-                  "from_node": "multiply3"
-                }
-              }
-            },
-            "sin2": {
+            "sin1": {
               "process_id": "sin",
               "arguments": {
                 "x": {
-                  "from_node": "add2"
-                }
-              }
-            },
-            "multiply4": {
-              "process_id": "multiply",
-              "arguments": {
-                "x": {
-                  "from_node": "sin1"
-                },
-                "y": {
-                  "from_node": "sin2"
+                  "from_node": "arrayelement7"
                 }
               }
             },
@@ -712,15 +752,7 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 8
-              }
-            },
-            "cos1": {
-              "process_id": "cos",
-              "arguments": {
-                "x": {
-                  "from_node": "arrayelement8"
-                }
+                "index": 3
               }
             },
             "arrayelement9": {
@@ -729,7 +761,7 @@
                 "data": {
                   "from_parameter": "data"
                 },
-                "index": 6
+                "index": 1
               }
             },
             "multiply5": {
@@ -741,15 +773,80 @@
                 "y": 0.017453292519943295
               }
             },
-            "cos2": {
-              "process_id": "cos",
+            "add2": {
+              "process_id": "add",
               "arguments": {
                 "x": {
+                  "from_node": "arrayelement8"
+                },
+                "y": {
                   "from_node": "multiply5"
                 }
               }
             },
+            "sin2": {
+              "process_id": "sin",
+              "arguments": {
+                "x": {
+                  "from_node": "add2"
+                }
+              }
+            },
             "multiply6": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "sin1"
+                },
+                "y": {
+                  "from_node": "sin2"
+                }
+              }
+            },
+            "arrayelement10": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 2
+              }
+            },
+            "cos1": {
+              "process_id": "cos",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement10"
+                }
+              }
+            },
+            "arrayelement11": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 0
+              }
+            },
+            "multiply7": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement11"
+                },
+                "y": 0.017453292519943295
+              }
+            },
+            "cos2": {
+              "process_id": "cos",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply7"
+                }
+              }
+            },
+            "multiply8": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
@@ -764,14 +861,14 @@
               "process_id": "add",
               "arguments": {
                 "x": {
-                  "from_node": "multiply4"
+                  "from_node": "multiply6"
                 },
                 "y": {
-                  "from_node": "multiply6"
+                  "from_node": "multiply8"
                 }
               }
             },
-            "multiply7": {
+            "multiply9": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
@@ -787,7 +884,7 @@
               "arguments": {
                 "x": 1,
                 "y": {
-                  "from_node": "multiply7"
+                  "from_node": "multiply9"
                 }
               }
             },
@@ -811,7 +908,7 @@
                 "y": 0.2
               }
             },
-            "multiply8": {
+            "multiply10": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
@@ -825,7 +922,7 @@
         }
       }
     },
-    "reducedimension7": {
+    "reducedimension9": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -834,7 +931,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement10": {
+            "arrayelement12": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -843,7 +940,7 @@
                 "index": 4
               }
             },
-            "arrayelement11": {
+            "arrayelement13": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -856,10 +953,10 @@
               "process_id": "subtract",
               "arguments": {
                 "x": {
-                  "from_node": "arrayelement10"
+                  "from_node": "arrayelement12"
                 },
                 "y": {
-                  "from_node": "arrayelement11"
+                  "from_node": "arrayelement13"
                 }
               }
             },
@@ -881,7 +978,7 @@
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "reducedimension7"
+          "from_node": "reducedimension9"
         },
         "process": {
           "process_graph": {
@@ -905,7 +1002,7 @@
       "process_id": "mask",
       "arguments": {
         "data": {
-          "from_node": "reducedimension6"
+          "from_node": "reducedimension8"
         },
         "mask": {
           "from_node": "apply6"
@@ -958,7 +1055,7 @@
         }
       }
     },
-    "reducedimension8": {
+    "reducedimension10": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -980,11 +1077,11 @@
         }
       }
     },
-    "mergecubes3": {
+    "mergecubes4": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "reducedimension8"
+          "from_node": "reducedimension10"
         },
         "cube2": {
           "from_node": "reducedimension4"
@@ -1011,7 +1108,7 @@
       "process_id": "apply",
       "arguments": {
         "data": {
-          "from_node": "reducedimension5"
+          "from_node": "reducedimension7"
         },
         "process": {
           "process_graph": {
@@ -1026,7 +1123,7 @@
                 }
               }
             },
-            "multiply9": {
+            "multiply11": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
@@ -1052,7 +1149,7 @@
         }
       }
     },
-    "reducedimension9": {
+    "reducedimension11": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -1061,7 +1158,7 @@
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement12": {
+            "arrayelement14": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -1075,18 +1172,18 @@
         }
       }
     },
-    "mergecubes4": {
+    "mergecubes5": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "mergecubes3"
+          "from_node": "mergecubes4"
         },
         "cube2": {
-          "from_node": "reducedimension9"
+          "from_node": "reducedimension11"
         },
         "overlap_resolver": {
           "process_graph": {
-            "multiply10": {
+            "multiply12": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
@@ -1102,14 +1199,14 @@
         }
       }
     },
-    "mergecubes5": {
+    "mergecubes6": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
           "from_node": "reducedimension4"
         },
         "cube2": {
-          "from_node": "mergecubes4"
+          "from_node": "mergecubes5"
         },
         "overlap_resolver": {
           "process_graph": {
@@ -1129,18 +1226,18 @@
         }
       }
     },
-    "adddimension1": {
+    "adddimension3": {
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "mergecubes5"
+          "from_node": "mergecubes6"
         },
         "label": "snow_cover_fraction",
         "name": "bands",
         "type": "bands"
       }
     },
-    "reducedimension10": {
+    "reducedimension12": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -1165,25 +1262,25 @@
         }
       }
     },
-    "adddimension2": {
+    "adddimension4": {
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension10"
+          "from_node": "reducedimension12"
         },
         "label": "clear_observations",
         "name": "bands",
         "type": "bands"
       }
     },
-    "mergecubes6": {
+    "mergecubes7": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "adddimension1"
+          "from_node": "adddimension3"
         },
         "cube2": {
-          "from_node": "adddimension2"
+          "from_node": "adddimension4"
         }
       },
       "result": true

@@ -21,6 +21,9 @@ ENDPOINT_CONFIG = {
     "reflectance_scale": 1.0,
     "bands_dimension": "spectral",
     "time_dimension": "t",
+    # Convention of the `aspect` process (titiler-openeo #456, checked
+    # 2026-10-14): downslope direction, clockwise from north, in radians (GDAL).
+    "aspect_convention": "cw_from_north",
     "description": "TiTiler-openEO on Microsoft Planetary Computer (synchronous only, no batch jobs)",
     "capabilities": ["load_collection", "apply_dimension", "save_result"],
     "cloud_cover_filter": True,

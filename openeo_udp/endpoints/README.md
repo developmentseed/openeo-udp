@@ -49,6 +49,7 @@ backend-agnostic.
 | `reflectance_scale` | Divisor to convert raw band values to 0-1 reflectance. `1.0` if the backend already serves reflectance; `10000.0` for integer L2A. |
 | `bands_dimension` | Name of the band/spectral dimension (openEO spec default is `bands`; some backends still use `spectral`). |
 | `time_dimension` | Name of the time dimension (`t` per spec; a few backends use `time`). |
+| `aspect_convention` | Optional. Convention of the backend's `aspect` process: `cw_from_north` (downslope, clockwise from north, GDAL) or `ccw_from_east` (downslope, counterclockwise from east, CDSE). Used by `lis_snow_cover.ipynb`. |
 | `description`, `capabilities`, `enabled` | Free-form metadata used by the widget / listing helpers. |
 
 ## Adding New Endpoints
