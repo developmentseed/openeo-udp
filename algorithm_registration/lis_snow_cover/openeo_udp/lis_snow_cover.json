@@ -7,7 +7,11 @@
           "B03",
           "B04",
           "B11",
-          "SCL"
+          "SCL",
+          "B02",
+          "B08",
+          "sunZenithAngles",
+          "sunAzimuthAngles"
         ],
         "id": "SENTINEL2_L2A",
         "properties": {
@@ -510,66 +514,6 @@
         "replacement": 1
       }
     },
-    "mask5": {
-      "process_id": "mask",
-      "arguments": {
-        "data": {
-          "from_node": "mask4"
-        },
-        "mask": {
-          "from_node": "reducedimension3"
-        }
-      }
-    },
-    "reducedimension5": {
-      "process_id": "reduce_dimension",
-      "arguments": {
-        "data": {
-          "from_node": "mask5"
-        },
-        "dimension": "t",
-        "reducer": {
-          "process_graph": {
-            "mean2": {
-              "process_id": "mean",
-              "arguments": {
-                "data": {
-                  "from_parameter": "data"
-                }
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
-    "mergecubes1": {
-      "process_id": "merge_cubes",
-      "arguments": {
-        "cube1": {
-          "from_node": "reducedimension5"
-        },
-        "cube2": {
-          "from_node": "reducedimension4"
-        },
-        "overlap_resolver": {
-          "process_graph": {
-            "subtract2": {
-              "process_id": "subtract",
-              "arguments": {
-                "x": {
-                  "from_parameter": "x"
-                },
-                "y": {
-                  "from_parameter": "y"
-                }
-              },
-              "result": true
-            }
-          }
-        }
-      }
-    },
     "loadcollection2": {
       "process_id": "load_collection",
       "arguments": {
@@ -583,7 +527,7 @@
         "temporal_extent": null
       }
     },
-    "reducedimension6": {
+    "reducedimension5": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -605,15 +549,473 @@
         }
       }
     },
+    "resamplecubespatial1": {
+      "process_id": "resample_cube_spatial",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension5"
+        },
+        "method": "bilinear",
+        "target": {
+          "from_node": "resamplespatial1"
+        }
+      }
+    },
+    "slope1": {
+      "process_id": "slope",
+      "arguments": {
+        "data": {
+          "from_node": "resamplecubespatial1"
+        }
+      }
+    },
+    "renamelabels1": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "slope1"
+        },
+        "dimension": "bands",
+        "target": [
+          "slope"
+        ]
+      }
+    },
+    "aspect1": {
+      "process_id": "aspect",
+      "arguments": {
+        "data": {
+          "from_node": "resamplecubespatial1"
+        }
+      }
+    },
+    "renamelabels2": {
+      "process_id": "rename_labels",
+      "arguments": {
+        "data": {
+          "from_node": "aspect1"
+        },
+        "dimension": "bands",
+        "target": [
+          "aspect"
+        ]
+      }
+    },
+    "mergecubes1": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "renamelabels1"
+        },
+        "cube2": {
+          "from_node": "renamelabels2"
+        }
+      }
+    },
+    "mergecubes2": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "resamplespatial1"
+        },
+        "cube2": {
+          "from_node": "mergecubes1"
+        }
+      }
+    },
+    "reducedimension6": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mergecubes2"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement5": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 8
+              }
+            },
+            "sin1": {
+              "process_id": "sin",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement5"
+                }
+              }
+            },
+            "arrayelement6": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 9
+              }
+            },
+            "arrayelement7": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 7
+              }
+            },
+            "multiply3": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement7"
+                },
+                "y": 0.017453292519943295
+              }
+            },
+            "add2": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement6"
+                },
+                "y": {
+                  "from_node": "multiply3"
+                }
+              }
+            },
+            "sin2": {
+              "process_id": "sin",
+              "arguments": {
+                "x": {
+                  "from_node": "add2"
+                }
+              }
+            },
+            "multiply4": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "sin1"
+                },
+                "y": {
+                  "from_node": "sin2"
+                }
+              }
+            },
+            "arrayelement8": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 8
+              }
+            },
+            "cos1": {
+              "process_id": "cos",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement8"
+                }
+              }
+            },
+            "arrayelement9": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 6
+              }
+            },
+            "multiply5": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement9"
+                },
+                "y": 0.017453292519943295
+              }
+            },
+            "cos2": {
+              "process_id": "cos",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply5"
+                }
+              }
+            },
+            "multiply6": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "cos1"
+                },
+                "y": {
+                  "from_node": "cos2"
+                }
+              }
+            },
+            "add3": {
+              "process_id": "add",
+              "arguments": {
+                "x": {
+                  "from_node": "multiply4"
+                },
+                "y": {
+                  "from_node": "multiply6"
+                }
+              }
+            },
+            "multiply7": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "cos2"
+                },
+                "y": {
+                  "from_node": "cos2"
+                }
+              }
+            },
+            "add4": {
+              "process_id": "add",
+              "arguments": {
+                "x": 1,
+                "y": {
+                  "from_node": "multiply7"
+                }
+              }
+            },
+            "divide5": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "add3"
+                },
+                "y": {
+                  "from_node": "add4"
+                }
+              }
+            },
+            "lt1": {
+              "process_id": "lt",
+              "arguments": {
+                "x": {
+                  "from_node": "divide5"
+                },
+                "y": 0.2
+              }
+            },
+            "multiply8": {
+              "process_id": "multiply",
+              "arguments": {
+                "x": {
+                  "from_node": "lt1"
+                },
+                "y": 1.0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "reducedimension7": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "resamplespatial1"
+        },
+        "dimension": "bands",
+        "reducer": {
+          "process_graph": {
+            "arrayelement10": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 4
+              }
+            },
+            "arrayelement11": {
+              "process_id": "array_element",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                },
+                "index": 5
+              }
+            },
+            "subtract2": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_node": "arrayelement10"
+                },
+                "y": {
+                  "from_node": "arrayelement11"
+                }
+              }
+            },
+            "divide6": {
+              "process_id": "divide",
+              "arguments": {
+                "x": {
+                  "from_node": "subtract2"
+                },
+                "y": 10000.0
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
     "apply6": {
       "process_id": "apply",
       "arguments": {
         "data": {
+          "from_node": "reducedimension7"
+        },
+        "process": {
+          "process_graph": {
+            "lte4": {
+              "process_id": "lte",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "shaded_snow_pass"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mask5": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
           "from_node": "reducedimension6"
+        },
+        "mask": {
+          "from_node": "apply6"
+        },
+        "replacement": 0
+      }
+    },
+    "apply7": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "mask5"
         },
         "process": {
           "process_graph": {
             "gt4": {
+              "process_id": "gt",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": 0.5
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mask6": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "mask4"
+        },
+        "mask": {
+          "from_node": "apply7"
+        },
+        "replacement": 1
+      }
+    },
+    "mask7": {
+      "process_id": "mask",
+      "arguments": {
+        "data": {
+          "from_node": "mask6"
+        },
+        "mask": {
+          "from_node": "reducedimension3"
+        }
+      }
+    },
+    "reducedimension8": {
+      "process_id": "reduce_dimension",
+      "arguments": {
+        "data": {
+          "from_node": "mask7"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "mean2": {
+              "process_id": "mean",
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "mergecubes3": {
+      "process_id": "merge_cubes",
+      "arguments": {
+        "cube1": {
+          "from_node": "reducedimension8"
+        },
+        "cube2": {
+          "from_node": "reducedimension4"
+        },
+        "overlap_resolver": {
+          "process_graph": {
+            "subtract3": {
+              "process_id": "subtract",
+              "arguments": {
+                "x": {
+                  "from_parameter": "x"
+                },
+                "y": {
+                  "from_parameter": "y"
+                }
+              },
+              "result": true
+            }
+          }
+        }
+      }
+    },
+    "apply8": {
+      "process_id": "apply",
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension5"
+        },
+        "process": {
+          "process_graph": {
+            "gt5": {
               "process_id": "gt",
               "arguments": {
                 "x": {
@@ -624,11 +1026,11 @@
                 }
               }
             },
-            "multiply3": {
+            "multiply9": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
-                  "from_node": "gt4"
+                  "from_node": "gt5"
                 },
                 "y": 1.0
               },
@@ -638,11 +1040,11 @@
         }
       }
     },
-    "resamplecubespatial1": {
+    "resamplecubespatial2": {
       "process_id": "resample_cube_spatial",
       "arguments": {
         "data": {
-          "from_node": "apply6"
+          "from_node": "apply8"
         },
         "method": "near",
         "target": {
@@ -650,16 +1052,16 @@
         }
       }
     },
-    "reducedimension7": {
+    "reducedimension9": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
-          "from_node": "resamplecubespatial1"
+          "from_node": "resamplecubespatial2"
         },
         "dimension": "bands",
         "reducer": {
           "process_graph": {
-            "arrayelement5": {
+            "arrayelement12": {
               "process_id": "array_element",
               "arguments": {
                 "data": {
@@ -673,18 +1075,18 @@
         }
       }
     },
-    "mergecubes2": {
+    "mergecubes4": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
-          "from_node": "mergecubes1"
+          "from_node": "mergecubes3"
         },
         "cube2": {
-          "from_node": "reducedimension7"
+          "from_node": "reducedimension9"
         },
         "overlap_resolver": {
           "process_graph": {
-            "multiply4": {
+            "multiply10": {
               "process_id": "multiply",
               "arguments": {
                 "x": {
@@ -700,18 +1102,18 @@
         }
       }
     },
-    "mergecubes3": {
+    "mergecubes5": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
           "from_node": "reducedimension4"
         },
         "cube2": {
-          "from_node": "mergecubes2"
+          "from_node": "mergecubes4"
         },
         "overlap_resolver": {
           "process_graph": {
-            "add2": {
+            "add5": {
               "process_id": "add",
               "arguments": {
                 "x": {
@@ -731,14 +1133,14 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "mergecubes3"
+          "from_node": "mergecubes5"
         },
         "label": "snow_cover_fraction",
         "name": "bands",
         "type": "bands"
       }
     },
-    "reducedimension8": {
+    "reducedimension10": {
       "process_id": "reduce_dimension",
       "arguments": {
         "data": {
@@ -767,14 +1169,14 @@
       "process_id": "add_dimension",
       "arguments": {
         "data": {
-          "from_node": "reducedimension8"
+          "from_node": "reducedimension10"
         },
         "label": "clear_observations",
         "name": "bands",
         "type": "bands"
       }
     },
-    "mergecubes4": {
+    "mergecubes6": {
       "process_id": "merge_cubes",
       "arguments": {
         "cube1": {
@@ -879,9 +1281,18 @@
       },
       "default": 1100,
       "optional": true
+    },
+    {
+      "name": "shaded_snow_pass",
+      "description": "LIS shaded snow threshold: a pixel in relief shadow and above the snowline is snow if blue - NIR > this value (0-1 reflectance; LIS default 160 in L2A integer units = 0.016)",
+      "schema": {
+        "type": "number"
+      },
+      "default": 0.016,
+      "optional": true
     }
   ],
   "id": "lis_snow_cover",
   "summary": "LIS-like snow cover fraction from Sentinel-2 L2A and the Copernicus DEM with openEO.",
-  "description": "Snow cover fraction (number of snow dates divided by the number of clear dates) and number of clear observations from Sentinel-2 L2A, with a simplified version of the CNES/CESBIO Let-it-snow (LIS) algorithm: pass 1 (NDSI > n1 and red > r1), pass 2 above a snowline elevation (NDSI > n2 and red > r2) with the Copernicus DEM GLO-30, and a Sen2Cor SCL cloud and no-data mask. Original implementation inspired by Gascoin et al. (2019), ESSD 11, 493-514."
+  "description": "Snow cover fraction (number of snow dates divided by the number of clear dates) and number of clear observations from Sentinel-2 L2A, with a simplified version of the CNES/CESBIO Let-it-snow (LIS) algorithm: pass 1 (NDSI > n1 and red > r1), pass 2 above a snowline elevation (NDSI > n2 and red > r2) with the Copernicus DEM GLO-30, pass 3 for snow in relief self-shadow (LIS hillshade from slope, aspect and the sun angles of each date, and blue - NIR > shaded_snow_pass), and a Sen2Cor SCL cloud and no-data mask. Original implementation inspired by Gascoin et al. (2019), ESSD 11, 493-514."
 }

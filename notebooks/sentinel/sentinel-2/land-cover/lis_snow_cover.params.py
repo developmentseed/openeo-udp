@@ -78,11 +78,21 @@ def _common(location, bbox, watersheds, snowline_dates, snowline_elevation):
         "bands": Parameter(
             "bands",
             description=(
-                "Bands used by LIS: green (b03), red (b04), SWIR (b11) and the "
-                "Sen2Cor scene classification (scl). Order matters: the "
-                "callbacks index the bands in this order."
+                "Bands used by LIS: green (b03), red (b04), SWIR (b11), the "
+                "Sen2Cor scene classification (scl), and for the shaded snow "
+                "pass blue (b02), NIR (b08) and the sun zenith and azimuth "
+                "angles. The callbacks find each band by its name in this list."
             ),
-            default=["b03", "b04", "b11", "scl"],
+            default=[
+                "b03",
+                "b04",
+                "b11",
+                "scl",
+                "b02",
+                "b08",
+                "sunzenithangles",
+                "sunazimuthangles",
+            ],
         ),
         "cloud_cover": Parameter(
             "cloud_cover",
@@ -135,6 +145,29 @@ def _common(location, bbox, watersheds, snowline_dates, snowline_elevation):
             ),
             schema={"type": "number"},
             default=snowline_elevation,
+        ),
+        # LIS shaded snow pass ("pass 3"), in the LIS code since the 1.1x
+        # releases (python/s2snow/snow_detector.py, compute_shaded_snow, and
+        # python/s2snow/hillshade.py), not in the 2019 paper. Defaults from
+        # doc/lis_default_configuration.json ("shaded_snow").
+        "shaded_snow_pass": Parameter(
+            "shaded_snow_pass",
+            description=(
+                "LIS shaded snow threshold: a pixel in relief shadow and above "
+                "the snowline is snow if blue - NIR > this value (0-1 "
+                "reflectance; LIS default 160 in L2A integer units = 0.016)"
+            ),
+            schema={"type": "number"},
+            default=0.016,
+        ),
+        "hillshade_lim": Parameter(
+            "hillshade_lim",
+            description=(
+                "LIS relief shadow threshold: a pixel is in self-shadow if its "
+                "hillshade (LIS formula) is below this value"
+            ),
+            schema={"type": "number", "minimum": 0, "maximum": 1},
+            default=0.2,
         ),
         # Step 4: the DEM, a second collection mapped by the notebook.
         "dem_collection": Parameter(
