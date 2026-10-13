@@ -18,6 +18,10 @@ ENDPOINT_CONFIG = {
     "reflectance_scale": 10000.0,
     "bands_dimension": "bands",
     "time_dimension": "t",
+    # Convention of the `aspect` process (checked 2026-10-13 against a numpy
+    # gradient): downslope direction, counterclockwise from east, in radians,
+    # although the process description says "from due North".
+    "aspect_convention": "ccw_from_east",
     "description": "Production endpoint for larger scale processing",
     "capabilities": [
         "load_collection",
@@ -99,6 +103,11 @@ COLLECTIONS = {
             "cloud_fraction": "CLOUD_FRACTION",
             "datamask": "dataMask",
         },
+    },
+    # Copernicus DEM GLO-30, elevation in metres.
+    Collection.COPERNICUS_DEM: {
+        "collection_id": "COPERNICUS_30",
+        "bands": {"dem": "DEM"},
     },
 }
 

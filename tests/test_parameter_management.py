@@ -549,6 +549,38 @@ class TestParameterMapping:
         with pytest.raises(UnsupportedCollectionError):
             param_manager.apply_endpoint_mapping(params, "eopf_explorer")
 
+    def test_copernicus_dem_mapping(self, temp_params_file):
+        """The canonical DEM maps to each backend's native id and band name."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="cop-dem-glo-30"
+            ),
+            "bands": Parameter("bands", description="b", default=["dem"]),
+        }
+
+        cdse = param_manager.apply_endpoint_mapping(params, "copernicus_dataspace")
+        assert cdse["collection"].default == "COPERNICUS_30"
+        assert cdse["bands"].default == ["DEM"]
+
+        mpc = param_manager.apply_endpoint_mapping(params, "mpc")
+        assert mpc["collection"].default == "cop-dem-glo-30"
+        assert mpc["bands"].default == ["data"]
+        assert mpc["bands_dimension"] == "spectral"
+
+    @pytest.mark.parametrize("endpoint", ["eopf_explorer", "ds_development"])
+    def test_copernicus_dem_unmapped_endpoint_raises(self, temp_params_file, endpoint):
+        """Endpoints with no verified DEM table raise rather than guessing."""
+        param_manager = ParameterManager(temp_params_file)
+        params = {
+            "collection": Parameter(
+                "collection", description="c", default="cop-dem-glo-30"
+            ),
+            "bands": Parameter("bands", description="b", default=["dem"]),
+        }
+        with pytest.raises(UnsupportedCollectionError):
+            param_manager.apply_endpoint_mapping(params, endpoint)
+
     def test_unsupported_collection_raises(self, temp_params_file):
         """An unknown canonical collection raises rather than passing through."""
         param_manager = ParameterManager(temp_params_file)
