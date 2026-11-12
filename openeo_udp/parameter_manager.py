@@ -57,8 +57,28 @@ class ParameterManager:
                 A file at the given path takes precedence over the packaged one.
         """
         self.param_file = _resolve_param_file(param_file_path)
+        self.is_packaged = self._is_packaged_file(self.param_file)
         self._parameter_sets = self._load_parameter_sets()
         self._current_set = None
+
+    @staticmethod
+    def _is_packaged_file(path: Path) -> bool:
+        """Return True if ``path`` is a parameter file shipped in openeo_udp.params."""
+        packaged_dir = Path(str(resources.files("openeo_udp.params"))).resolve()
+        return path.resolve().parent == packaged_dir
+
+    def describe_source(self) -> str:
+        """Describe which parameter file was loaded and where it came from."""
+        if self.is_packaged:
+            return f"{self.param_file.name} (packaged with openeo-udp)"
+
+        description = f"{self.param_file.resolve()} (local file)"
+        if self.param_file.name in list_parameter_files():
+            description += (
+                f"\n   ⚠️  This local file overrides the packaged "
+                f"{self.param_file.name}. Delete or rename it to use the packaged one."
+            )
+        return description
 
     def _load_parameter_sets(self) -> Dict[str, Dict[str, Any]]:
         """Load parameter sets from the .py file.
@@ -206,6 +226,8 @@ class ParameterManager:
             algorithm_name: Name of the algorithm for display purposes
         """
         from .endpoints import get_all_endpoints
+
+        print(f"Parameter file: {self.describe_source()}\n")
 
         # Show available parameter sets
         available_sets = self.list_parameter_sets()

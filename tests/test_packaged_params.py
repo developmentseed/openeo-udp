@@ -80,3 +80,33 @@ def test_missing_bare_name_raises(tmp_path, monkeypatch):
 def test_path_with_directory_does_not_fall_back(tmp_path):
     with pytest.raises(FileNotFoundError):
         ParameterManager(tmp_path / "missing" / "urban_areas.params.py")
+
+
+def test_describe_source_packaged(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    manager = ParameterManager("urban_areas.params.py")
+    assert manager.is_packaged
+    assert manager.describe_source() == "urban_areas.params.py (packaged with openeo-udp)"
+
+
+def test_describe_source_warns_when_local_overrides_packaged(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "urban_areas.params.py").write_text(LOCAL_PARAMS)
+    manager = ParameterManager("urban_areas.params.py")
+    assert not manager.is_packaged
+    assert "(local file)" in manager.describe_source()
+    assert "overrides the packaged" in manager.describe_source()
+
+
+def test_describe_source_local_only_has_no_warning(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "my_algorithm.params.py").write_text(LOCAL_PARAMS)
+    manager = ParameterManager("my_algorithm.params.py")
+    assert "(local file)" in manager.describe_source()
+    assert "overrides" not in manager.describe_source()
+
+
+def test_print_options_shows_parameter_file(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    ParameterManager("urban_areas.params.py").print_options("urban areas")
+    assert "Parameter file: urban_areas.params.py (packaged with openeo-udp)" in capsys.readouterr().out
