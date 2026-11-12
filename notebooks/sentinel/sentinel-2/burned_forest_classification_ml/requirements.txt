@@ -1,0 +1,8 @@
+# Extra packages for machine_learning.ipynb, on top of openeo-udp and its
+# notebooks extra:
+#   pip install "openeo-udp[notebooks]" -r requirements.txt
+geopandas>=1.1.4
+netcdf4>=1.7.4
+scikit-learn>=1.9.0
+shapely>=2.0.0
+xarray>=2025.1.0

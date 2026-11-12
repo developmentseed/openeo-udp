@@ -4,12 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openeo-udp"
-version = "0.1.1"
+dynamic = ["version"]
 description = "openEO User-Defined Processes converted from Sentinel Hub evalscripts"
 readme = "README.md"
 license = "Apache-2.0"
 authors = [
     {name = "Emmanuel Mathot", email = "emmanuel@developmentseed.org"},
+    {name = "Firza Riany", email = "firza@developmentseed.org"},
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -23,28 +24,32 @@ classifiers = [
 requires-python = ">=3.11"
 dependencies = [
     "openeo>=0.24.0",
+    "ipywidgets>=8.0.0",
+]
+
+[project.optional-dependencies]
+# Everything the notebooks in notebooks/ need on top of the core package.
+notebooks = [
     "matplotlib>=3.7.0",
-    "Pillow>=10.0.0",
     "numpy>=1.24.0",
+    "Pillow>=10.0.0",
     "rioxarray>=0.19.0",
-    "jupyter>=1.0.0",
-    "ipykernel>=6.25.0",
-    "requests>=2.28.0",
-    "pip>=25.3",
-    "scipy>=1.17.1",
-    "scikit-learn>=1.9.0",
-    "geopandas>=1.1.4",
-    "netcdf4>=1.7.4",
-    "h5netcdf>=1.8.1",
 ]
 
 [dependency-groups]
 dev = [
+    "openeo-udp[notebooks]",
+    "jupyter>=1.0.0",
+    "ipykernel>=6.25.0",
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "black>=23.0.0",
     "ruff>=0.0.290",
     "pre-commit>=3.0.0",
+]
+# scripts/run_batch_job.py (repository tooling, not part of the package)
+batch = [
+    "pydantic>=2.0.0",
 ]
 docs = [
     "mkdocs>=1.5.0",
@@ -65,6 +70,9 @@ exclude = ["tests*"]
 
 [tool.setuptools]
 include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "openeo_udp.__version__"}
 
 [tool.setuptools.package-data]
 "openeo_udp.params" = ["*.params.py"]

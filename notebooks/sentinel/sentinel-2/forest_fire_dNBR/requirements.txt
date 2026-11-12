@@ -1,0 +1,8 @@
+# Extra packages for dnbr_vegetation_classification_udf.ipynb, on top of
+# openeo-udp and its notebooks extra:
+#   pip install "openeo-udp[notebooks]" -r requirements.txt
+geopandas>=1.1.4
+rasterio>=1.4.0
+scikit-learn>=1.9.0
+scipy>=1.17.1
+xarray>=2025.1.0
