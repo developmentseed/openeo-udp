@@ -67,7 +67,7 @@ exclude = ["tests*"]
 include-package-data = true
 
 [tool.setuptools.package-data]
-"*" = ["notebooks/**/*.ipynb"]
+"openeo_udp.params" = ["*.params.py"]
 
 [tool.black]
 line-length = 88

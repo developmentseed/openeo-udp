@@ -177,7 +177,7 @@ Before writing any code, thoroughly analyze the original evalscript:
   - **The openEO UDP parameter management system** (`from openeo_udp import ParameterManager`)
 
 - **Set up parameter management** to support multiple locations and backends:
-  - Create a `.params.py` file alongside your notebook with parameter sets for different locations
+  - Create a `<algorithm_id>.params.py` file in `openeo_udp/params/` with parameter sets for different locations. File names must be unique, because notebooks load them by name
   - Use the parameter manager for flexible backend connections and parameter handling
   - Follow the five practices below consistently across all notebooks
 
@@ -190,8 +190,8 @@ is the canonical reference.
 
 ##### Practice 1 — Initialize and display options
 
-In the imports cell, initialize the `ParameterManager` with the co-located
-`.params.py` file and call `print_options()` so contributors can see available
+In the imports cell, initialize the `ParameterManager` with the name of the
+algorithm's `.params.py` file in `openeo_udp/params/` and call `print_options()` so contributors can see available
 parameter sets and endpoints at a glance:
 
 ```python

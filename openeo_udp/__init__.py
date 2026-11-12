@@ -6,8 +6,9 @@ for OpenEO notebooks in the DevelopmentSeed UDP repository.
 
 __version__ = "0.1.0"
 
-from .parameter_manager import ParameterManager
+from .parameter_manager import ParameterManager, list_parameter_files
 
 __all__ = [
     "ParameterManager",
+    "list_parameter_files",
 ]
