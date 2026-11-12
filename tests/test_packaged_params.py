@@ -27,10 +27,32 @@ def test_params_files_are_packaged():
     assert len(PACKAGED_FILES) == len(set(PACKAGED_FILES))
 
 
+# Self-contained notebook folders whose parameter files intentionally stay next
+# to the notebook and are not shipped with the openeo_udp package.
+STANDALONE_NOTEBOOK_DIRS = {
+    Path("notebooks/sentinel/sentinel-2/forest_fire_dNBR"),
+    Path("notebooks/sentinel/sentinel-2/burned_forest_classification_ml"),
+}
+
+
 def test_no_params_files_left_in_notebooks():
     repo_root = Path(__file__).resolve().parents[1]
-    leftovers = sorted(repo_root.glob("notebooks/**/*.params.py"))
+    leftovers = sorted(
+        path.relative_to(repo_root)
+        for path in repo_root.glob("notebooks/**/*.params.py")
+        if not any(
+            path.relative_to(repo_root).is_relative_to(d)
+            for d in STANDALONE_NOTEBOOK_DIRS
+        )
+    )
     assert leftovers == [], f"Move these into openeo_udp/params/: {leftovers}"
+
+
+def test_standalone_params_files_are_not_packaged():
+    repo_root = Path(__file__).resolve().parents[1]
+    for d in STANDALONE_NOTEBOOK_DIRS:
+        for path in (repo_root / d).glob("*.params.py"):
+            assert path.name not in PACKAGED_FILES
 
 
 @pytest.mark.parametrize("file_name", PACKAGED_FILES)

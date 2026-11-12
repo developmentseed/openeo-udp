@@ -10,7 +10,7 @@ This work was developed based on the methodology Anton Donle developed: https://
 - The GeoJSON file containing labels derived from the National Forest Inventory (`input_data/nfi_labels.geojson`).
 - Refer environment set up in openEO UDP repository readme section [`### Environment Setup`](../../../../README.md#environment-setup).
 - Run the `dnbr_vegetation_classification_udf.ipynb` notebook.
-- Set the spatial and temporal coverage in [`openeo_udp/params/dnbr_vegetation_classification_udf.params.py`](../../../../openeo_udp/params/dnbr_vegetation_classification_udf.params.py) to change locations and time period.
+- Set the spatial and temporal coverage in `dnbr_vegetation_classification_udf.params.py` to change locations and time period.
 
 This folder contains the following structure:
 
@@ -18,7 +18,8 @@ This folder contains the following structure:
 forest_fire_dNBR/
 ├── input_data/
 │   └── nfi_labels.geojson
-└── dnbr_vegetation_classification_udf.ipynb
+├── dnbr_vegetation_classification_udf.ipynb
+└── dnbr_vegetation_classification_udf.params.py
 ```
 
 ## Data
