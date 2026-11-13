@@ -78,30 +78,45 @@ def get_parameters():
         """Assemble one parameter set; only the AOI and the two dates vary."""
         return {
             "bounding_box": Parameter(
-                "bounding_box", description=bbox_description, default=bbox
+                "bounding_box",
+                description=bbox_description,
+                schema={"type": "object", "subtype": "bounding-box"},
+                default=bbox,
             ),
-            "time_pre": Parameter("time_pre", description=pre_description, default=pre),
+            "time_pre": Parameter(
+                "time_pre",
+                description=pre_description,
+                schema={"type": "array", "subtype": "temporal-interval"},
+                default=pre,
+            ),
             "time_post": Parameter(
-                "time_post", description=post_description, default=post
+                "time_post",
+                description=post_description,
+                schema={"type": "array", "subtype": "temporal-interval"},
+                default=post,
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum scene-level cloud cover for the pre- and post-fire images",
+                schema={"type": "number"},
                 default=40,
             ),
             "collection": Parameter(
                 "collection",
                 description="Sentinel-2 L2A collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-2-l2a",
             ),
             "bands": Parameter(
                 "bands",
                 description="Post-fire bands: natural-colour rendering plus NIR/SWIR for NBR",
+                schema={"type": "array", "subtype": "band-names"},
                 default=post_bands,
             ),
             "pre_bands": Parameter(
                 "pre_bands",
                 description="Pre-fire bands: NIR and SWIR for the baseline NBR only",
+                schema={"type": "array", "subtype": "band-names"},
                 default=pre_bands,
             ),
         }

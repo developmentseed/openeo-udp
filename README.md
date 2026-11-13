@@ -218,12 +218,24 @@ When creating or opening a notebook:
 3. Execute the cells sequentially to see the conversion process, validate results, and export the UDP definition
 
 **Parameter Management Integration:**
-Notebooks include parameter files (`.params.py`) that define multiple locations and configurations. You can:
+Each notebook has a parameter file (`.params.py`) that defines multiple locations and configurations. The parameter files ship with the `openeo-udp` package in [`openeo_udp/params/`](openeo_udp/params/) (except for the self-contained machine-learning notebooks, which keep theirs in their own folder), so `ParameterManager("<algorithm>.params.py")` finds them wherever the package is installed. You can:
 
 - Use interactive widgets to select parameters and endpoints via dropdowns
 - Switch between locations (Venice Lagoon, Lake Victoria, etc.) without editing code
 - Connect to different OpenEO backends with automatic parameter mapping
 - Run the same algorithm on different areas by simply changing parameter sets
+
+**Using your own parameter file:**
+Users and developers can override a packaged parameter file without changing the package. Create a file with the same name in the notebook's folder (the notebook's working directory), and `ParameterManager` loads it instead of the packaged one. The easiest way is to copy the packaged file and edit it:
+
+```python
+import shutil
+from importlib.resources import files
+
+shutil.copy(files("openeo_udp.params") / "urban_areas.params.py", "urban_areas.params.py")
+```
+
+Then edit `urban_areas.params.py`, for example to add a parameter set for your own area and dates, and re-run the notebook from the `ParameterManager` cell. `print_options()` shows which file was loaded and warns when a local file overrides the packaged one; delete or rename the local file to go back to the packaged version. You can also keep your file under a different name and pass its path, e.g. `ParameterManager("my_urban_areas.params.py")`.
 
 Most notebooks are designed to run completely from top to bottom without modification, though you may want to adjust spatial extents or temporal ranges to explore different areas.
 

@@ -1,32 +1,84 @@
 """Simple parameter manager for OpenEO UDP notebooks.
 
 This module provides a simplified ParameterManager that loads parameter sets
-from co-located .py files containing a get_parameters() function.
+from .params.py files containing a get_parameters() function. The parameter
+files for all algorithms ship with the package in ``openeo_udp/params/``.
 """
 
 import importlib.util
+from importlib import resources
 from pathlib import Path
 from typing import Any, Dict, List
 
 from openeo.api.process import Parameter
 
 
+def _resolve_param_file(param_file_path: str | Path) -> Path:
+    """Locate a parameter file on disk or inside the installed package.
+
+    A path that exists on disk always wins, so a local file can override the
+    packaged one. A bare file name (no directory part) that does not exist
+    locally is looked up in the ``openeo_udp.params`` package.
+    """
+    path = Path(param_file_path)
+    if path.exists():
+        return path
+
+    if path.parent == Path("."):
+        packaged = resources.files("openeo_udp.params") / path.name
+        if packaged.is_file():
+            return Path(str(packaged))
+
+    return path  # Missing; _load_parameter_sets raises FileNotFoundError
+
+
+def list_parameter_files() -> List[str]:
+    """Return the names of the parameter files shipped with openeo_udp."""
+    return sorted(
+        entry.name
+        for entry in resources.files("openeo_udp.params").iterdir()
+        if entry.name.endswith(".params.py")
+    )
+
+
 class ParameterManager:
     """Simple parameter manager for OpenEO UDP notebooks.
 
-    Loads parameter sets from co-located .py files that return
-    pre-configured openEO Parameter objects.
+    Loads parameter sets from .params.py files that return pre-configured
+    openEO Parameter objects.
     """
 
-    def __init__(self, param_file_path: str):
+    def __init__(self, param_file_path: str | Path):
         """Initialize parameter manager with a parameter file.
 
         Args:
-            param_file_path: Path to the .params.py file
+            param_file_path: Path to a .params.py file, or the bare file name
+                of one shipped with the package (e.g. ``"urban_areas.params.py"``).
+                A file at the given path takes precedence over the packaged one.
         """
-        self.param_file = Path(param_file_path)
+        self.param_file = _resolve_param_file(param_file_path)
+        self.is_packaged = self._is_packaged_file(self.param_file)
         self._parameter_sets = self._load_parameter_sets()
         self._current_set = None
+
+    @staticmethod
+    def _is_packaged_file(path: Path) -> bool:
+        """Return True if ``path`` is a parameter file shipped in openeo_udp.params."""
+        packaged_dir = Path(str(resources.files("openeo_udp.params"))).resolve()
+        return path.resolve().parent == packaged_dir
+
+    def describe_source(self) -> str:
+        """Describe which parameter file was loaded and where it came from."""
+        if self.is_packaged:
+            return f"{self.param_file.name} (packaged with openeo-udp)"
+
+        description = f"{self.param_file.resolve()} (local file)"
+        if self.param_file.name in list_parameter_files():
+            description += (
+                f"\n   ⚠️  This local file overrides the packaged "
+                f"{self.param_file.name}. Delete or rename it to use the packaged one."
+            )
+        return description
 
     def _load_parameter_sets(self) -> Dict[str, Dict[str, Any]]:
         """Load parameter sets from the .py file.
@@ -174,6 +226,8 @@ class ParameterManager:
             algorithm_name: Name of the algorithm for display purposes
         """
         from .endpoints import get_all_endpoints
+
+        print(f"Parameter file: {self.describe_source()}\n")
 
         # Show available parameter sets
         available_sets = self.list_parameter_sets()

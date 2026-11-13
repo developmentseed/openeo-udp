@@ -74,31 +74,37 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent over the Gorgan river floodplain around Aq Qala, Iran",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 54.30, "south": 36.90, "east": 54.65, "north": 37.20},
             ),
             "time_before": Parameter(
                 "time_before",
                 description="Pre-flood acquisition window (11 Mar 2019, orbit 137 descending)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-03-11", "2019-03-12"],
             ),
             "time_during": Parameter(
                 "time_during",
                 description="Flood acquisition window (23 Mar 2019, orbit 137 descending)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-03-23", "2019-03-24"],
             ),
             "flood_threshold": Parameter(
                 "flood_threshold",
                 description="Backscatter drop (on the 1.5x-scaled VV difference) above which a pixel is classed as flooded",
+                schema={"type": "number"},
                 default=default_threshold,
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-1 GRD polarization band",
+                schema={"type": "array", "subtype": "band-names"},
                 default=flood_bands,
             ),
             "collection": Parameter(
                 "collection",
                 description="Sentinel-1 GRD collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-1-grd",
             ),
         },
@@ -111,31 +117,37 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent over the Horta Sud plain and Albufera lagoon, Valencia, Spain",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": -0.50, "south": 39.15, "east": -0.25, "north": 39.42},
             ),
             "time_before": Parameter(
                 "time_before",
                 description="Pre-flood acquisition window (19 Oct 2024, orbit 103 ascending)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-10-19", "2024-10-20"],
             ),
             "time_during": Parameter(
                 "time_during",
                 description="Flood acquisition window (31 Oct 2024, two days after the DANA, orbit 103 ascending)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-10-31", "2024-11-01"],
             ),
             "flood_threshold": Parameter(
                 "flood_threshold",
                 description="Backscatter drop (on the 1.5x-scaled VV difference) above which a pixel is classed as flooded",
+                schema={"type": "number"},
                 default=default_threshold,
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-1 GRD polarization band",
+                schema={"type": "array", "subtype": "band-names"},
                 default=flood_bands,
             ),
             "collection": Parameter(
                 "collection",
                 description="Sentinel-1 GRD collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-1-grd",
             ),
         },
@@ -149,6 +161,7 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent over the Uruguay river floodplain at Uruguaiana, Brazil",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={
                     "west": -57.15,
                     "south": -29.90,
@@ -159,26 +172,31 @@ def get_parameters():
             "time_before": Parameter(
                 "time_before",
                 description="Pre-flood acquisition window (6 Jan 2019, orbit 170 descending)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-01-06", "2019-01-07"],
             ),
             "time_during": Parameter(
                 "time_during",
                 description="Flood acquisition window (18 Jan 2019, orbit 170 descending)",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-01-18", "2019-01-19"],
             ),
             "flood_threshold": Parameter(
                 "flood_threshold",
                 description="Backscatter drop (on the 1.5x-scaled VV difference) above which a pixel is classed as flooded",
+                schema={"type": "number"},
                 default=default_threshold,
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-1 GRD polarization band",
+                schema={"type": "array", "subtype": "band-names"},
                 default=flood_bands,
             ),
             "collection": Parameter(
                 "collection",
                 description="Sentinel-1 GRD collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-1-grd",
             ),
         },

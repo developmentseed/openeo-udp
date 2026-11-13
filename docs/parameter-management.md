@@ -284,8 +284,16 @@ time_dimension: 'time'
 ### Initialization
 
 ```python
-param_manager = ParameterManager('path/to/params.py')
+# Bare file name: loaded from openeo_udp/params/ in the installed package
+param_manager = ParameterManager('algorithm.params.py')
+
+# Explicit path: loaded from disk (a local file with the same name as a
+# packaged one takes precedence)
+param_manager = ParameterManager('path/to/my_algorithm.params.py')
 ```
+
+Use `openeo_udp.list_parameter_files()` to see which parameter files ship with
+the package.
 
 ### Core Methods
 

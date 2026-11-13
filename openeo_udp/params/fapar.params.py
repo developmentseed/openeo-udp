@@ -1,4 +1,4 @@
-"""Parameter definitions for the Fraction of Absorbed Photosynthetically Active 
+"""Parameter definitions for the Fraction of Absorbed Photosynthetically Active
 Radiation (FAPAR) calculation.
 
 This file defines parameter sets that can be used with the FAPAR algorithm
@@ -53,31 +53,37 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Cropland Plain, Croatia",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 14.09, "south": 45.174, "east": 14.27, "north": 45.25},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-05-10", "2025-05-12"],
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for FAPAR calculation",
+                schema={"type": "array", "subtype": "band-names"},
                 default=fapar_bands,
             ),
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=30,
             ),
             "reflectance_scale": Parameter(
                 "reflectance_scale",
                 description="Scale factor to convert band values to 0-1 reflectance (10000.0 for integer-scaled L2A, 1.0 for endpoints that already return reflectance)",
+                schema={"type": "number"},
                 default=10000.0,
             ),
         },
@@ -86,31 +92,37 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Natural Parks in Provence-Alpes, France",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 3.09, "south": 43.82, "east": 4.80, "north": 44.57},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-08-01", "2025-08-03"],
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for FAPAR calculation",
+                schema={"type": "array", "subtype": "band-names"},
                 default=fapar_bands,
             ),
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=30,
             ),
             "reflectance_scale": Parameter(
                 "reflectance_scale",
                 description="Scale factor to convert band values to 0-1 reflectance (10000.0 for integer-scaled L2A, 1.0 for endpoints that already return reflectance)",
+                schema={"type": "number"},
                 default=10000.0,
             ),
         },
@@ -119,31 +131,37 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for a Natural Reserve in Rome, Italy",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 12.09, "south": 41.78, "east": 12.39, "north": 41.92},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2025-10-06", "2025-10-08"],
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for FAPAR calculation",
+                schema={"type": "array", "subtype": "band-names"},
                 default=fapar_bands,
             ),
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-2-l2a",
             ),
             "cloud_cover": Parameter(
                 "cloud_cover",
                 description="Maximum cloud cover percentage",
+                schema={"type": "number"},
                 default=30,
             ),
             "reflectance_scale": Parameter(
                 "reflectance_scale",
                 description="Scale factor to convert band values to 0-1 reflectance (10000.0 for integer-scaled L2A, 1.0 for endpoints that already return reflectance)",
+                schema={"type": "number"},
                 default=10000.0,
             ),
         },
