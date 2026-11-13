@@ -176,8 +176,27 @@ Before writing any code, thoroughly analyze the original evalscript:
   - Any specialized processing libraries
   - **The openEO UDP parameter management system** (`from openeo_udp import ParameterManager`)
 
+- **Add the Environment Setup section** before the imports, as in the
+  [`templates/simple_openeo_notebook.ipynb`](templates/simple_openeo_notebook.ipynb)
+  template. Its install cell runs only in the browser (APEx JupyterLite):
+  ```python
+  import sys
+
+  if sys.platform == "emscripten":  # Running in the browser (APEx JupyterLite)
+      %pip install openeo-udp==0.2.0
+  ```
+  Notebooks pin the exact `openeo-udp` release they were written against,
+  because the parameter files ship inside the package. The pin must match
+  `openeo_udp.__version__`; `tests/test_notebooks.py` fails when it does not,
+  so bump it in every notebook and template when releasing.
+
 - **Set up parameter management** to support multiple locations and backends:
   - Create a `<algorithm_id>.params.py` file in `openeo_udp/params/` with parameter sets for different locations. File names must be unique, because notebooks load them by name
+  - Exception: self-contained notebook folders whose dependencies are not part of
+    `openeo-udp` (currently `forest_fire_dNBR` and `burned_forest_classification_ml`)
+    keep their `.params.py` file and a `requirements.txt` next to the notebook. List
+    any new folder like this in `STANDALONE_NOTEBOOK_DIRS` in
+    `tests/test_packaged_params.py`
   - Use the parameter manager for flexible backend connections and parameter handling
   - Follow the five practices below consistently across all notebooks
 
@@ -396,52 +415,42 @@ Write comprehensive documentation within the notebook:
   - Acknowledge any modifications you made during conversion
   - Thank relevant institutions or funding sources
 
-- **Export the final process graph and register the algorithm to APEx Algorithm Catalogue** using
-  `register()`. See the practices below — the
-  [Lava Visualization notebook](notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/lava_visualization.ipynb)
+- **Export the final process graph and the catalogue metadata from the
+  notebook**, then **register the algorithm from the repository root** (see
+  below). The
+  [Urban Areas notebook](notebooks/sentinel/sentinel-1/land-cover/urban_areas.ipynb)
   is a reference example, and the
   [`templates/simple_openeo_notebook.ipynb`](templates/simple_openeo_notebook.ipynb)
   template is the recommended starting point for new notebooks.
 
-#### Registration Best Practices (`register()`)
+#### Export Best Practices (in the notebook)
 
-`register()` (from `algorithm_registration.register_algorithm`) copies your UDP
-JSON and preview image into `algorithm_registration/<id>/` and generates the
-OGC API record. Add these cells as the last section of your notebook, in order.
+Notebooks do not write into `algorithm_registration/`. They run for users too
+(locally and in APEx JupyterLite, where there is no repository checkout), so
+they only produce files next to themselves:
 
-**Required outputs**:
-- UDP JSON file
-- Preview and thumbnail images
-- OGC API record carrying the UDP/notebook metadata (title, algorithm summary,
-  creation date, citation, etc.)
-
-1. **Provide the preview image via `preview_fig` (preferred) or
-   `preview_path`** — one of the two is required for `register()` to register
-   a preview image to the APEx Algorithm Catalogue. Keep a reference to the
-   `Figure` you plot and pass it directly:
+1. **Use one extension-less base name** for the downloaded result and its
+   plot, and save the plot as `<base>_preview.png` in the plotting cell:
    ```python
-   fig, ax = plt.subplots(figsize=(14, 10), dpi=100)
-   ax.imshow(img)
+   filename = f"{_algorithm_id}_{current_params['location_name'].replace(' ', '_').replace(',', '').lower()}"
+   resolved.download(f"{filename}.tif")  # or .png
    ...
+   fig.savefig(f"{filename}_preview.png", bbox_inches="tight", dpi=150)
    plt.show()
-
-   register(..., preview_fig=fig)
    ```
-   If you'd rather save a file yourself, give it an algorithm-specific name
-   (not `preview.png`, to avoid collisions with other notebooks sharing the
-   working directory) and pass its path via `preview_path` instead — the two
-   are mutually exclusive:
+
+2. **Hardcode `_algorithm_id`** to the notebook's file name (no `ipynbname`,
+   which is not available in JupyterLite).
+
+3. **Tag the metadata cell `notebook_metadata`** and set the notebook's path
+   in the repository as a fixed string:
    ```python
-   plt.savefig("algorithm_preview.png", bbox_inches="tight", dpi=150)
-   plt.show()
-
-   register(..., preview_path=Path("algorithm_preview.png"))
+   _nb_href = "notebooks/<folder>/<algorithm_id>.ipynb"
    ```
+   `populate_record.py` finds this cell by tag, not position, and `exec()`s it
+   on its own to build the OGC record, so it must not depend on other cells.
 
-2. **Tag the metadata cell `notebook_metadata`.** `populate_record.py` finds
-   this cell by tag, not position, and `exec()`s it to build the OGC record.
-
-3. **When building the UDP `parameters` array, refer to the values already
+4. **When building the UDP `parameters` array, refer to the values already
    defined in your `.params.py` / `current_params` (ParameterManager) rather
    than re-declaring them.** Only list the runtime `Parameter` objects (e.g.
    `current_params["time"]`, `current_params["bounding_box"]`,
@@ -449,29 +458,47 @@ OGC API record. Add these cells as the last section of your notebook, in order.
    values (collection, bands) stay baked into the graph via `.default` and
    should not be exposed as UDP parameters.
 
-4. **Call `register()` last**, after the UDP JSON is written:
-   ```python
-   register(
-       notebook_path=Path.cwd() / f"{_algorithm_id}.ipynb",
-       udp_path=Path(f"{_algorithm_id}.json"),
-       preview_fig=fig,
-   )
-   ```
+5. **Write the UDP JSON next to the notebook** as `<algorithm_id>.json`.
 
-5. **UDP and OGC API records are generated automatically** and stored in
+`tests/test_notebooks.py` fails if a notebook or template calls `register()`,
+imports `algorithm_registration` or `ipynbname`, or looks up the repository
+root.
+
+#### Registration (maintainers, from the repository root)
+
+Registration copies the UDP JSON and preview into
+`algorithm_registration/<id>/` and generates the OGC API record and thumbnail.
+Run the notebook with its **default parameter set** first, so the published
+parameter defaults and preview match the notebook, then run:
+
+```bash
+uv run python -m algorithm_registration.register_algorithm \
+    notebooks/<folder>/<algorithm_id>.ipynb \
+    --udp notebooks/<folder>/<algorithm_id>.json \
+    --preview notebooks/<folder>/<base>_preview.png
+```
+
+**Required outputs**:
+- UDP JSON file
+- Preview and thumbnail images
+- OGC API record carrying the UDP/notebook metadata (title, algorithm summary,
+  creation date, citation, etc.)
+
+1. **The generated files** are stored in
    `algorithm_registration/<id>/openeo_udp/<id>.json` and
-   `algorithm_registration/<id>/records/<id>.json`. These are regenerated from
-   the notebook on every run of the export cell, so avoid hand-editing them —
-   they can be used as-is to register the UDP in the
+   `algorithm_registration/<id>/records/<id>.json`. They are regenerated on
+   every registration, so avoid hand-editing them — they can be used as-is to
+   register the UDP in the
    [APEx Algorithm Catalogue](https://algorithm-catalogue.apex.esa.int/).
 
-6. **Check the console output** for `Warning: unfilled placeholders` — it
+2. **Check the console output** for `Warning: unfilled placeholders` — it
    means a key is missing from your `metadata` dict and the record JSON has
    literal `{{PLACEHOLDER}}` strings in it.
 
-7. **Commit the whole generated directory**, not just the notebook —
+3. **Commit the whole generated directory**, not just the notebook —
    `openeo_udp/<id>.json`, `records/<id>.json`, `records/preview.png`, and
-   `records/thumbnail.png` are the actual deliverable.
+   `records/thumbnail.png` are the actual deliverable. The files the notebook
+   writes next to itself are ignored by git.
 
 ## Coding Standards
 
