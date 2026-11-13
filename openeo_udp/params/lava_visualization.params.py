@@ -30,21 +30,30 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for the Cumbre Vieja volcanic eruption area",
-                default={"west": -17.94, "south": 28.58, "east": -17.86, "north": 28.64},
+                schema={"type": "object", "subtype": "bounding-box"},
+                default={
+                    "west": -17.94,
+                    "south": 28.58,
+                    "east": -17.86,
+                    "north": 28.64,
+                },
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2021-10-10", "2021-10-11"],
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-2 bands required for lava visualization",
+                schema={"type": "array", "subtype": "band-names"},
                 default=lava_bands,
             ),
             "collection": Parameter(
                 "collection",
                 description="Data collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-2-l2a",
             ),
         },

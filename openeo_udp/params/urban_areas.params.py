@@ -40,21 +40,25 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Bologna, Italy",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 11.20, "south": 44.45, "east": 11.48, "north": 44.56},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2019-05-26", "2019-06-01"],
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-1 GRD polarization bands",
+                schema={"type": "array", "subtype": "band-names"},
                 default=urban_bands,
             ),
             "collection": Parameter(
                 "collection",
                 description="Sentinel-1 GRD collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-1-grd",
             ),
         },
@@ -63,21 +67,25 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for central Paris, France",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 2.20, "south": 48.75, "east": 2.55, "north": 48.95},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-09-01", "2024-09-12"],
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-1 GRD polarization bands",
+                schema={"type": "array", "subtype": "band-names"},
                 default=urban_bands,
             ),
             "collection": Parameter(
                 "collection",
                 description="Sentinel-1 GRD collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-1-grd",
             ),
         },
@@ -86,21 +94,25 @@ def get_parameters():
             "bounding_box": Parameter(
                 "bounding_box",
                 description="Spatial extent for Dubai, UAE",
+                schema={"type": "object", "subtype": "bounding-box"},
                 default={"west": 55.15, "south": 25.05, "east": 55.45, "north": 25.30},
             ),
             "time": Parameter(
                 "time",
                 description="Temporal range for data acquisition",
+                schema={"type": "array", "subtype": "temporal-interval"},
                 default=["2024-10-01", "2024-10-12"],
             ),
             "bands": Parameter(
                 "bands",
                 description="Sentinel-1 GRD polarization bands",
+                schema={"type": "array", "subtype": "band-names"},
                 default=urban_bands,
             ),
             "collection": Parameter(
                 "collection",
                 description="Sentinel-1 GRD collection identifier",
+                schema={"type": "string", "subtype": "collection-id"},
                 default="sentinel-1-grd",
             ),
         },
