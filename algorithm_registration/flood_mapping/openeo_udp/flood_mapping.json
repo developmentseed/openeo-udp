@@ -260,7 +260,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent over the Horta Sud plain and Albufera lagoon, Valencia, Spain",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": -0.5,
         "south": 39.15,
@@ -272,7 +275,10 @@
     {
       "name": "time_before",
       "description": "Pre-flood acquisition window (19 Oct 2024, orbit 103 ascending)",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2024-10-19",
         "2024-10-20"
@@ -282,7 +288,10 @@
     {
       "name": "time_during",
       "description": "Flood acquisition window (31 Oct 2024, two days after the DANA, orbit 103 ascending)",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2024-10-31",
         "2024-11-01"
