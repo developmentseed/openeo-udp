@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      # pyproject.toml declares requires-python >=3.11 and lists 3.11 and 3.12 in
+      # its classifiers, so PyPI users can install on either. Local development
+      # usually runs 3.12, so testing 3.11 here catches code that breaks on the
+      # oldest supported version. The jobs run in parallel and the suite is fast,
+      # so the second version adds little CI time.
       matrix:
         python-version: ["3.11", "3.12"]
     steps:
