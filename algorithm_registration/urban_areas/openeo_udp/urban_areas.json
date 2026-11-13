@@ -164,7 +164,10 @@
     {
       "name": "time",
       "description": "Temporal range for data acquisition",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2019-05-26",
         "2019-06-01"
@@ -174,7 +177,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent for Bologna, Italy",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 11.2,
         "south": 44.45,
