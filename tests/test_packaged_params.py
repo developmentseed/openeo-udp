@@ -1,5 +1,6 @@
 """Tests for the parameter files shipped in openeo_portable/params/."""
 
+from importlib import resources
 from pathlib import Path
 
 import pytest
@@ -25,6 +26,21 @@ def get_parameters():
 def test_params_files_are_packaged():
     assert "urban_areas.params.py" in PACKAGED_FILES
     assert len(PACKAGED_FILES) == len(set(PACKAGED_FILES))
+
+
+@pytest.mark.parametrize("file_name", PACKAGED_FILES)
+def test_packaged_params_file_has_license_header(file_name):
+    # Only files converted from Sentinel Hub Custom Scripts must retain the
+    # CC-BY-SA-4.0 license; everything else in the repository is MIT (see
+    # LICENSING.md). Every parameter file is such a conversion, so each must
+    # state CC-BY-SA-4.0 and link the original evalscript it was converted from.
+    # The link is what shows the file is a conversion and needs this license.
+    text = (resources.files("openeo_portable.params") / file_name).read_text()
+    header = text.splitlines()[:5]
+    assert header[0] == "# License: CC-BY-SA-4.0", f"{file_name}: missing license header"
+    assert any(
+        line.startswith("# Original evalscript: https://") for line in header
+    ), f"{file_name}: header does not link the original evalscript"
 
 
 # Self-contained notebook folders whose parameter files intentionally stay next

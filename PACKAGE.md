@@ -110,7 +110,12 @@ You can also give your file a different name and pass its path, for example `Par
 
 ## License
 
-See [LICENSING.md](https://github.com/developmentseed/openeo-udp/blob/main/LICENSING.md).
+`MIT AND CC-BY-SA-4.0`:
+
+- The package code is MIT ([LICENSE](https://github.com/developmentseed/openeo-udp/blob/main/LICENSE)).
+- The parameter files in `openeo_portable/params/` are converted from [Sentinel Hub custom scripts](https://custom-scripts.sentinel-hub.com/) and are [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/). Each file's header links to its original evalscript.
+
+See [LICENSING.md](https://github.com/developmentseed/openeo-udp/blob/main/LICENSING.md) for details.
 
 ## Acknowledgments
 

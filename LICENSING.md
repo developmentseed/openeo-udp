@@ -13,6 +13,10 @@ Files that are converted from Sentinel Hub Custom Scripts **must retain the
 original license**. The Sentinel Hub Custom Scripts are published under
 **CC-BY-SA-4.0**, so converted files are also **CC-BY-SA-4.0**.
 
+The full CC-BY-SA-4.0 license text is at
+<https://creativecommons.org/licenses/by-sa/4.0/legalcode>
+([summary](https://creativecommons.org/licenses/by-sa/4.0/)).
+
 To keep this clear and non-viral, every converted file must include an explicit
 header that states:
 
@@ -52,13 +56,24 @@ Conversion: Development Seed (openEO-UDP project)
 
 ## Current CC-BY-SA-4.0 files
 
+### Parameter files
+
+Every parameter file in `openeo_portable/params/` (`*.params.py`) is converted
+from a Sentinel Hub evalscript and is **CC-BY-SA-4.0**. Each one carries the
+header above with a link to its original evalscript.
+`tests/test_packaged_params.py` fails if a parameter file is missing the header.
+
+### Notebooks
+
 - `notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/bais2_burned_area.ipynb`
 - `notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb`
 - `notebooks/sentinel/sentinel-2/advanced_spectral_processing/cab_chlorophyll_content.ipynb`
-- `openeo_portable/params/cab_chlorophyll_content.params.py`
 - `notebooks/sentinel/sentinel-2/advanced_spectral_processing/ndvi_anomaly_detection.ipynb`
-- `openeo_portable/params/ndvi_anomaly_detection.params.py`
 - `notebooks/sentinel/sentinel-3/land_surface_temperature.ipynb`
-- `openeo_portable/params/land_surface_temperature.params.py`
 - `notebooks/sentinel/sentinel-3/olci_under_s5.ipynb`
-- `openeo_portable/params/olci_under_s5.params.py`
+
+## Python package
+
+The `openeo-portable` package on PyPI is licensed `MIT AND CC-BY-SA-4.0`: its
+code is MIT, and its parameter files are CC-BY-SA-4.0. The package ships both
+`LICENSE` and this file.

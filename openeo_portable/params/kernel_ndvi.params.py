@@ -1,3 +1,8 @@
+# License: CC-BY-SA-4.0
+# Origin: Converted from Sentinel Hub evalscript
+# Original evalscript: https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/kndvi/
+# Source: Sentinel Hub Custom Scripts (CC-BY-SA-4.0)
+# Conversion: Development Seed (openEO-UDP project)
 """Parameter definitions for Kernel NDVI (kNDVI) notebook.
 
 This file defines parameter sets that can be used with the kNDVI algorithm

@@ -7,7 +7,8 @@ name = "openeo-portable"
 dynamic = ["version"]
 description = "openEO User-Defined Processes converted from Sentinel Hub evalscripts"
 readme = "PACKAGE.md"
-license = "Apache-2.0"
+license = "MIT AND CC-BY-SA-4.0"
+license-files = ["LICENSE", "LICENSING.md"]
 authors = [
     {name = "Emmanuel Mathot", email = "emmanuel@developmentseed.org"},
     {name = "Firza Riany", email = "firza@developmentseed.org"},

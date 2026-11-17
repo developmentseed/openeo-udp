@@ -1,3 +1,8 @@
+# License: CC-BY-SA-4.0
+# Origin: Converted from Sentinel Hub evalscript
+# Original evalscript: https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/evi2/
+# Source: Sentinel Hub Custom Scripts (CC-BY-SA-4.0)
+# Conversion: Development Seed (openEO-UDP project)
 """Parameter definitions for Enhanced Vegetation Index 2 (EVI2) notebook.
 
 This file defines parameter sets that can be used with the EVI2 algorithm
