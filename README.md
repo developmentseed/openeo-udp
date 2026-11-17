@@ -145,7 +145,7 @@ This repository includes a comprehensive parameter management system that simpli
 **Quick Example:**
 
 ```python
-from openeo_udp import ParameterManager
+from openeo_portable import ParameterManager
 
 # Initialize parameter manager with algorithm parameters
 param_manager = ParameterManager('algorithm.params.py')
@@ -218,7 +218,7 @@ When creating or opening a notebook:
 3. Execute the cells sequentially to see the conversion process, validate results, and export the UDP definition
 
 **Parameter Management Integration:**
-Each notebook has a parameter file (`.params.py`) that defines multiple locations and configurations. The parameter files ship with the `openeo-udp` package in [`openeo_udp/params/`](openeo_udp/params/) (except for the self-contained machine-learning notebooks, which keep theirs in their own folder), so `ParameterManager("<algorithm>.params.py")` finds them wherever the package is installed. You can:
+Each notebook has a parameter file (`.params.py`) that defines multiple locations and configurations. The parameter files ship with the `openeo-portable` package in [`openeo_portable/params/`](openeo_portable/params/) (except for the self-contained machine-learning notebooks, which keep theirs in their own folder), so `ParameterManager("<algorithm>.params.py")` finds them wherever the package is installed. You can:
 
 - Use interactive widgets to select parameters and endpoints via dropdowns
 - Switch between locations (Venice Lagoon, Lake Victoria, etc.) without editing code
@@ -232,7 +232,7 @@ Users and developers can override a packaged parameter file without changing the
 import shutil
 from importlib.resources import files
 
-shutil.copy(files("openeo_udp.params") / "urban_areas.params.py", "urban_areas.params.py")
+shutil.copy(files("openeo_portable.params") / "urban_areas.params.py", "urban_areas.params.py")
 ```
 
 Then edit `urban_areas.params.py`, for example to add a parameter set for your own area and dates, and re-run the notebook from the `ParameterManager` cell. `print_options()` shows which file was loaded and warns when a local file overrides the packaged one; delete or rename the local file to go back to the packaged version. You can also keep your file under a different name and pass its path, e.g. `ParameterManager("my_urban_areas.params.py")`.

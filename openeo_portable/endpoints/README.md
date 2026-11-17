@@ -14,7 +14,7 @@ Each endpoint is configured in a separate Python file:
 ## Canonical collections and bands
 
 `*.params.py` files reference **canonical** collection ids and band names
-(lowercase STAC-style), defined once in `openeo_udp/collections.py`:
+(lowercase STAC-style), defined once in `openeo_portable/collections.py`:
 
 - collections: `sentinel-2-l2a`, `sentinel-1-grd` (see the `Collection` enum)
 - bands: `b01`..`b12`, `b8a`, `scl` (Sentinel-2); `vh`, `vv` (Sentinel-1); plus
@@ -22,7 +22,7 @@ Each endpoint is configured in a separate Python file:
 
 Each endpoint declares an explicit `COLLECTIONS` table that maps these canonical
 identifiers to its backend-native ids. The shared mapper
-(`openeo_udp.collections.make_mapper`) rewrites the `collection` and `bands`
+(`openeo_portable.collections.make_mapper`) rewrites the `collection` and `bands`
 Parameters using that table and **raises** rather than guessing:
 
 - `UnsupportedCollectionError` — the endpoint's `COLLECTIONS` has no entry for the
@@ -58,7 +58,7 @@ To add a new endpoint, create a new Python file with an `ENDPOINT_CONFIG`, a
 
 import openeo
 
-from openeo_udp.collections import Collection, make_mapper
+from openeo_portable.collections import Collection, make_mapper
 
 # Endpoint configuration
 ENDPOINT_CONFIG = {

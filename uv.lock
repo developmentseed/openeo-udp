@@ -2012,7 +2012,7 @@ wheels = [
 ]
 
 [[package]]
-name = "openeo-udp"
+name = "openeo-portable"
 source = { editable = "." }
 dependencies = [
     { name = "ipywidgets" },
@@ -2037,7 +2037,7 @@ dev = [
     { name = "black" },
     { name = "ipykernel" },
     { name = "jupyter" },
-    { name = "openeo-udp", extra = ["notebooks"] },
+    { name = "openeo-portable", extra = ["notebooks"] },
     { name = "pre-commit" },
     { name = "pytest" },
     { name = "pytest-cov" },
@@ -2066,7 +2066,7 @@ dev = [
     { name = "black", specifier = ">=23.0.0" },
     { name = "ipykernel", specifier = ">=6.25.0" },
     { name = "jupyter", specifier = ">=1.0.0" },
-    { name = "openeo-udp", extras = ["notebooks"] },
+    { name = "openeo-portable", extras = ["notebooks"] },
     { name = "pre-commit", specifier = ">=3.0.0" },
     { name = "pytest", specifier = ">=7.0.0" },
     { name = "pytest-cov", specifier = ">=4.0.0" },

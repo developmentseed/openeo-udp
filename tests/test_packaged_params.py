@@ -1,10 +1,10 @@
-"""Tests for the parameter files shipped in openeo_udp/params/."""
+"""Tests for the parameter files shipped in openeo_portable/params/."""
 
 from pathlib import Path
 
 import pytest
 
-from openeo_udp import ParameterManager, list_parameter_files
+from openeo_portable import ParameterManager, list_parameter_files
 
 PACKAGED_FILES = list_parameter_files()
 
@@ -28,7 +28,7 @@ def test_params_files_are_packaged():
 
 
 # Self-contained notebook folders whose parameter files intentionally stay next
-# to the notebook and are not shipped with the openeo_udp package.
+# to the notebook and are not shipped with the openeo_portable package.
 STANDALONE_NOTEBOOK_DIRS = {
     Path("notebooks/sentinel/sentinel-2/forest_fire_dNBR"),
     Path("notebooks/sentinel/sentinel-2/burned_forest_classification_ml"),
@@ -45,7 +45,7 @@ def test_no_params_files_left_in_notebooks():
             for d in STANDALONE_NOTEBOOK_DIRS
         )
     )
-    assert leftovers == [], f"Move these into openeo_udp/params/: {leftovers}"
+    assert leftovers == [], f"Move these into openeo_portable/params/: {leftovers}"
 
 
 def test_standalone_params_files_are_not_packaged():
@@ -60,7 +60,7 @@ def test_packaged_params_file_loads(file_name, tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)  # No local file with this name
     manager = ParameterManager(file_name)
     assert manager.param_file.name == file_name
-    assert "openeo_udp" in manager.param_file.parts
+    assert "openeo_portable" in manager.param_file.parts
     assert manager.list_parameter_sets()
 
 
@@ -86,7 +86,7 @@ def test_describe_source_packaged(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     manager = ParameterManager("urban_areas.params.py")
     assert manager.is_packaged
-    assert manager.describe_source() == "urban_areas.params.py (packaged with openeo-udp)"
+    assert manager.describe_source() == "urban_areas.params.py (packaged with openeo-portable)"
 
 
 def test_describe_source_warns_when_local_overrides_packaged(tmp_path, monkeypatch):
@@ -109,4 +109,4 @@ def test_describe_source_local_only_has_no_warning(tmp_path, monkeypatch):
 def test_print_options_shows_parameter_file(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
     ParameterManager("urban_areas.params.py").print_options("urban areas")
-    assert "Parameter file: urban_areas.params.py (packaged with openeo-udp)" in capsys.readouterr().out
+    assert "Parameter file: urban_areas.params.py (packaged with openeo-portable)" in capsys.readouterr().out

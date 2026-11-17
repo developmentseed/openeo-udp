@@ -174,10 +174,10 @@ Before writing any code, thoroughly analyze the original evalscript:
   - The openEO Python client
   - Visualization tools
   - Any specialized processing libraries
-  - **The openEO UDP parameter management system** (`from openeo_udp import ParameterManager`)
+  - **The openEO UDP parameter management system** (`from openeo_portable import ParameterManager`)
 
 - **Set up parameter management** to support multiple locations and backends:
-  - Create a `<algorithm_id>.params.py` file in `openeo_udp/params/` with parameter sets for different locations. File names must be unique, because notebooks load them by name
+  - Create a `<algorithm_id>.params.py` file in `openeo_portable/params/` with parameter sets for different locations. File names must be unique, because notebooks load them by name
   - Use the parameter manager for flexible backend connections and parameter handling
   - Follow the five practices below consistently across all notebooks
 
@@ -191,11 +191,11 @@ is the canonical reference.
 ##### Practice 1 — Initialize and display options
 
 In the imports cell, initialize the `ParameterManager` with the name of the
-algorithm's `.params.py` file in `openeo_udp/params/` and call `print_options()` so contributors can see available
+algorithm's `.params.py` file in `openeo_portable/params/` and call `print_options()` so contributors can see available
 parameter sets and endpoints at a glance:
 
 ```python
-from openeo_udp import ParameterManager
+from openeo_portable import ParameterManager
 
 _algorithm_id = "your_algorithm"
 param_manager = ParameterManager('your_algorithm.params.py')
@@ -296,7 +296,7 @@ green_band = next(b for b in cube.metadata.band_names if b.lower().startswith("b
 ```
 
 Instead reference bands by their **canonical** name (the lowercase STAC-style ids
-defined in `openeo_udp/collections.py` and used in your `*.params.py` defaults)
+defined in `openeo_portable/collections.py` and used in your `*.params.py` defaults)
 and let the resolver return the native name for the active endpoint:
 
 ```python

@@ -37,7 +37,7 @@ def get_endpoint_config(endpoint_name: str) -> Dict[str, Any]:
         ImportError: If endpoint configuration is not found
     """
     try:
-        module = importlib.import_module(f"openeo_udp.endpoints.{endpoint_name}")
+        module = importlib.import_module(f"openeo_portable.endpoints.{endpoint_name}")
         return module.ENDPOINT_CONFIG
     except ImportError as e:
         raise ImportError(f"Endpoint configuration '{endpoint_name}' not found") from e
@@ -53,7 +53,7 @@ def get_endpoint_mapper(endpoint_name: str):
         Mapper function or None if not found
     """
     try:
-        module = importlib.import_module(f"openeo_udp.endpoints.{endpoint_name}")
+        module = importlib.import_module(f"openeo_portable.endpoints.{endpoint_name}")
         return getattr(module, "map_parameters", None)
     except ImportError:
         return None
@@ -72,7 +72,7 @@ def get_endpoint_connection(endpoint_name: str):
         ImportError: If endpoint module or get_connection function not found
     """
     try:
-        module = importlib.import_module(f"openeo_udp.endpoints.{endpoint_name}")
+        module = importlib.import_module(f"openeo_portable.endpoints.{endpoint_name}")
         if not hasattr(module, "get_connection"):
             raise ImportError(
                 f"Endpoint '{endpoint_name}' does not have a get_connection function"

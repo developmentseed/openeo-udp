@@ -2,12 +2,12 @@
 
 This module contains both connection configuration and the canonical->native
 collection/band mapping table for the EOPF Explorer OpenEO backend. The actual
-mapping logic lives in :func:`openeo_udp.collections.make_mapper`.
+mapping logic lives in :func:`openeo_portable.collections.make_mapper`.
 """
 
 import openeo
 
-from openeo_udp.collections import Collection, make_mapper
+from openeo_portable.collections import Collection, make_mapper
 
 # Endpoint configuration
 ENDPOINT_CONFIG = {

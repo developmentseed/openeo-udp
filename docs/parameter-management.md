@@ -157,7 +157,7 @@ resolved.download("result.png")
 ## Quick Start
 
 ```python
-from openeo_udp import ParameterManager
+from openeo_portable import ParameterManager
 
 # Initialize with your parameter file
 param_manager = ParameterManager('algorithm_name.params.py')
@@ -284,7 +284,7 @@ time_dimension: 'time'
 ### Initialization
 
 ```python
-# Bare file name: loaded from openeo_udp/params/ in the installed package
+# Bare file name: loaded from openeo_portable/params/ in the installed package
 param_manager = ParameterManager('algorithm.params.py')
 
 # Explicit path: loaded from disk (a local file with the same name as a
@@ -292,7 +292,7 @@ param_manager = ParameterManager('algorithm.params.py')
 param_manager = ParameterManager('path/to/my_algorithm.params.py')
 ```
 
-Use `openeo_udp.list_parameter_files()` to see which parameter files ship with
+Use `openeo_portable.list_parameter_files()` to see which parameter files ship with
 the package.
 
 ### Core Methods
@@ -392,10 +392,10 @@ collection = current_params['collection']
 
 To add support for a new OpenEO backend:
 
-1. **Create endpoint module** in `openeo_udp/endpoints/`:
+1. **Create endpoint module** in `openeo_portable/endpoints/`:
 
 ```python
-# openeo_udp/endpoints/new_backend.py
+# openeo_portable/endpoints/new_backend.py
 from openeo.api.process import Parameter
 from typing import Any, Dict
 
@@ -441,7 +441,7 @@ def map_parameters(params: Dict[str, Any]) -> Dict[str, Any]:
     return mapped_params
 ```
 
-2. **Update endpoint registry** in `openeo_udp/endpoints/__init__.py`:
+2. **Update endpoint registry** in `openeo_portable/endpoints/__init__.py`:
 
 ```python
 from .new_backend import ENDPOINT_CONFIG as new_backend_config, map_parameters as new_backend_mapper
@@ -510,7 +510,7 @@ Enable verbose output for troubleshooting:
 selection_widget = param_manager.interactive_parameter_selection()
 
 # Or check endpoint configurations
-from openeo_udp.endpoints import get_all_endpoints
+from openeo_portable.endpoints import get_all_endpoints
 print(get_all_endpoints())
 ```
 

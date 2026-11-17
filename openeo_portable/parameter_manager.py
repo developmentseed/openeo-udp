@@ -2,7 +2,7 @@
 
 This module provides a simplified ParameterManager that loads parameter sets
 from .params.py files containing a get_parameters() function. The parameter
-files for all algorithms ship with the package in ``openeo_udp/params/``.
+files for all algorithms ship with the package in ``openeo_portable/params/``.
 """
 
 import importlib.util
@@ -18,14 +18,14 @@ def _resolve_param_file(param_file_path: str | Path) -> Path:
 
     A path that exists on disk always wins, so a local file can override the
     packaged one. A bare file name (no directory part) that does not exist
-    locally is looked up in the ``openeo_udp.params`` package.
+    locally is looked up in the ``openeo_portable.params`` package.
     """
     path = Path(param_file_path)
     if path.exists():
         return path
 
     if path.parent == Path("."):
-        packaged = resources.files("openeo_udp.params") / path.name
+        packaged = resources.files("openeo_portable.params") / path.name
         if packaged.is_file():
             return Path(str(packaged))
 
@@ -33,10 +33,10 @@ def _resolve_param_file(param_file_path: str | Path) -> Path:
 
 
 def list_parameter_files() -> List[str]:
-    """Return the names of the parameter files shipped with openeo_udp."""
+    """Return the names of the parameter files shipped with openeo_portable."""
     return sorted(
         entry.name
-        for entry in resources.files("openeo_udp.params").iterdir()
+        for entry in resources.files("openeo_portable.params").iterdir()
         if entry.name.endswith(".params.py")
     )
 
@@ -63,14 +63,14 @@ class ParameterManager:
 
     @staticmethod
     def _is_packaged_file(path: Path) -> bool:
-        """Return True if ``path`` is a parameter file shipped in openeo_udp.params."""
-        packaged_dir = Path(str(resources.files("openeo_udp.params"))).resolve()
+        """Return True if ``path`` is a parameter file shipped in openeo_portable.params."""
+        packaged_dir = Path(str(resources.files("openeo_portable.params"))).resolve()
         return path.resolve().parent == packaged_dir
 
     def describe_source(self) -> str:
         """Describe which parameter file was loaded and where it came from."""
         if self.is_packaged:
-            return f"{self.param_file.name} (packaged with openeo-udp)"
+            return f"{self.param_file.name} (packaged with openeo-portable)"
 
         description = f"{self.param_file.resolve()} (local file)"
         if self.param_file.name in list_parameter_files():

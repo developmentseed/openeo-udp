@@ -55,10 +55,10 @@ Conversion: Development Seed (openEO-UDP project)
 - `notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/bais2_burned_area.ipynb`
 - `notebooks/sentinel/sentinel-2/marine_and_water_bodies/ndci_cyanobacteria.ipynb`
 - `notebooks/sentinel/sentinel-2/advanced_spectral_processing/cab_chlorophyll_content.ipynb`
-- `openeo_udp/params/cab_chlorophyll_content.params.py`
+- `openeo_portable/params/cab_chlorophyll_content.params.py`
 - `notebooks/sentinel/sentinel-2/advanced_spectral_processing/ndvi_anomaly_detection.ipynb`
-- `openeo_udp/params/ndvi_anomaly_detection.params.py`
+- `openeo_portable/params/ndvi_anomaly_detection.params.py`
 - `notebooks/sentinel/sentinel-3/land_surface_temperature.ipynb`
-- `openeo_udp/params/land_surface_temperature.params.py`
+- `openeo_portable/params/land_surface_temperature.params.py`
 - `notebooks/sentinel/sentinel-3/olci_under_s5.ipynb`
-- `openeo_udp/params/olci_under_s5.params.py`
+- `openeo_portable/params/olci_under_s5.params.py`

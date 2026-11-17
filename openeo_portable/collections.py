@@ -3,7 +3,7 @@
 This module is the single source of truth for the *canonical* collection ids and
 band names that ``*.params.py`` files use. Each endpoint declares an explicit
 mapping table from these canonical identifiers to its backend-native ids
-(see ``openeo_udp/endpoints/*.py``) and delegates to :func:`make_mapper`.
+(see ``openeo_portable/endpoints/*.py``) and delegates to :func:`make_mapper`.
 
 Note that ``reflectance_scale`` is an *endpoint*-level attribute, not a
 per-collection one. It describes the Sentinel-2 collections (0-10000 integers on

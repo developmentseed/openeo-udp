@@ -17,7 +17,7 @@ Land Surface Temperature notebook:
 Only ``copernicus_dataspace`` serves Sentinel-5P
 --------------------------------------------------
 CDSE is currently the only endpoint in this repository with a Sentinel-5P
-mapping (``SENTINEL5P_L2`` in ``openeo_udp/collections.py``). The
+mapping (``SENTINEL5P_L2`` in ``openeo_portable/collections.py``). The
 ``ds_development``/``eopf_explorer``/``localhost_dev`` endpoints have no S5P
 collection at all, so this notebook is CDSE-only.
 
