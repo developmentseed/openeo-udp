@@ -56,11 +56,22 @@ cube = connection.load_collection(
     properties={"eo:cloud_cover": lambda x: x <= current_params["cloud_cover"]},
 )
 
-# The synchronous /result endpoint rejects unresolved parameter references
+# Some backends store reflectance as scaled integers (0-10000), others as 0-1
+# floats. Dividing by reflectance_scale gives 0-1 reflectance on every backend.
+cube = cube / current_params["reflectance_scale"]
+
+# Backends name the time dimension differently ("t" or "time"), so take the
+# name from current_params instead of hard-coding it
+cube = cube.reduce_dimension(
+    dimension=current_params["time_dimension"], reducer="first"
+)
+
+# Resolve parameter references before running synchronously, because the
+# /result endpoint rejects unresolved ones
 param_manager.resolve(cube, current_params).download("preview.nc")
 ```
 
-The endpoint mapping also adds three backend values to `current_params`: `reflectance_scale`, `bands_dimension` and `time_dimension`. Read them from `current_params` instead of hard-coding them, so the graph stays backend-agnostic.
+`reflectance_scale` and `time_dimension` come from the endpoint mapping, which adds them to `current_params` for the chosen backend. It also adds `bands_dimension`, the name of the band dimension, for processes such as `apply_dimension`. Reading these values from `current_params` instead of hard-coding them keeps the graph backend-agnostic.
 
 ## Supported endpoints
 
