@@ -1,4 +1,4 @@
-name: Runs APEx QA Tests for Existing Algorithms
+name: Runs APEx QA Tests for Changed Algorithms
 
 on:
   pull_request:
@@ -12,13 +12,46 @@ jobs:
       - name: Checkout openeo-udp
         uses: actions/checkout@v4
         with:
+          # Full history, so the PR can be compared with its base branch
           fetch-depth: 0
 
+      # An algorithm counts as changed when the PR touches any file under
+      # algorithm_registration/<name>/. Changes to the shared files directly in
+      # algorithm_registration/ (register_algorithm.py, records_template.json)
+      # do not select an algorithm; regenerated records do.
+      - name: Find changed algorithms
+        id: changed
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          # lava_visualization is excluded because it relies on the ds_development
+          # openEO backend to execute, which doesn't return 200
+          EXCLUDED="lava_visualization"
+
+          ALGORITHMS=""
+          for name in $(git diff --name-only "$BASE_SHA"...HEAD \
+                          | grep -E '^algorithm_registration/[^/]+/' \
+                          | cut -d/ -f2 | sort -u); do
+            if [ "$name" = "__pycache__" ] || [ ! -d "algorithm_registration/$name" ]; then
+              continue  # Not an algorithm, or deleted by this PR
+            fi
+            if [[ " $EXCLUDED " == *" $name "* ]]; then
+              echo "Skipping $name (excluded)"
+              continue
+            fi
+            ALGORITHMS="${ALGORITHMS:+$ALGORITHMS }$name"
+          done
+
+          echo "Changed algorithms: ${ALGORITHMS:-none}"
+          echo "algorithms=$ALGORITHMS" >> "$GITHUB_OUTPUT"
+
       - name: Set up uv
+        if: steps.changed.outputs.algorithms != ''
         uses: astral-sh/setup-uv@v4
 
       # Pipeline below happens in developmentseed/apex_algorithms repo
       - name: Clone apex_algorithms repo
+        if: steps.changed.outputs.algorithms != ''
         uses: actions/checkout@v4
         with:
           repository: developmentseed/apex_algorithms
@@ -26,33 +59,34 @@ jobs:
           token: ${{ secrets.APEX_PAT }}
 
       - name: Configure apex_algorithms git
+        if: steps.changed.outputs.algorithms != ''
         working-directory: apex_algorithms
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote add target https://x-access-token:${{ secrets.APEX_PAT }}@github.com/developmentseed/apex_algorithms.git
 
-      - name: Copy algorithm registrations into apex_algorithms
+      # Replaces the fork's copy of each changed algorithm with the PR's version,
+      # so the tests check this PR's files and not an older copy in the fork
+      - name: Copy changed algorithms into apex_algorithms
+        if: steps.changed.outputs.algorithms != ''
+        env:
+          ALGORITHMS: ${{ steps.changed.outputs.algorithms }}
         run: |
           mkdir -p apex_algorithms/algorithm_catalog/developmentseed
-          # ndvi_anomaly_detection and lava_visualization are excluded because they rely on
-          # the ds_development openeo backend to execute, which doesn't return 200
-          EXCLUDED="lava_visualization"
-          for d in algorithm_registration/*/; do
-            name=$(basename "$d")
-            if [[ " $EXCLUDED " == *" $name "* ]]; then
-              echo "Skipping $name (excluded)"
-              continue
-            fi
+          for name in $ALGORITHMS; do
             target="apex_algorithms/algorithm_catalog/developmentseed/$name"
             if [ -e "$target" ]; then
-              echo "Skipping $name (already exists)"
+              echo "Replacing $name with the PR's version"
+              rm -rf "$target"
             else
-              cp -r "$d" "$target"
+              echo "Adding $name"
             fi
+            cp -r "algorithm_registration/$name" "$target"
           done
 
-      - name: Run QA tests
+      - name: Install APEx QA tools
+        if: steps.changed.outputs.algorithms != ''
         working-directory: apex_algorithms
         run: |
           uv venv .venv
@@ -61,16 +95,87 @@ jobs:
           uv pip install qa/tools
           uv pip install -r qa/unittests/requirements.txt
 
-          cd qa/unittests
+      - name: Lint changed UDPs
+        id: lint
+        if: steps.changed.outputs.algorithms != ''
+        working-directory: apex_algorithms/qa/unittests
+        env:
+          ALGORITHMS: ${{ steps.changed.outputs.algorithms }}
+        run: |
+          source ../../.venv/bin/activate
 
-          # List the algorithms that exist in devseed dir
-          IDS=""
-          echo "Algorithms found:"
-          for d in ../../algorithm_catalog/developmentseed/*/; do
-            name=$(basename "$d")
-            echo "  - $name"
-            IDS="${IDS:+$IDS or }$name"
+          # Select tests by exact pytest ID instead of -k, which matches by
+          # substring and would also pick up algorithms whose names contain
+          # another algorithm's name
+          TESTS=()
+          for name in $ALGORITHMS; do
+            for udp in ../../algorithm_catalog/developmentseed/"$name"/openeo_udp/*.json; do
+              TESTS+=("tests/test_openeo_udp.py::test_lint_openeo_udp_json_file[$(basename "$udp")]")
+            done
           done
 
-          # Run selected tests
-          pytest tests/test_records.py tests/test_openeo_udp.py -k "$IDS" --deselect "tests/test_records.py::test_service_record_validation"
+          printf 'Running:\n'; printf '  %s\n' "${TESTS[@]}"
+          pytest "${TESTS[@]}"
+
+      # Runs the location and schema checks of APEx's
+      # tests/test_records.py::test_service_record_validation, without its link
+      # checks: records link to ESA-APEx/apex_algorithms, where new algorithms
+      # return 404 until the PR to ESA-APEx pins those links to a commit. The
+      # links are checked by the tests in that PR. The schema is read from the
+      # fork's checkout, so this follows APEx's schema when it changes.
+      # Runs even when the lint step fails, so one run reports both.
+      - name: Validate changed OGC records against the APEx schema
+        if: ${{ !cancelled() && steps.changed.outputs.algorithms != '' && steps.lint.conclusion != 'skipped' }}
+        working-directory: apex_algorithms
+        env:
+          ALGORITHMS: ${{ steps.changed.outputs.algorithms }}
+        run: |
+          source .venv/bin/activate
+          python - <<'EOF'
+          import os
+          import sys
+
+          import jsonschema
+          from apex_algorithm_qa_tools.records import (
+              get_service_ogc_record_schema,
+              get_service_ogc_records,
+          )
+
+          schema = get_service_ogc_record_schema()
+          validator = jsonschema.validators.validator_for(schema)(schema)
+          changed = os.environ["ALGORITHMS"].split()
+
+          records = get_service_ogc_records()
+
+          failures = 0
+          for name in changed:
+              own = [r for r in records if f"/developmentseed/{name}/records/" in r["path"]]
+              # Every changed algorithm needs a record; a missing one would
+              # otherwise not show up in the results at all
+              if not own:
+                  print(f"FAIL developmentseed/{name}: no record at records/{name}.json")
+                  failures += 1
+                  continue
+
+              problems = []
+              for record in own:
+                  path, data = record["path"], record["data"]
+                  record_id = data.get("id")
+                  if not path.endswith(f"{record_id}/records/{record_id}.json"):
+                      problems.append(
+                          f"{path.split('algorithm_catalog/')[-1]}: file is not at "
+                          f"<id>/records/<id>.json for id {record_id!r}"
+                      )
+                  problems += [
+                      f"{'/'.join(map(str, e.absolute_path)) or '<root>'}: {e.message}"
+                      for e in validator.iter_errors(data)
+                  ]
+              paths = ", ".join(r["path"].split("algorithm_catalog/")[-1] for r in own)
+              print(f"{'FAIL' if problems else 'ok  '} {paths}")
+              for problem in problems:
+                  print(f"       {problem}")
+              failures += bool(problems)
+
+          print(f"{len(changed)} algorithms checked, {failures} failed")
+          sys.exit(1 if failures else 0)
+          EOF

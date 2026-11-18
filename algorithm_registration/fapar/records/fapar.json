@@ -118,7 +118,7 @@
       "rel": "notebook",
       "type": "application/x-ipynb+json",
       "title": "Fraction of Absorbed Photosynthetically Active Radiation (FAPAR) notebook",
-      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/advanced_spectral_processing/fapar.ipynb"
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/46b81885296c1bab350664c9100a903536fa4a34/notebooks/sentinel/sentinel-2/advanced_spectral_processing/fapar.ipynb"
     },
     {
       "rel": "platform",

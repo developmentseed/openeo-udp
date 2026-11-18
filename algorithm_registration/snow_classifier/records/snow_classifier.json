@@ -116,7 +116,7 @@
       "rel": "notebook",
       "type": "application/x-ipynb+json",
       "title": "Snow Classifier notebook",
-      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/land-cover/snow_classifier.ipynb"
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/46b81885296c1bab350664c9100a903536fa4a34/notebooks/sentinel/sentinel-2/land-cover/snow_classifier.ipynb"
     },
     {
       "rel": "platform",

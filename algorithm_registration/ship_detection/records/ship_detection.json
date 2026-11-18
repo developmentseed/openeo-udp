@@ -123,7 +123,7 @@
       "rel": "notebook",
       "type": "application/x-ipynb+json",
       "title": "Ship Detection (S1/S2 Fusion) notebook",
-      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/marine_and_water_bodies/ship_detection.ipynb"
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/46b81885296c1bab350664c9100a903536fa4a34/notebooks/sentinel/sentinel-2/marine_and_water_bodies/ship_detection.ipynb"
     },
     {
       "rel": "platform",

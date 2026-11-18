@@ -125,7 +125,7 @@
       "rel": "notebook",
       "type": "application/x-ipynb+json",
       "title": "Forest Fire Progression (S2/S1 Fusion) notebook",
-      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/s2_s1_forest_fire_progression.ipynb"
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/46b81885296c1bab350664c9100a903536fa4a34/notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/s2_s1_forest_fire_progression.ipynb"
     },
     {
       "rel": "platform",

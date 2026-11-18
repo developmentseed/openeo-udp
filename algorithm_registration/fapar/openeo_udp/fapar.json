@@ -1983,7 +1983,10 @@
     {
       "name": "time",
       "description": "Temporal range for data acquisition",
-      "schema": {},
+      "schema": {
+        "type": "array",
+        "subtype": "temporal-interval"
+      },
       "default": [
         "2025-05-10",
         "2025-05-12"
@@ -1993,7 +1996,10 @@
     {
       "name": "bounding_box",
       "description": "Spatial extent for Cropland Plain, Croatia",
-      "schema": {},
+      "schema": {
+        "type": "object",
+        "subtype": "bounding-box"
+      },
       "default": {
         "west": 14.09,
         "south": 45.174,
@@ -2005,7 +2011,9 @@
     {
       "name": "cloud_cover",
       "description": "Maximum cloud cover percentage",
-      "schema": {},
+      "schema": {
+        "type": "number"
+      },
       "default": 30,
       "optional": true
     }

@@ -117,7 +117,7 @@
       "rel": "notebook",
       "type": "application/x-ipynb+json",
       "title": "Algorithm to Visualize Wildfire-Affected Areas notebook",
-      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/wildfire_visualization.ipynb"
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/46b81885296c1bab350664c9100a903536fa4a34/notebooks/sentinel/sentinel-2/fire_and_disaster_monitoring/wildfire_visualization.ipynb"
     },
     {
       "rel": "platform",
