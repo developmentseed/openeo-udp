@@ -124,7 +124,7 @@
       "rel": "notebook",
       "type": "application/x-ipynb+json",
       "title": "Flood Mapping (Sentinel-1) notebook",
-      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-1/water_and_flood_monitoring/flood_mapping.ipynb"
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/46b81885296c1bab350664c9100a903536fa4a34/notebooks/sentinel/sentinel-1/water_and_flood_monitoring/flood_mapping.ipynb"
     },
     {
       "rel": "platform",

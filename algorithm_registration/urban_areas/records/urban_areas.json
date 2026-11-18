@@ -116,7 +116,7 @@
       "rel": "notebook",
       "type": "application/x-ipynb+json",
       "title": "Algorithm to Visualize Urban Areas and Buildings notebook",
-      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/refs/heads/main/notebooks/sentinel/sentinel-1/land-cover/urban_areas.ipynb"
+      "href": "https://raw.githubusercontent.com/developmentseed/openeo-udp/46b81885296c1bab350664c9100a903536fa4a34/notebooks/sentinel/sentinel-1/land-cover/urban_areas.ipynb"
     },
     {
       "rel": "platform",
