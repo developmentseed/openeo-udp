@@ -2,6 +2,8 @@
 
 This repository contains Jupyter notebooks that creates openEO User-Defined Processes (UDPs), initially from Sentinel Hub evalscripts. Each notebook documents the purpose of the UDP, validates the results, and exports the final process graph for integration with the openEO ecosystem.
 
+The notebooks use [`openeo-portable`](PACKAGE.md), a Python package in this repository that manages parameter sets and maps them to different openEO backends. See [PACKAGE.md](PACKAGE.md) for its documentation.
+
 ## Project Context
 
 This work is part of the [APEx (Application Propagation Environments)](https://apex.esa.int/) project for the European Space Agency. The goal is to convert the extensive library of [Sentinel Hub custom evalscripts](https://custom-scripts.sentinel-hub.com/) into interoperable openEO process graphs that can run on any openEO-compliant backend while maintaining synchronous visualization capabilities.
@@ -68,7 +70,7 @@ connection, current_params = selection_widget()
 
 # Alternative: Programmatic approach - direct connection
 connection, current_params = param_manager.quick_connect(
-    parameter_set='venice_lagoon',
+    param_set='venice_lagoon',
     endpoint='eopf_explorer'
 )
 
@@ -133,38 +135,7 @@ To run these notebooks, you need:
 
 ### Parameter Management System
 
-This repository includes a comprehensive parameter management system that simplifies working with different locations, time periods, and OpenEO backends. The system eliminates the need for manual parameter editing when switching between scenarios.
-
-**Key Features:**
-
-- **Multiple Parameter Sets**: Predefined configurations for different locations (Venice Lagoon, Lake Victoria, etc.)
-- **Backend Flexibility**: Automatic parameter mapping for different OpenEO endpoints
-- **Interactive Widgets**: User-friendly dropdown menus for parameter selection
-- **Programmatic Access**: Quick connection methods for automated workflows
-
-**Quick Example:**
-
-```python
-from openeo_udp import ParameterManager
-
-# Initialize parameter manager with algorithm parameters
-param_manager = ParameterManager('algorithm.params.py')
-
-# Show available parameter sets and endpoints
-param_manager.print_options("Algorithm name")
-
-# Option 1: Interactive widgets (recommended for notebooks)
-selection_widget = param_manager.interactive_parameter_selection()
-connection, current_params = selection_widget()
-
-# Option 2: Programmatic connection (useful for scripts)
-connection, current_params = param_manager.quick_connect(
-    parameter_set='venice_lagoon',
-    endpoint='eopf_explorer'
-)
-```
-
-📚 **[Complete Parameter Management Documentation](docs/parameter-management.md)**
+The notebooks get their locations, dates and backend connections from the [`openeo-portable`](PACKAGE.md) package, so you can switch study area or openEO backend without editing code. The package's [README](PACKAGE.md) covers installation and usage, and the [parameter management guide](docs/parameter-management.md) has the full reference.
 
 ### Environment Setup
 
@@ -218,12 +189,14 @@ When creating or opening a notebook:
 3. Execute the cells sequentially to see the conversion process, validate results, and export the UDP definition
 
 **Parameter Management Integration:**
-Notebooks include parameter files (`.params.py`) that define multiple locations and configurations. You can:
+Each notebook has a parameter file (`.params.py`) that defines multiple locations and configurations. The parameter files ship with `openeo-portable` in [`openeo_portable/params/`](openeo_portable/params/), except for the self-contained machine-learning notebooks, which keep theirs in their own folder. You can:
 
 - Use interactive widgets to select parameters and endpoints via dropdowns
 - Switch between locations (Venice Lagoon, Lake Victoria, etc.) without editing code
 - Connect to different OpenEO backends with automatic parameter mapping
 - Run the same algorithm on different areas by simply changing parameter sets
+
+To add your own area or dates, override a packaged parameter file with a local copy next to the notebook. See [Using your own parameter file](PACKAGE.md#using-your-own-parameter-file).
 
 Most notebooks are designed to run completely from top to bottom without modification, though you may want to adjust spatial extents or temporal ranges to explore different areas.
 

@@ -16,12 +16,12 @@ import pytest
 from openeo.api.process import Parameter
 
 # Import the modules to test
-from openeo_udp import ParameterManager
-from openeo_udp.collections import (
+from openeo_portable import ParameterManager
+from openeo_portable.collections import (
     UnsupportedBandError,
     UnsupportedCollectionError,
 )
-from openeo_udp.endpoints import get_all_endpoints
+from openeo_portable.endpoints import get_all_endpoints
 
 
 @pytest.fixture
@@ -226,7 +226,7 @@ class TestParameterManagerMethods:
         assert "location_name" in params
         assert params["location_name"] == "Venice Lagoon"
 
-    @patch("openeo_udp.endpoints.get_endpoint_connection")
+    @patch("openeo_portable.endpoints.get_endpoint_connection")
     def test_quick_connect_with_defaults(self, mock_get_connection, mock_param_manager):
         """Test quick connection with default parameters."""
         mock_connection = Mock()
@@ -239,7 +239,7 @@ class TestParameterManagerMethods:
         assert params["location_name"] in ["Venice Lagoon", "Lake Victoria"]
         mock_get_connection.assert_called_once()
 
-    @patch("openeo_udp.endpoints.get_endpoint_connection")
+    @patch("openeo_portable.endpoints.get_endpoint_connection")
     def test_quick_connect_failure(self, mock_get_connection, mock_param_manager):
         """Test quick connection failure handling."""
         # Mock connection failure
@@ -706,7 +706,7 @@ class TestParameterResolution:
 class TestIntegration:
     """Integration tests for the complete workflow."""
 
-    @patch("openeo_udp.endpoints.get_endpoint_connection")
+    @patch("openeo_portable.endpoints.get_endpoint_connection")
     def test_complete_workflow_simulation(self, mock_get_connection, temp_params_file):
         """Test a complete workflow from parameter loading to connection."""
         # Mock external dependencies

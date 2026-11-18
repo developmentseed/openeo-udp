@@ -1,0 +1,194 @@
+name: Build and publish
+
+# build-check runs on every pull request and push to main, so packaging
+# problems show up before a release. The publish jobs reuse the files that
+# build-check built and checked, through the "dist" artifact:
+#   - publish-testpypi: add the "testpypi" label to a pull request to upload
+#     it to TestPyPI as <__version__>.dev<run id>; every push while the label
+#     is on uploads again. Or run this workflow by hand (Actions > Build and
+#     publish > Run workflow), optionally with a version such as 0.2.0rc1.
+#   - publish-pypi: push a tag such as v0.2.0 to release on PyPI.
+# TestPyPI versions are set on the runner only and never committed. Both jobs
+# publish with PyPI Trusted Publishing, so no API token is stored here.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    # "labeled" so that adding the testpypi label starts an upload right away
+    types: [opened, synchronize, reopened, labeled]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to upload to TestPyPI (empty: use __version__)"
+        required: false
+        default: ""
+
+jobs:
+  build-check:
+    runs-on: ubuntu-latest
+    outputs:
+      testpypi: ${{ steps.version.outputs.testpypi }}
+    steps:
+      - name: Checkout openeo-udp
+        uses: actions/checkout@v4
+
+      # Decides whether this run uploads to TestPyPI and, if it does, which
+      # version to build. Tag and main builds keep __version__ unchanged.
+      - name: Set version
+        id: version
+        env:
+          LABELLED: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'testpypi') }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          BASE=$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' openeo_portable/__init__.py)
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            VERSION="${INPUT_VERSION:-$BASE}"
+            UPLOAD=true
+          elif [ "$LABELLED" = "true" ]; then
+            VERSION="$BASE.dev$GITHUB_RUN_ID"
+            UPLOAD=true
+          else
+            VERSION="$BASE"
+            UPLOAD=false
+          fi
+
+          if ! echo "$VERSION" | grep -Eq '^[0-9]+(\.[0-9]+)*((a|b|rc)[0-9]+)?(\.post[0-9]+)?(\.dev[0-9]+)?$'; then
+            echo "Not a valid version: $VERSION"
+            exit 1
+          fi
+          if [ "$VERSION" != "$BASE" ]; then
+            sed -i "s/^__version__ = .*/__version__ = \"$VERSION\"/" openeo_portable/__init__.py
+          fi
+
+          echo "Version: $VERSION (upload to TestPyPI: $UPLOAD)"
+          echo "testpypi=$UPLOAD" >> "$GITHUB_OUTPUT"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+
+      # Builds the sdist, then the wheel from the sdist, so a file missing
+      # from the sdist also breaks the wheel and fails the checks below
+      - name: Build sdist and wheel
+        run: uv build
+
+      - name: Check metadata and README rendering
+        run: uvx twine check --strict dist/*
+
+      - name: Check wheel contents
+        run: |
+          python - <<'EOF'
+          import glob
+          import zipfile
+
+          wheel = glob.glob("dist/*.whl")[0]
+          version = wheel.split("-")[1]
+          names = zipfile.ZipFile(wheel).namelist()
+          dist_info = f"openeo_portable-{version}.dist-info"
+
+          top_level = {name.split("/")[0] for name in names}
+          unexpected = top_level - {"openeo_portable", dist_info}
+          assert not unexpected, f"Unexpected top-level entries: {unexpected}"
+
+          for license_file in ("LICENSE", "LICENSING.md"):
+              path = f"{dist_info}/licenses/{license_file}"
+              assert path in names, f"Missing {path}"
+
+          print(f"{wheel}: {len(names)} files, contents OK")
+          EOF
+
+      # Runs outside the checkout, so Python imports the installed wheel and
+      # not the openeo_portable/ folder in the repository
+      - name: Install wheel in a clean environment
+        working-directory: ${{ runner.temp }}
+        run: |
+          uv venv smoke
+          uv pip install --python smoke/bin/python "$GITHUB_WORKSPACE"/dist/*.whl
+
+      - name: Smoke test the installed package
+        working-directory: ${{ runner.temp }}
+        run: |
+          WHEEL=$(ls "$GITHUB_WORKSPACE"/dist/*.whl)
+          export WHEEL_VERSION=$(basename "$WHEEL" | cut -d- -f2)
+          smoke/bin/python - <<'EOF'
+          import os
+
+          import openeo_portable
+          from openeo_portable import ParameterManager, list_parameter_files
+
+          assert "site-packages" in openeo_portable.__file__, openeo_portable.__file__
+
+          expected = os.environ["WHEEL_VERSION"]
+          assert openeo_portable.__version__ == expected, (
+              f"__version__ is {openeo_portable.__version__}, wheel is {expected}"
+          )
+
+          files = list_parameter_files()
+          assert len(files) == 36, f"Expected 36 parameter files, found {len(files)}"
+
+          manager = ParameterManager("urban_areas.params.py")
+          source = manager.describe_source()
+          assert source.endswith("(packaged with openeo-portable)"), source
+
+          print(f"openeo-portable {expected}: {len(files)} parameter files, {source}")
+          EOF
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  publish-testpypi:
+    needs: build-check
+    if: needs.build-check.outputs.testpypi == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/openeo-portable/
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dist
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  publish-pypi:
+    needs: build-check
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/openeo-portable/
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dist
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      # A PyPI version cannot be replaced once uploaded, so stop if the tag
+      # and the package version disagree
+      - name: Check tag matches package version
+        run: |
+          WHEEL_VERSION=$(ls dist/*.whl | xargs basename | cut -d- -f2)
+          if [ "${GITHUB_REF_NAME#v}" != "$WHEEL_VERSION" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package version $WHEEL_VERSION"
+            exit 1
+          fi
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
