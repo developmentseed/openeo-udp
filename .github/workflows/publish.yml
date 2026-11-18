@@ -3,24 +3,67 @@ name: Build and publish
 # build-check runs on every pull request and push to main, so packaging
 # problems show up before a release. The publish jobs reuse the files that
 # build-check built and checked, through the "dist" artifact:
-#   - publish-testpypi: run this workflow by hand (Actions > Build and publish >
-#     Run workflow) to try a release on TestPyPI.
+#   - publish-testpypi: add the "testpypi" label to a pull request to upload
+#     it to TestPyPI as <__version__>.dev<run id>; every push while the label
+#     is on uploads again. Or run this workflow by hand (Actions > Build and
+#     publish > Run workflow), optionally with a version such as 0.2.0rc1.
 #   - publish-pypi: push a tag such as v0.2.0 to release on PyPI.
-# Both publish with PyPI Trusted Publishing, so no API token is stored here.
+# TestPyPI versions are set on the runner only and never committed. Both jobs
+# publish with PyPI Trusted Publishing, so no API token is stored here.
 
 on:
   push:
     branches: [main]
     tags: ["v*"]
   pull_request:
+    # "labeled" so that adding the testpypi label starts an upload right away
+    types: [opened, synchronize, reopened, labeled]
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to upload to TestPyPI (empty: use __version__)"
+        required: false
+        default: ""
 
 jobs:
   build-check:
     runs-on: ubuntu-latest
+    outputs:
+      testpypi: ${{ steps.version.outputs.testpypi }}
     steps:
       - name: Checkout openeo-udp
         uses: actions/checkout@v4
+
+      # Decides whether this run uploads to TestPyPI and, if it does, which
+      # version to build. Tag and main builds keep __version__ unchanged.
+      - name: Set version
+        id: version
+        env:
+          LABELLED: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'testpypi') }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          BASE=$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' openeo_portable/__init__.py)
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            VERSION="${INPUT_VERSION:-$BASE}"
+            UPLOAD=true
+          elif [ "$LABELLED" = "true" ]; then
+            VERSION="$BASE.dev$GITHUB_RUN_ID"
+            UPLOAD=true
+          else
+            VERSION="$BASE"
+            UPLOAD=false
+          fi
+
+          if ! echo "$VERSION" | grep -Eq '^[0-9]+(\.[0-9]+)*((a|b|rc)[0-9]+)?(\.post[0-9]+)?(\.dev[0-9]+)?$'; then
+            echo "Not a valid version: $VERSION"
+            exit 1
+          fi
+          if [ "$VERSION" != "$BASE" ]; then
+            sed -i "s/^__version__ = .*/__version__ = \"$VERSION\"/" openeo_portable/__init__.py
+          fi
+
+          echo "Version: $VERSION (upload to TestPyPI: $UPLOAD)"
+          echo "testpypi=$UPLOAD" >> "$GITHUB_OUTPUT"
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v4
@@ -102,7 +145,7 @@ jobs:
 
   publish-testpypi:
     needs: build-check
-    if: github.event_name == 'workflow_dispatch'
+    if: needs.build-check.outputs.testpypi == 'true'
     runs-on: ubuntu-latest
     environment:
       name: testpypi
