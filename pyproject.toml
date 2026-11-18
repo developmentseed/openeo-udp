@@ -1,11 +1,11 @@
 [build-system]
-requires = ["setuptools>=45", "wheel"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "openeo-portable"
 dynamic = ["version"]
-description = "openEO User-Defined Processes converted from Sentinel Hub evalscripts"
+description = "Parameter and backend management for porting openEO notebooks and User-Defined Processes across backends with different collection and band names"
 readme = "PACKAGE.md"
 license = "MIT AND CC-BY-SA-4.0"
 license-files = ["LICENSE", "LICENSING.md"]
@@ -66,7 +66,7 @@ Repository = "https://github.com/developmentseed/openeo-udp"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["openeo_portable*", "algorithm_registration*"]
+include = ["openeo_portable*"]
 exclude = ["tests*"]
 
 [tool.setuptools]

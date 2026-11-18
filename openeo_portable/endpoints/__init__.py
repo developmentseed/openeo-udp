@@ -8,8 +8,6 @@ import importlib
 from pathlib import Path
 from typing import Any, Dict, List
 
-__version__ = "0.1.0"
-
 
 def list_available_endpoints() -> List[str]:
     """List all available endpoint configurations.
