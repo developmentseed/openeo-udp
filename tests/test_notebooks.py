@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-import openeo_udp
+import openeo_portable
 from tests.test_packaged_params import STANDALONE_NOTEBOOK_DIRS
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -36,7 +36,7 @@ FORBIDDEN = {
     "looks up the repository root": re.compile(r"\b_repo_root\b"),
     "uses ipynbname": re.compile(r"\bipynbname\b"),
 }
-INSTALL = re.compile(r"%pip install openeo-udp==([\w.]+)")
+INSTALL = re.compile(r"%pip install openeo-portable==([\w.]+)")
 
 
 def _code(path: Path) -> str:
@@ -61,7 +61,7 @@ def test_no_in_notebook_registration(path):
 def test_install_cell_pins_current_version(path):
     pins = INSTALL.findall(_code(path))
     assert len(pins) == 1, f"{path.name} should have exactly one install cell"
-    assert pins[0] == openeo_udp.__version__, (
-        f"{path.name} installs openeo-udp=={pins[0]}, "
-        f"but the package version is {openeo_udp.__version__}"
+    assert pins[0] == openeo_portable.__version__, (
+        f"{path.name} installs openeo-portable=={pins[0]}, "
+        f"but the package version is {openeo_portable.__version__}"
     )

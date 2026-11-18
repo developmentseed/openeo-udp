@@ -183,11 +183,11 @@ Before writing any code, thoroughly analyze the original evalscript:
   import sys
 
   if sys.platform == "emscripten":  # Running in the browser (APEx JupyterLite)
-      %pip install openeo-udp==0.2.0
+      %pip install openeo-portable==0.2.0
   ```
-  Notebooks pin the exact `openeo-udp` release they were written against,
+  Notebooks pin the exact `openeo-portable` release they were written against,
   because the parameter files ship inside the package. The pin must match
-  `openeo_udp.__version__`; `tests/test_notebooks.py` fails when it does not,
+  `openeo_portable.__version__`; `tests/test_notebooks.py` fails when it does not,
   so bump it in every notebook and template when releasing.
 
 - **Set up parameter management** to support multiple locations and backends:
