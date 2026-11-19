@@ -16,7 +16,9 @@
                   "x": {
                     "from_parameter": "value"
                   },
-                  "y": 30
+                  "y": {
+                    "from_parameter": "cloud_cover"
+                  }
                 },
                 "result": true
               }
